@@ -5,4 +5,5 @@ package com.teentitans.cakeproject.activities;
  * Delete this when you create other class in this package.
  */
 public class PlaceholderActivity {
+    //Test commit
 }
