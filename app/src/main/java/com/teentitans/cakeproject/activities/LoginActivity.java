@@ -36,8 +36,10 @@ public class LoginActivity extends ActionBarActivity {
         public void onClick(View v) {
             if (v.equals(btnLogin)) {
                 new LoginTask().execute();
-            } else if (v.equals(btnRegister))
-                Log.e("OnClick", "Register Clicked");
+            } else if (v.equals(btnRegister)) {
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(intent);
+            }
             else if (v.equals(btnForgotPassword))
                 Log.e("OnClick", "ForgotPassword Clicked");
         }
