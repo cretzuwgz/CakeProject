@@ -17,7 +17,7 @@
         android:layout_gravity="center"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="DUMMY LOGO!!!"
+        android:text="LOGO PLACEHOLDER!!!"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/primary_text" />
 
@@ -28,44 +28,51 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/etUsername"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:layout_marginBottom="5dp"
-            android:background="@android:color/white"
-            android:drawableLeft="@drawable/ic_action_user"
-            android:drawablePadding="8dp"
-            android:hint="@string/prompt_user"
-            android:padding="15dp"
-            android:textColor="@color/primary_text"
-            android:textColorHint="@color/secondary_text" />
+            <EditText
+                android:id="@+id/etUsername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@android:color/white"
+                android:drawableLeft="@drawable/ic_action_user"
+                android:drawablePadding="8dp"
+                android:editable="true"
+                android:hint="@string/prompt_user"
+                android:padding="15dp"
+                android:singleLine="true"
+                android:textColor="@color/primary_text"
+                android:textColorHint="@color/secondary_text"
+                android:textCursorDrawable="@color/primary_text" />
 
-        <EditText
-            android:id="@+id/etPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="0dp"
-            android:background="@android:color/white"
-            android:drawableLeft="@drawable/ic_action_key"
-            android:drawablePadding="8dp"
-            android:hint="@string/prompt_password"
-            android:inputType="textPassword"
-            android:padding="15dp"
-            android:textColor="@color/primary_text"
-            android:textColorHint="@color/secondary_text" />
+            <EditText
+                android:id="@+id/etPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="0dp"
+                android:background="@android:color/white"
+                android:drawableLeft="@drawable/ic_action_key"
+                android:drawablePadding="8dp"
+                android:editable="true"
+                android:hint="@string/prompt_password"
+                android:inputType="textPassword"
+                android:padding="15dp"
+                android:singleLine="true"
+                android:textColor="@color/primary_text"
+                android:textColorHint="@color/secondary_text"
+                android:textCursorDrawable="@color/primary_text" />
 
         <com.balysv.materialripple.MaterialRippleLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:background="#ffff00"
             app:mrl_rippleAlpha="0.7"
-            app:mrl_rippleColor="@color/accent"
+            app:mrl_rippleColor="@color/primary"
             app:mrl_rippleDelayClick="false"
             app:mrl_rippleHover="true"
             app:mrl_rippleOverlay="true">
@@ -74,12 +81,12 @@
                 android:id="@+id/btnLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/primary"
+                android:background="@color/accent"
                 android:text="@string/action_sign_in_short"
                 android:textSize="20sp"
                 android:textStyle="bold" />
-
         </com.balysv.materialripple.MaterialRippleLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -94,28 +101,48 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/secondary_text" />
 
-            <TextView
-                android:id="@+id/btnRegister"
+            <com.balysv.materialripple.MaterialRippleLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:clickable="true"
-                android:text="@string/action_sign_in"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/secondary_text"
-                android:textStyle="bold" />
+                app:mrl_rippleAlpha="0.7"
+                app:mrl_rippleColor="@color/primary"
+                app:mrl_rippleDelayClick="false"
+                app:mrl_rippleHover="true"
+                app:mrl_rippleOverlay="true">
+
+                <TextView
+                    android:id="@+id/btnRegister"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:text="@string/action_sign_in"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/secondary_text"
+                    android:textStyle="bold" />
+            </com.balysv.materialripple.MaterialRippleLayout>
         </LinearLayout>
+
+        <com.balysv.materialripple.MaterialRippleLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            app:mrl_rippleAlpha="0.7"
+            app:mrl_rippleColor="@color/primary"
+            app:mrl_rippleDelayClick="false"
+            app:mrl_rippleHover="true"
+            app:mrl_rippleOverlay="true">
 
         <TextView
             android:id="@+id/btnForgotPassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
             android:clickable="true"
             android:text="@string/action_forgot_password"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/secondary_text"
             android:textStyle="bold" />
+        </com.balysv.materialripple.MaterialRippleLayout>
     </LinearLayout>
 
 </LinearLayout>
