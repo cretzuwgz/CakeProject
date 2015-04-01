@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">CakeProject</string>
+    <string name="title_activity_login">CakeProject</string>
+
 </resources>
