@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">CakeProject</string>
-    <string name="title_activity_login">CakeProject</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_main">MainActivity</string>
 
 </resources>

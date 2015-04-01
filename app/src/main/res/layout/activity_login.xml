@@ -1,106 +1,121 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_login"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
-    android:background="@drawable/bg_login"
     tools:context="com.teentitans.cakeproject.activities.LoginActivity">
 
-        <TextView
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="0px"
-            android:layout_weight="1"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="DUMMY LOGO!!!"
-            android:textColor="@color/primary_text"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="DUMMY LOGO!!!"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/primary_text" />
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="0px"
         android:layout_weight="3"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="vertical">
 
         <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="15dp"
-            android:layout_marginBottom="5dp"
-            android:layout_margin="10dp"
             android:id="@+id/etUsername"
-            android:background="@android:color/white"
-            android:textColor="@color/primary_text"
-            android:textColorHint="@color/secondary_text"
-            android:hint="@string/prompt_user"
-            android:drawableLeft="@drawable/ic_action_user"
-            android:drawablePadding="8dp"/>
-
-        <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            android:layout_marginTop="0dp"
+            android:layout_margin="10dp"
+            android:layout_marginBottom="5dp"
+            android:background="@android:color/white"
+            android:drawableLeft="@drawable/ic_action_user"
+            android:drawablePadding="8dp"
+            android:hint="@string/prompt_user"
+            android:padding="15dp"
+            android:textColor="@color/primary_text"
+            android:textColorHint="@color/secondary_text" />
+
+        <EditText
+            android:id="@+id/etPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:padding="15dp"
-            android:id="@+id/etPassword"
+            android:layout_marginTop="0dp"
             android:background="@android:color/white"
-            android:textColor="@color/primary_text"
-            android:textColorHint="@color/secondary_text"
-            android:hint="@string/prompt_password"
             android:drawableLeft="@drawable/ic_action_key"
-            android:drawablePadding="8dp"/>
+            android:drawablePadding="8dp"
+            android:hint="@string/prompt_password"
+            android:inputType="textPassword"
+            android:padding="15dp"
+            android:textColor="@color/primary_text"
+            android:textColorHint="@color/secondary_text" />
 
-        <Button
+        <com.balysv.materialripple.MaterialRippleLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:id="@+id/btnLogin"
-            android:text="@string/action_sign_in_short"
-            android:background="@color/accent"
-            android:textStyle="bold"
-            android:textSize="20sp"  />
+            android:background="#ffff00"
+            app:mrl_rippleAlpha="0.7"
+            app:mrl_rippleColor="@color/accent"
+            app:mrl_rippleDelayClick="false"
+            app:mrl_rippleHover="true"
+            app:mrl_rippleOverlay="true">
 
+            <Button
+                android:id="@+id/btnLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/primary"
+                android:text="@string/action_sign_in_short"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+        </com.balysv.materialripple.MaterialRippleLayout>
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/sign_in"
                 android:id="@+id/lRegister"
-                android:textColor="@color/secondary_text"/>
-
-            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@string/sign_in"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textStyle="bold"
-                android:text="@string/action_sign_in"
-                android:layout_margin="10dp"
+                android:textColor="@color/secondary_text" />
+
+            <TextView
                 android:id="@+id/btnRegister"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:clickable="true"
+                android:text="@string/action_sign_in"
+                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@color/secondary_text"
-                android:clickable="true"/>
+                android:textStyle="bold" />
         </LinearLayout>
+
         <TextView
+            android:id="@+id/btnForgotPassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textStyle="bold"
-            android:text="@string/action_forgot_password"
             android:layout_margin="10dp"
-            android:id="@+id/btnForgotPassword"
+            android:clickable="true"
+            android:text="@string/action_forgot_password"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/secondary_text"
-            android:clickable="true"/>
+            android:textStyle="bold" />
     </LinearLayout>
 
 </LinearLayout>
