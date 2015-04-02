@@ -29,6 +29,7 @@ public class LoginActivity extends ActionBarActivity {
 
     private static String URL_LOGIN = "http://cakeproject.whostf.com/php/get_user.php";
     UserVO userVO;
+    //test commit chituc
     private Button btnLogin;
     private TextView btnRegister;
     private TextView btnForgotPassword;
