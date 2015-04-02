@@ -9,16 +9,20 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 
 import com.teentitans.cakeproject.R;
 import com.teentitans.cakeproject.fragments.RegisterPageFragment;
+import com.teentitans.cakeproject.utils.UserVO;
 
 public class RegisterActivity extends FragmentActivity {
 
     /**
      * The number of pages (wizard steps) to show in this demo.
      */
-    private static final int NUM_PAGES = 3;
+    private static final int NUM_PAGES = 2;
+    private static UserVO user;
 
     /**
      * The pager widget, which handles animation and allows swiping horizontally to access previous
@@ -26,26 +30,44 @@ public class RegisterActivity extends FragmentActivity {
      */
     private ViewPager mPager;
 
-    /**
-     * The pager adapter, which provides the pages to the view pager widget.
-     */
-    private PagerAdapter mPagerAdapter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        /**
+         * The pager adapter, which provides the pages to the view pager widget.
+         */
+        PagerAdapter mPagerAdapter;
+
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (ViewPager) findViewById(R.id.pager);
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
+        mPager.setOnTouchListener( new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                return true;
+            }
+        });
         mPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 invalidateOptionsMenu();
             }
         });
+    }
+
+    public void nextStep(){
+        mPager.setCurrentItem(mPager.getCurrentItem()+1,true);
+    }
+
+    public void register(){
+
+    }
+
+    public UserVO getUser(){
+        return user;
     }
 
     @Override
@@ -61,7 +83,7 @@ public class RegisterActivity extends FragmentActivity {
     }
 
     /**
-     * A simple pager adapter that represents 5 {@link RegisterPageFragment} objects, in
+     * A simple pager adapter that represents 2 {@link RegisterPageFragment} objects, in
      * sequence.
      */
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {

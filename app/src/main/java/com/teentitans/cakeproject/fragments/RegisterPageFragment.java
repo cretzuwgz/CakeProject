@@ -2,11 +2,14 @@ package com.teentitans.cakeproject.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.teentitans.cakeproject.R;
+import com.teentitans.cakeproject.activities.RegisterActivity;
 
 public class RegisterPageFragment extends Fragment {
 
@@ -24,6 +27,7 @@ public class RegisterPageFragment extends Fragment {
      * Factory method for this fragment class. Constructs a new fragment for the given page number.
      */
     public static RegisterPageFragment create(int pageNumber) {
+        Log.e("Page",pageNumber+"");
         RegisterPageFragment fragment = new RegisterPageFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, pageNumber);
@@ -42,12 +46,19 @@ public class RegisterPageFragment extends Fragment {
                              Bundle savedInstanceState) {
         ViewGroup rootView = null;
 
-        if(mPageNumber == 1)
+        if(mPageNumber == 1) {
             rootView = (ViewGroup) inflater.inflate(R.layout.fragment_register_step1, container, false);
+            Button next = (Button) rootView.findViewById(R.id.btnNext);
+            next.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ((RegisterActivity) getActivity()).nextStep();
+                }
+            });
+        }
+
         else if(mPageNumber == 2)
             rootView = (ViewGroup) inflater.inflate(R.layout.fragment_register_step2, container, false);
-        else if(mPageNumber == 3)
-            rootView = (ViewGroup) inflater.inflate(R.layout.fragment_register_step3, container, false);
 
         return rootView;
     }
