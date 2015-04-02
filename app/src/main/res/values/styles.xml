@@ -1,6 +1,8 @@
 <resources>
 
     <style name="AppTheme" parent="AppTheme.Base" >
+        <item name="android:spinnerItemStyle">@style/SpinnerItem</item>
+        <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItem</item>
     </style>
 
     <style name="AppTheme.Base" parent="Theme.AppCompat.NoActionBar">
@@ -12,4 +14,16 @@
         <item name="android:textColor">@color/primary_text</item>
     </style>
 
+    <style name="SpinnerItem">
+        <item name="android:textColor">@color/primary_text</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:drawableRight">@drawable/ic_arrow</item>
+    </style>
+
+    <style name="SpinnerDropDownItem">
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textColor">@color/primary_text</item>
+    </style>
 </resources>

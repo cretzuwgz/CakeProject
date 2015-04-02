@@ -28,6 +28,7 @@
         android:hint="@string/prompt_user"
         android:padding="15dp"
         android:singleLine="true"
+        android:textColor="@color/primary_text"
         android:textColorHint="@color/secondary_text"
         android:textCursorDrawable="@color/primary_text" />
 
@@ -46,6 +47,7 @@
         android:inputType="textPassword"
         android:padding="15dp"
         android:singleLine="true"
+        android:textColor="@color/primary_text"
         android:textColorHint="@color/secondary_text"
         android:textCursorDrawable="@color/primary_text" />
 
@@ -65,7 +67,8 @@
             android:layout_marginRight="5dp"
             android:layout_weight="1"
             android:background="@android:color/white"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="5dp">
 
             <TextView
                 android:id="@+id/tvGender"
@@ -75,14 +78,18 @@
                 android:drawableLeft="@drawable/ic_action_key"
                 android:gravity="center"
                 android:text="Gender"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/primary_text" />
 
             <Spinner
                 android:id="@+id/sGender"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:entries="@array/gender_array"
-                android:spinnerMode="dropdown" />
+                android:gravity="center"
+                android:spinnerMode="dropdown"
+                android:textColor="@color/primary_text" />
         </LinearLayout>
 
         <LinearLayout
@@ -90,7 +97,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@android:color/white"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="5dp">
 
             <TextView
                 android:id="@+id/tvExperience"
@@ -100,14 +108,18 @@
                 android:drawableLeft="@drawable/ic_action_user"
                 android:gravity="center"
                 android:text="Experience"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/primary_text" />
 
             <Spinner
                 android:id="@+id/sExperience"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:entries="@array/experience_array"
-                android:spinnerMode="dropdown" />
+                android:gravity="center"
+                android:spinnerMode="dropdown"
+                android:textColor="@color/primary_text" />
         </LinearLayout>
 
     </LinearLayout>
@@ -130,7 +142,8 @@
             android:background="@color/accent"
             android:text="@string/action_next"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textStyle="bold" />
+            android:textColor="@color/primary_text"
+            android:textStyle="bold"/>
     </com.balysv.materialripple.MaterialRippleLayout>
 
 

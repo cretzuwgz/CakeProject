@@ -81,7 +81,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/accent"
                 android:text="@string/action_sign_in_short"
-                android:textSize="20sp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textStyle="bold" />
         </com.balysv.materialripple.MaterialRippleLayout>
 
