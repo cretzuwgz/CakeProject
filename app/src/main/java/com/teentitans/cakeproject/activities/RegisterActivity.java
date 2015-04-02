@@ -23,7 +23,6 @@ public class RegisterActivity extends FragmentActivity {
      * The number of pages (wizard steps) to show in this demo.
      */
     private static final int NUM_PAGES = 2;
-    private static UserVO user;
 
     /**
      * The pager widget, which handles animation and allows swiping horizontally to access previous
@@ -46,7 +45,7 @@ public class RegisterActivity extends FragmentActivity {
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
         mPager.setPageTransformer(true, new ZoomOutPageTransformer());
-        mPager.setOnTouchListener(new View.OnTouchListener() {
+        mPager.setOnTouchListener( new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 return true;
@@ -60,17 +59,10 @@ public class RegisterActivity extends FragmentActivity {
         });
     }
 
-    public void nextStep() {
-        mPager.setCurrentItem(mPager.getCurrentItem() + 1, true);
+    public void nextStep(){
+        mPager.setCurrentItem(mPager.getCurrentItem()+1,true);
     }
 
-    public void register() {
-
-    }
-
-    public UserVO getUser() {
-        return user;
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -95,7 +87,7 @@ public class RegisterActivity extends FragmentActivity {
 
         @Override
         public Fragment getItem(int position) {
-            return RegisterPageFragment.create(position + 1);
+            return RegisterPageFragment.create(position+1);
         }
 
         @Override

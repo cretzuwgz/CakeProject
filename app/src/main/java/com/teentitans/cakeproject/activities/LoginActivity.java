@@ -139,7 +139,7 @@ public class LoginActivity extends ActionBarActivity {
             }
 
             try {
-                userVO = new UserVO(userJson.getString("id"), userJson.getString("username"), userJson.getString("date"), userJson.getString("gender"), userJson.getString("experience"));
+                userVO = new UserVO(userJson.getString("id"), userJson.getString("username"), null, userJson.getString("date"), userJson.getString("gender"), userJson.getString("experience"));
             } catch (JSONException e) {
                 return null;
             }

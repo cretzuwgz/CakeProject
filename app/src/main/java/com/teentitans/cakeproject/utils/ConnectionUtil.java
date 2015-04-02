@@ -1,8 +1,6 @@
 package com.teentitans.cakeproject.utils;
 
 
-import android.util.Log;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -12,7 +10,7 @@ import java.net.URL;
 
 public class ConnectionUtil {
 
-    public static String getResponseFromURL(String link) throws IOException{
+    public static String getResponseFromURL(String link) throws IOException {
 
         HttpURLConnection connection;
 
@@ -37,7 +35,7 @@ public class ConnectionUtil {
         return response;
     }
 
-    public static String getResponseFromURL(String link, String parameters) throws IOException{
+    public static String getResponseFromURL(String link, String parameters) throws IOException {
 
         HttpURLConnection connection;
         OutputStreamWriter request;
