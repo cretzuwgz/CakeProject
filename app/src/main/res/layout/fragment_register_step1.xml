@@ -75,7 +75,7 @@
                 android:drawableLeft="@drawable/ic_action_key"
                 android:gravity="center"
                 android:text="Gender"
-                android:textSize="?android:attr/textAppearanceLarge" />
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <Spinner
                 android:id="@+id/sGender"
@@ -100,7 +100,7 @@
                 android:drawableLeft="@drawable/ic_action_user"
                 android:gravity="center"
                 android:text="Experience"
-                android:textSize="?android:attr/textAppearanceMedium" />
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <Spinner
                 android:id="@+id/sExperience"
@@ -129,7 +129,7 @@
             android:layout_height="wrap_content"
             android:background="@color/accent"
             android:text="@string/action_next"
-            android:textSize="?android:attr/textAppearanceLarge"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:textStyle="bold" />
     </com.balysv.materialripple.MaterialRippleLayout>
 
