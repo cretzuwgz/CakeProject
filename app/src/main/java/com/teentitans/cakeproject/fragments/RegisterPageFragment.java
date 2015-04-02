@@ -60,14 +60,16 @@ public class RegisterPageFragment extends Fragment {
 
         if (mPageNumber == 1) {
             final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_register_step1, container, false);
-            Button next = (Button) rootView.findViewById(R.id.btnNext);
+            Button btnNext = (Button) rootView.findViewById(R.id.btnNext);
 
-            next.setOnClickListener(new View.OnClickListener() {
+            btnNext.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Log.e("ButtonClicked", "ASD");
                     new CheckRegisterDataTask(rootView);
                 }
             });
+            return rootView;
         } else if (mPageNumber == 2) {
             final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_register_step2, container, false);
             return rootView;
