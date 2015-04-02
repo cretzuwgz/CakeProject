@@ -14,7 +14,6 @@ import android.view.View;
 
 import com.teentitans.cakeproject.R;
 import com.teentitans.cakeproject.fragments.RegisterPageFragment;
-import com.teentitans.cakeproject.utils.UserVO;
 import com.teentitans.cakeproject.utils.ZoomOutPageTransformer;
 
 public class RegisterActivity extends FragmentActivity {
@@ -45,7 +44,7 @@ public class RegisterActivity extends FragmentActivity {
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
         mPager.setPageTransformer(true, new ZoomOutPageTransformer());
-        mPager.setOnTouchListener( new View.OnTouchListener() {
+        mPager.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 return true;
@@ -59,8 +58,8 @@ public class RegisterActivity extends FragmentActivity {
         });
     }
 
-    public void nextStep(){
-        mPager.setCurrentItem(mPager.getCurrentItem()+1,true);
+    public void nextStep() {
+        mPager.setCurrentItem(mPager.getCurrentItem() + 1, true);
     }
 
 
@@ -87,7 +86,7 @@ public class RegisterActivity extends FragmentActivity {
 
         @Override
         public Fragment getItem(int position) {
-            return RegisterPageFragment.create(position+1);
+            return RegisterPageFragment.create(position + 1);
         }
 
         @Override

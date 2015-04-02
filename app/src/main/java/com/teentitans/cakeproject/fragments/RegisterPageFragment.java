@@ -36,7 +36,6 @@ public class RegisterPageFragment extends Fragment {
      * Factory method for this fragment class. Constructs a new fragment for the given page number.
      */
     public static RegisterPageFragment create(int pageNumber) {
-        Log.e("Page", pageNumber + "");
         RegisterPageFragment fragment = new RegisterPageFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, pageNumber);
@@ -65,8 +64,7 @@ public class RegisterPageFragment extends Fragment {
             btnNext.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Log.e("ButtonClicked", "ASD");
-                    new CheckRegisterDataTask(rootView);
+                    new CheckRegisterDataTask(rootView).execute();
                 }
             });
             return rootView;
@@ -90,6 +88,7 @@ public class RegisterPageFragment extends Fragment {
         private ProgressDialog pDialog;
 
         public CheckRegisterDataTask(ViewGroup rootView) {
+            super();
             this.rootView = rootView;
         }
 
@@ -154,9 +153,7 @@ public class RegisterPageFragment extends Fragment {
 
             try {
                 String response = ConnectionUtil.getResponseFromURL(url, parameters);
-                if (response.equals(0))
-                    return false;
-                return true;
+                return !response.equals("0");
             } catch (IOException e) {
                 return null;
             }
