@@ -16,13 +16,15 @@ public class UserVO implements Parcelable {
     };
     private String id;
     private String username;
+    private String password;
     private String date;
     private String gender;
     private String experience;
 
-    public UserVO(String id, String username, String date, String gender, String experience) {
+    public UserVO(String id, String username, String password, String date, String gender, String experience) {
         this.id = id;
         this.username = username;
+        this.password = password;
         this.date = date;
         this.gender = gender;
         this.experience = experience;
