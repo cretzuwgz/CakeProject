@@ -13,17 +13,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.teentitans.cakeproject.R;
+import com.teentitans.cakeproject.utils.ConnectionUtil;
 import com.teentitans.cakeproject.utils.UserVO;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 public class LoginActivity extends ActionBarActivity {
 
@@ -54,7 +50,6 @@ public class LoginActivity extends ActionBarActivity {
         btnRegister = (TextView) findViewById(R.id.btnRegister);
         btnForgotPassword = (TextView) findViewById(R.id.btnForgotPassword);
 
-
         btnLogin.setOnClickListener(onClick);
         btnRegister.setOnClickListener(onClick);
         btnForgotPassword.setOnClickListener(onClick);
@@ -62,43 +57,11 @@ public class LoginActivity extends ActionBarActivity {
     }
 
     protected String tryLogin(String mUsername, String mPassword) {
-        HttpURLConnection connection = null;
-        OutputStreamWriter request;
 
-        URL url;
-        String response;
         String parameters = "username=" + mUsername + "&password=" + mPassword;
-
         try {
-            url = new URL(URL_LOGIN);
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setDoOutput(true);
-            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            connection.setRequestMethod("POST");
-
-            request = new OutputStreamWriter(connection.getOutputStream());
-            request.write(parameters);
-            request.flush();
-            request.close();
-            String line;
-            InputStreamReader isr = new InputStreamReader(connection.getInputStream());
-            BufferedReader reader = new BufferedReader(isr);
-            StringBuilder sb = new StringBuilder();
-            while ((line = reader.readLine()) != null) {
-                sb.append(line).append("\n");
-            }
-            // Response from server after login process will be stored in response variable.
-            response = sb.toString();
-            // You can perform UI operations here
-            Log.e("JSON", response);
-            isr.close();
-            reader.close();
-            connection.disconnect();
-            return response;
-
+            return ConnectionUtil.getResponseFromURL(URL_LOGIN, parameters);
         } catch (IOException e) {
-            if (connection != null)
-                connection.disconnect();
             return null;
         }
     }
@@ -131,9 +94,7 @@ public class LoginActivity extends ActionBarActivity {
                 return "Connection failed";
 
             try {
-
                 userJson = new JSONObject(response).getJSONArray("user").getJSONObject(0);
-
             } catch (JSONException e) {
                 return null;
             }
@@ -164,7 +125,6 @@ public class LoginActivity extends ActionBarActivity {
                 }
             } else
                 Toast.makeText(LoginActivity.this, R.string.error_login, Toast.LENGTH_SHORT).show();
-
         }
     }
 }
