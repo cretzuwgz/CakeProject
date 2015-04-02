@@ -3,8 +3,8 @@ package com.teentitans.cakeproject.utils;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class UserVO implements Parcelable{
-    
+public class UserVO implements Parcelable {
+
     public static final Parcelable.Creator<UserVO> CREATOR = new Parcelable.Creator<UserVO>() {
         public UserVO createFromParcel(Parcel in) {
             return new UserVO(in);

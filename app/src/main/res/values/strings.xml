@@ -6,6 +6,8 @@
     <string name="title_activity_register">RegisterActivity</string>
 
     <string name="action_next">Next</string>
+    <string name="action_register">Register</string>
+    <string name="prompt_tags">Favorite Tags (separated by comma \",\")</string>
 
     <string-array name="gender_array">
         <item>Male</item>

@@ -46,7 +46,7 @@ public class RegisterActivity extends FragmentActivity {
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
         mPager.setPageTransformer(true, new ZoomOutPageTransformer());
-        mPager.setOnTouchListener( new View.OnTouchListener() {
+        mPager.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 return true;
@@ -60,15 +60,15 @@ public class RegisterActivity extends FragmentActivity {
         });
     }
 
-    public void nextStep(){
-        mPager.setCurrentItem(mPager.getCurrentItem()+1,true);
+    public void nextStep() {
+        mPager.setCurrentItem(mPager.getCurrentItem() + 1, true);
     }
 
-    public void register(){
+    public void register() {
 
     }
 
-    public UserVO getUser(){
+    public UserVO getUser() {
         return user;
     }
 
@@ -95,7 +95,7 @@ public class RegisterActivity extends FragmentActivity {
 
         @Override
         public Fragment getItem(int position) {
-            return RegisterPageFragment.create(position+1);
+            return RegisterPageFragment.create(position + 1);
         }
 
         @Override

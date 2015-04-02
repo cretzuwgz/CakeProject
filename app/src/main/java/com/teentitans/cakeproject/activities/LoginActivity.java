@@ -39,8 +39,7 @@ public class LoginActivity extends ActionBarActivity {
             } else if (v.equals(btnRegister)) {
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(intent);
-            }
-            else if (v.equals(btnForgotPassword))
+            } else if (v.equals(btnForgotPassword))
                 Log.e("OnClick", "ForgotPassword Clicked");
         }
     };
@@ -62,17 +61,15 @@ public class LoginActivity extends ActionBarActivity {
 
     }
 
-    protected String tryLogin(String mUsername, String mPassword)
-    {
+    protected String tryLogin(String mUsername, String mPassword) {
         HttpURLConnection connection = null;
         OutputStreamWriter request;
 
         URL url;
         String response;
-        String parameters = "username="+mUsername+"&password="+mPassword;
+        String parameters = "username=" + mUsername + "&password=" + mPassword;
 
-        try
-        {
+        try {
             url = new URL(URL_LOGIN);
             connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
@@ -87,8 +84,7 @@ public class LoginActivity extends ActionBarActivity {
             InputStreamReader isr = new InputStreamReader(connection.getInputStream());
             BufferedReader reader = new BufferedReader(isr);
             StringBuilder sb = new StringBuilder();
-            while ((line = reader.readLine()) != null)
-            {
+            while ((line = reader.readLine()) != null) {
                 sb.append(line).append("\n");
             }
             // Response from server after login process will be stored in response variable.
@@ -100,10 +96,8 @@ public class LoginActivity extends ActionBarActivity {
             connection.disconnect();
             return response;
 
-        }
-        catch(IOException e)
-        {
-            if(connection!=null)
+        } catch (IOException e) {
+            if (connection != null)
                 connection.disconnect();
             return null;
         }
@@ -112,6 +106,7 @@ public class LoginActivity extends ActionBarActivity {
     private class LoginTask extends AsyncTask<String, String, String> {
 
         private ProgressDialog pDialog;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -121,17 +116,18 @@ public class LoginActivity extends ActionBarActivity {
             pDialog.setCancelable(false);
             pDialog.show();
         }
+
         /**
          * Login
-         * */
+         */
         protected String doInBackground(String... args) {
 
             EditText etUsername = (EditText) findViewById(R.id.etUsername);
             EditText etPassword = (EditText) findViewById(R.id.etPassword);
 
             JSONObject userJson;
-            String response = tryLogin(etUsername.getText().toString(),etPassword.getText().toString());
-            if(response == null)
+            String response = tryLogin(etUsername.getText().toString(), etPassword.getText().toString());
+            if (response == null)
                 return "Connection failed";
 
             try {
@@ -143,7 +139,7 @@ public class LoginActivity extends ActionBarActivity {
             }
 
             try {
-                userVO= new UserVO(userJson.getString("id"),userJson.getString("username"),userJson.getString("date"),userJson.getString("gender"),userJson.getString("experience"));
+                userVO = new UserVO(userJson.getString("id"), userJson.getString("username"), userJson.getString("date"), userJson.getString("gender"), userJson.getString("experience"));
             } catch (JSONException e) {
                 return null;
             }
@@ -156,8 +152,8 @@ public class LoginActivity extends ActionBarActivity {
             super.onPostExecute(result);
             pDialog.dismiss();
 
-            if(result!=null) {
-                if(result.equals("Connection failed"))
+            if (result != null) {
+                if (result.equals("Connection failed"))
                     Toast.makeText(LoginActivity.this, result, Toast.LENGTH_SHORT).show();
                 else {
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -166,8 +162,7 @@ public class LoginActivity extends ActionBarActivity {
                     intent.putExtra("bundle", b);
                     startActivity(intent);
                 }
-            }
-            else
+            } else
                 Toast.makeText(LoginActivity.this, R.string.error_login, Toast.LENGTH_SHORT).show();
 
         }
