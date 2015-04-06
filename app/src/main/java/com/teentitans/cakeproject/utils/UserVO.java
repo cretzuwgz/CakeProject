@@ -46,6 +46,10 @@ public class UserVO implements Parcelable {
         return username;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
     public String getDate() {
         return date;
     }
