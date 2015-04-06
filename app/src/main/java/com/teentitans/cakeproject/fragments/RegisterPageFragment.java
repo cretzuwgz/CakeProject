@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,6 +69,15 @@ public class RegisterPageFragment extends Fragment {
             return rootView;
         } else if (mPageNumber == 2) {
             final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_register_step2, container, false);
+            Button btnRegister = (Button) rootView.findViewById(R.id.btnRegister);
+
+            btnRegister.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    new RegisterDataTask(rootView).execute();
+                }
+            });
+
             return rootView;
         }
         return null;
@@ -154,6 +162,69 @@ public class RegisterPageFragment extends Fragment {
             try {
                 String response = ConnectionUtil.getResponseFromURL(url, parameters);
                 return !response.equals("0");
+            } catch (IOException e) {
+                return null;
+            }
+        }
+    }
+
+    private class RegisterDataTask extends AsyncTask<String, String, String> {
+
+        final ViewGroup rootView;
+        private ProgressDialog pDialog;
+
+        public RegisterDataTask(ViewGroup rootView) {
+            super();
+            this.rootView = rootView;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(getActivity());
+            pDialog.setMessage("Processing...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();
+        }
+
+        /**
+         * Login
+         */
+        protected String doInBackground(String... args) {
+
+            if (user == null)
+                return "There was a problem with registering. Please go to step 1.";
+
+            EditText etTags = (EditText) rootView.findViewById(R.id.etTags);
+            String response = sendDataToDB(etTags.getText().toString());
+            if(response == null)
+                return "Connection problem.";
+
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            pDialog.dismiss();
+            if (result.equals("OK"))
+                getActivity().finish();
+            else if (result.equals("FAIL"))
+                Toast.makeText(getActivity(), "There was a problem with registration. Try again later.", Toast.LENGTH_SHORT).show();
+            else {
+                Toast.makeText(getActivity(), result, Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        protected String sendDataToDB(String tags) {
+
+            String url = "http://cakeproject.whostf.com/php/add_username.php";
+            String parameters = "username=" + user.getUsername() + "&password=" + user.getPassword() + "&gender=" + user.getPassword() + "&experience=" + user.getExperience();
+
+            try {
+                String response = ConnectionUtil.getResponseFromURL(url, parameters);
+                return response;
             } catch (IOException e) {
                 return null;
             }
