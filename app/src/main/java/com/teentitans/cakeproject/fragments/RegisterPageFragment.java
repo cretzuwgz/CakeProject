@@ -42,10 +42,6 @@ public class RegisterPageFragment extends Fragment {
         return fragment;
     }
 
-    public static UserVO getUser() {
-        return user;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,13 +77,6 @@ public class RegisterPageFragment extends Fragment {
             return rootView;
         }
         return null;
-    }
-
-    /**
-     * Returns the page number represented by this fragment object.
-     */
-    public int getPageNumber() {
-        return mPageNumber;
     }
 
     private class CheckRegisterDataTask extends AsyncTask<String, String, String> {
@@ -198,7 +187,7 @@ public class RegisterPageFragment extends Fragment {
 
             EditText etTags = (EditText) rootView.findViewById(R.id.etTags);
             String response = sendDataToDB(etTags.getText().toString());
-            if(response == null)
+            if (response == null)
                 return "Connection problem.";
 
             return response;
@@ -210,8 +199,6 @@ public class RegisterPageFragment extends Fragment {
             pDialog.dismiss();
             if (result.equals("OK"))
                 getActivity().finish();
-            else if (result.equals("FAIL"))
-                Toast.makeText(getActivity(), "There was a problem with registration. Try again later.", Toast.LENGTH_SHORT).show();
             else {
                 Toast.makeText(getActivity(), result, Toast.LENGTH_SHORT).show();
             }
@@ -223,8 +210,7 @@ public class RegisterPageFragment extends Fragment {
             String parameters = "username=" + user.getUsername() + "&password=" + user.getPassword() + "&gender=" + user.getPassword() + "&experience=" + user.getExperience();
 
             try {
-                String response = ConnectionUtil.getResponseFromURL(url, parameters);
-                return response;
+                return ConnectionUtil.getResponseFromURL(url, parameters);
             } catch (IOException e) {
                 return null;
             }
