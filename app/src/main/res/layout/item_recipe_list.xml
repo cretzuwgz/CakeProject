@@ -55,6 +55,8 @@
                     android:layout_weight="1"
                     android:drawableLeft="@drawable/ic_action_label"
                     android:gravity="center|left"
+                    android:nestedScrollingEnabled="true"
+                    android:singleLine="true"
                     android:text="tags tags tags"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="@color/primary_text" />

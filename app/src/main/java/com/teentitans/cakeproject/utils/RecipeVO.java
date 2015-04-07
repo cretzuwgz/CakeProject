@@ -5,6 +5,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 
 public class RecipeVO implements Parcelable {
 
@@ -25,14 +26,15 @@ public class RecipeVO implements Parcelable {
     private String description;
     private String pLink;
     private String rating;
-    private String ratingCounter;
+    //    private String ratingCounter;
     private String difficulty;
     private String reqTime;
-    private String searched;
-    private String accessed;
+    //    private String searched;
+//    private String accessed;
     private HashMap<String, String> ingredientToQuantity;
+    private LinkedList<String> tags;
 
-    public RecipeVO(String id, String title, String date, String uploader, String description, String pLink, String rating, String ratingCounter, String difficulty, String reqTime, String searched, String accessed) {
+    public RecipeVO(String id, String title, String date, String uploader, String description, String pLink, String rating, String difficulty, String reqTime) {
         this.id = id;
         this.title = title;
         this.date = date;
@@ -40,12 +42,13 @@ public class RecipeVO implements Parcelable {
         this.description = description;
         this.pLink = pLink;
         this.rating = rating;
-        this.ratingCounter = ratingCounter;
+//        this.ratingCounter = ratingCounter;
         this.difficulty = difficulty;
         this.reqTime = reqTime;
-        this.searched = searched;
-        this.accessed = accessed;
-        ingredientToQuantity = new HashMap<String, String>();
+//        this.searched = searched;
+//        this.accessed = accessed;
+        ingredientToQuantity = new HashMap<>();
+        tags = new LinkedList<>();
     }
 
     @SuppressWarnings("unchecked")
@@ -57,12 +60,13 @@ public class RecipeVO implements Parcelable {
         this.description = in.readString();
         this.pLink = in.readString();
         this.rating = in.readString();
-        this.ratingCounter = in.readString();
+//        this.ratingCounter = in.readString();
         this.difficulty = in.readString();
         this.reqTime = in.readString();
-        this.searched = in.readString();
-        this.accessed = in.readString();
-        this.ingredientToQuantity = (HashMap<String, String>) in.readBundle().getSerializable("map");
+//        this.searched = in.readString();
+//        this.accessed = in.readString();
+        this.ingredientToQuantity = (HashMap<String, String>) in.readBundle().getSerializable("ingredients");
+        this.tags = (LinkedList<String>) in.readBundle().getSerializable("tags");
     }
 
     public String getId() {
@@ -93,9 +97,9 @@ public class RecipeVO implements Parcelable {
         return rating;
     }
 
-    public String getRatingCounter() {
-        return ratingCounter;
-    }
+//    public String getRatingCounter() {
+//        return ratingCounter;
+//    }
 
     public String getDifficulty() {
         return difficulty;
@@ -105,20 +109,39 @@ public class RecipeVO implements Parcelable {
         return reqTime;
     }
 
-    public String getSearched() {
-        return searched;
-    }
+//    public String getSearched() {
+//        return searched;
+//    }
 
-    public String getAccessed() {
-        return accessed;
-    }
+//    public String getAccessed() {
+//        return accessed;
+//    }
 
     public HashMap<String, String> getIngredientToQuantity() {
         return ingredientToQuantity;
     }
 
-    public String addIngredient(String key, String value) {
-        return ingredientToQuantity.put(key, value);
+    public LinkedList<String> getTags() {
+        return tags;
+    }
+
+    public String getFirstXTags(int x) {
+        StringBuffer buffer = new StringBuffer();
+
+        for (int i = 0; i < x - 1; i++)
+            buffer.append(tags.get(i)).append(", ");
+
+        buffer.append(tags.get(x - 1));
+
+        return buffer.toString().trim();
+    }
+
+    public void addIngredient(String key, String value) {
+        ingredientToQuantity.put(key, value);
+    }
+
+    public void addTag(String tag) {
+        tags.add(tag);
     }
 
     @Override
@@ -136,13 +159,14 @@ public class RecipeVO implements Parcelable {
         parcel.writeString(description);
         parcel.writeString(pLink);
         parcel.writeString(rating);
-        parcel.writeString(ratingCounter);
+//        parcel.writeString(ratingCounter);
         parcel.writeString(difficulty);
         parcel.writeString(reqTime);
-        parcel.writeString(searched);
-        parcel.writeString(accessed);
+//        parcel.writeString(searched);
+//        parcel.writeString(accessed);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("map", ingredientToQuantity);
+        bundle.putSerializable("ingredients", ingredientToQuantity);
+        bundle.putSerializable("tags", tags);
         parcel.writeBundle(bundle);
     }
 }

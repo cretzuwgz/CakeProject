@@ -31,10 +31,14 @@
             android:label="@string/app_name"
             android:parentActivityName=".activities.LoginActivity"
             android:screenOrientation="portrait">
+            <!--<intent-filter>-->
+            <!--<action android:name="android.intent.action.MAIN" />-->
 
+            <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.teentitans.cakeproject.activities.LoginActivity" />
+                android:value=".activities.LoginActivity" />
         </activity>
 
         <activity
@@ -43,7 +47,7 @@
             android:parentActivityName=".activities.LoginActivity"
             android:screenOrientation="portrait">
 
-        <meta-data
+            <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.teentitans.cakeproject.activities.LoginActivity" />
         </activity>
