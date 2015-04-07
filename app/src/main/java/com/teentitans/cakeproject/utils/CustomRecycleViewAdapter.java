@@ -10,12 +10,14 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.teentitans.cakeproject.R;
+import com.teentitans.cakeproject.activities.MainActivity;
+import com.teentitans.cakeproject.activities.ViewRecipeActivity;
 
 import java.util.ArrayList;
 
 public class CustomRecycleViewAdapter extends RecyclerView.Adapter<CustomRecycleViewAdapter.ViewHolder> {
+    private static Context context;
     private ArrayList<RecipeVO> recipes;
-    private Context context;
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public CustomRecycleViewAdapter(ArrayList<RecipeVO> recipes, Context context) {
@@ -40,13 +42,13 @@ public class CustomRecycleViewAdapter extends RecyclerView.Adapter<CustomRecycle
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         holder.recipeTitle.setText(recipes.get(position).getTitle());
-        holder.lTags.setText(recipes.get(position).getFirstXTags(3));
-        holder.recipeImage.setImageResource(R.drawable.cake_bg);
-        if (recipes.get(position).getpLink() == null)
-            Picasso.with(context).load(R.drawable.cake_bg).into(holder.recipeImage);
-        else
-            Picasso.with(context).load(recipes.get(position).getpLink().replaceAll("\\\\", "")).into(holder.recipeImage);
+        if (recipes.get(position).getTags().size() < 3 && recipes.get(position).getTags().size() != 0)
+            holder.lTags.setText(recipes.get(position).getFirstXTags(recipes.get(position).getTags().size()));
+        else if (recipes.get(position).getTags().size() != 0)
+            holder.lTags.setText(recipes.get(position).getFirstXTags(3));
+        Picasso.with(context).load(recipes.get(position).getpLink().replaceAll("\\\\", "")).placeholder(R.drawable.cake_bg).into(holder.recipeImage);
         holder.recipeRating.setRating(Integer.valueOf(recipes.get(position).getRating()));
+        holder.itemView.setTag(recipes.get(position));
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -58,7 +60,7 @@ public class CustomRecycleViewAdapter extends RecyclerView.Adapter<CustomRecycle
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         // each data item is just a string in this case
         public CustomImageView recipeImage;
         public TextView recipeTitle;
@@ -71,6 +73,13 @@ public class CustomRecycleViewAdapter extends RecyclerView.Adapter<CustomRecycle
             recipeTitle = (TextView) v.findViewById(R.id.recipeTitle);
             lTags = (TextView) v.findViewById(R.id.lTags);
             recipeRating = (RatingBar) v.findViewById(R.id.recipeRating);
+            v.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            ViewRecipeActivity.navigate((MainActivity) context, view.findViewById(R.id.recipeImage), (RecipeVO) view.getTag());
         }
     }
+
 }

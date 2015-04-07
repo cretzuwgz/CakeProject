@@ -6,11 +6,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.teentitans.cakeproject.R;
@@ -40,6 +44,9 @@ public class MainActivity extends ActionBarActivity {
     private ArrayList<RecipeVO> recommendedRecipes;
     private ArrayList<RecipeVO> topRecipes;
     private ArrayList<RecipeVO> recentRecipes;
+    private ActionBarDrawerToggle mDrawerToggle;
+    private DrawerLayout mDrawerLayout;
+    private ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +56,19 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        listView = (ListView) findViewById(R.id.left_drawer);
 
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.app_name, R.string.app_name);
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerToggle.syncState();
+        String[] navigationDrawerItems = new String[7];
+        listView.setAdapter(new ArrayAdapter<>(this, R.layout.item_drawer_list, navigationDrawerItems));
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             toolbar.setTitle(R.string.app_name);
-            toolbar.setNavigationIcon(R.mipmap.ic_launcher);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
         }
 
         // Assigning ViewPager View and setting the adapter
@@ -84,6 +98,7 @@ public class MainActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
 
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
         return true;
     }
 
@@ -91,6 +106,15 @@ public class MainActivity extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mDrawerLayout.isDrawerOpen(Gravity.START | Gravity.LEFT)) {
+            mDrawerLayout.closeDrawers();
+            return;
+        }
+        super.onBackPressed();
     }
 
     private ArrayList<RecipeVO> getRecipesFrom(String response) {
@@ -106,10 +130,10 @@ public class MainActivity extends ActionBarActivity {
             for (int i = 0; i < recipesJson.length(); i++) {
                 JSONObject recipe = recipesJson.getJSONObject(i);
                 RecipeVO recipeVO = new RecipeVO(recipe.getString("id"), recipe.getString("title"), recipe.getString("date"), recipe.getString("uploader"), recipe.getString("description"), recipe.getString("p_link"), recipe.getString("rating"), recipe.getString("difficulty"), recipe.getString("req_time"));
-                recipeVO.addTag("tag1");
-                recipeVO.addTag("tag2");
-                recipeVO.addTag("tag3");
+                for (int j = 0; j < recipe.getJSONArray("tags").length(); j++)
+                    recipeVO.addTag(recipe.getJSONArray("tags").getString(j));
                 recipeList.add(recipeVO);
+
             }
 
         } catch (JSONException e) {
@@ -177,7 +201,6 @@ public class MainActivity extends ActionBarActivity {
             try {
                 switch (args[0]) {
                     case "recommended": {
-                        Log.e("async", "recommended");
                         response = ConnectionUtil.getResponseFromURL(URL_RECOMMENDED);
                         recommendedRecipes = getRecipesFrom(response);
 
@@ -187,7 +210,6 @@ public class MainActivity extends ActionBarActivity {
                             return response;
                     }
                     case "top": {
-                        Log.e("async", "top");
                         response = ConnectionUtil.getResponseFromURL(URL_TOP);
                         topRecipes = getRecipesFrom(response);
 
@@ -197,7 +219,6 @@ public class MainActivity extends ActionBarActivity {
                             return response;
                     }
                     case "recent": {
-                        Log.e("async", "recent");
                         response = ConnectionUtil.getResponseFromURL(URL_RECENT);
                         recentRecipes = getRecipesFrom(response);
 
@@ -224,7 +245,6 @@ public class MainActivity extends ActionBarActivity {
             // Setting the ViewPager For the SlidingTabsLayout
             tabs.setViewPager(pager);
             if (result != null) {
-                Log.e("result", result);
                 if (result.equals("Connection failed"))
                     Toast.makeText(MainActivity.this, result, Toast.LENGTH_SHORT).show();
             } else

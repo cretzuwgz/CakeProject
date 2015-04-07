@@ -4,8 +4,8 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 
 public class RecipeVO implements Parcelable {
 
@@ -32,7 +32,7 @@ public class RecipeVO implements Parcelable {
     //    private String searched;
 //    private String accessed;
     private HashMap<String, String> ingredientToQuantity;
-    private LinkedList<String> tags;
+    private ArrayList<String> tags;
 
     public RecipeVO(String id, String title, String date, String uploader, String description, String pLink, String rating, String difficulty, String reqTime) {
         this.id = id;
@@ -48,7 +48,7 @@ public class RecipeVO implements Parcelable {
 //        this.searched = searched;
 //        this.accessed = accessed;
         ingredientToQuantity = new HashMap<>();
-        tags = new LinkedList<>();
+        tags = new ArrayList<>();
     }
 
     @SuppressWarnings("unchecked")
@@ -65,8 +65,9 @@ public class RecipeVO implements Parcelable {
         this.reqTime = in.readString();
 //        this.searched = in.readString();
 //        this.accessed = in.readString();
-        this.ingredientToQuantity = (HashMap<String, String>) in.readBundle().getSerializable("ingredients");
-        this.tags = (LinkedList<String>) in.readBundle().getSerializable("tags");
+        Bundle b = in.readBundle();
+        this.ingredientToQuantity = (HashMap<String, String>) b.getSerializable("ingredients");
+        this.tags = (ArrayList<String>) b.getSerializable("tags");
     }
 
     public String getId() {
@@ -121,7 +122,7 @@ public class RecipeVO implements Parcelable {
         return ingredientToQuantity;
     }
 
-    public LinkedList<String> getTags() {
+    public ArrayList<String> getTags() {
         return tags;
     }
 

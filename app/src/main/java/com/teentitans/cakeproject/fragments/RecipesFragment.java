@@ -1,6 +1,5 @@
 package com.teentitans.cakeproject.fragments;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -26,7 +25,7 @@ public class RecipesFragment extends Fragment implements ObservableScrollViewCal
     public static final String ARG_RECIPES = "recipes";
     ArrayList<RecipeVO> recipes;
     private ObservableRecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private CustomRecycleViewAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private String title;
 
@@ -53,18 +52,15 @@ public class RecipesFragment extends Fragment implements ObservableScrollViewCal
         View v = inflater.inflate(R.layout.fragment_recipes, container, false);
 
         mRecyclerView = (ObservableRecyclerView) v.findViewById(R.id.recycler);
-
-        mRecyclerView.setScrollViewCallbacks(this);
-
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
 
-        Activity parentActivity = getActivity();
-        mRecyclerView.setTouchInterceptionViewGroup((ViewGroup) parentActivity.findViewById(R.id.container));
-        if (parentActivity instanceof ObservableScrollViewCallbacks) {
-            mRecyclerView.setScrollViewCallbacks((ObservableScrollViewCallbacks) parentActivity);
-        }
+//        mRecyclerView.setScrollViewCallbacks(this);
+//        Activity parentActivity = getActivity();
+//        mRecyclerView.setTouchInterceptionViewGroup((ViewGroup) parentActivity.findViewById(R.id.container));
+
+//        if (parentActivity instanceof ObservableScrollViewCallbacks) {
+//            mRecyclerView.setScrollViewCallbacks((ObservableScrollViewCallbacks) parentActivity);
+//        }
 
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(getActivity());
@@ -107,5 +103,6 @@ public class RecipesFragment extends Fragment implements ObservableScrollViewCal
             }
         }
     }
+
 }
 
