@@ -1,5 +1,6 @@
 package com.teentitans.cakeproject.fragments;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -54,13 +55,13 @@ public class RecipesFragment extends Fragment implements ObservableScrollViewCal
         mRecyclerView = (ObservableRecyclerView) v.findViewById(R.id.recycler);
         mRecyclerView.setHasFixedSize(true);
 
-//        mRecyclerView.setScrollViewCallbacks(this);
-//        Activity parentActivity = getActivity();
-//        mRecyclerView.setTouchInterceptionViewGroup((ViewGroup) parentActivity.findViewById(R.id.container));
+        mRecyclerView.setScrollViewCallbacks(this);
+        Activity parentActivity = getActivity();
+        mRecyclerView.setTouchInterceptionViewGroup((ViewGroup) parentActivity.findViewById(R.id.container));
 
-//        if (parentActivity instanceof ObservableScrollViewCallbacks) {
-//            mRecyclerView.setScrollViewCallbacks((ObservableScrollViewCallbacks) parentActivity);
-//        }
+        if (parentActivity instanceof ObservableScrollViewCallbacks) {
+            mRecyclerView.setScrollViewCallbacks((ObservableScrollViewCallbacks) parentActivity);
+        }
 
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(getActivity());

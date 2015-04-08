@@ -46,7 +46,7 @@ public class CustomRecycleViewAdapter extends RecyclerView.Adapter<CustomRecycle
             holder.lTags.setText(recipes.get(position).getFirstXTags(recipes.get(position).getTags().size()));
         else if (recipes.get(position).getTags().size() != 0)
             holder.lTags.setText(recipes.get(position).getFirstXTags(3));
-        Picasso.with(context).load(recipes.get(position).getpLink().replaceAll("\\\\", "")).placeholder(R.drawable.cake_bg).into(holder.recipeImage);
+        Picasso.with(context).load(recipes.get(position).getpLink().replaceAll("\\\\", "")).placeholder(R.drawable.img_placeholder).into(holder.recipeImage);
         holder.recipeRating.setRating(Integer.valueOf(recipes.get(position).getRating()));
         holder.itemView.setTag(recipes.get(position));
     }

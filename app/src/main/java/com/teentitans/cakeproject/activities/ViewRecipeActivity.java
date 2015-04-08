@@ -92,7 +92,7 @@ public class ViewRecipeActivity extends ActionBarActivity implements ObservableS
 
         final ImageView image = (ImageView) mImageView;
         ViewCompat.setTransitionName(image, "image");
-        Picasso.with(this).load(recipe.getpLink()).placeholder(R.drawable.cake_bg).into(image);
+        Picasso.with(this).load(recipe.getpLink()).placeholder(R.drawable.img_placeholder).into(image);
 
         mImageView = findViewById(R.id.image);
         mOverlayView = findViewById(R.id.overlay);
