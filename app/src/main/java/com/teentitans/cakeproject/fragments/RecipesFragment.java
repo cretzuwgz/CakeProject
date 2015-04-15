@@ -70,7 +70,7 @@ public class RecipesFragment extends Fragment implements ObservableScrollViewCal
         // specify an adapter (see also next example)
         if (title.equals("Search")) {
             //TODO search here (recipes = result)
-            recipes = null;
+            //recipes = null;
         }
         if (recipes != null) {
             mAdapter = new CustomRecycleViewAdapter(recipes, getActivity());

@@ -171,7 +171,7 @@ public class MainActivity extends ActionBarActivity {
                     return RecipesFragment.create(getPageTitle(position).toString(), topRecipes);
                 }
                 case 3: {
-                    return RecipesFragment.create(getPageTitle(position).toString(), null);
+                    return RecipesFragment.create(getPageTitle(position).toString(), new ArrayList<RecipeVO>());
                 }
             }
             return null;
@@ -238,17 +238,20 @@ public class MainActivity extends ActionBarActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            // Creating The ViewPagerAdapter and Passing Fragment Manager, Titles fot the Tabs and Number Of Tabs.
-            adapter = new ViewPagerAdapter(getSupportFragmentManager(), Titles, noOfTabs);
-            pager.setAdapter(adapter);
-
             // Setting the ViewPager For the SlidingTabsLayout
             tabs.setViewPager(pager);
             if (result != null) {
-                if (result.equals("Connection failed"))
+                if (result.equals("Connection failed")) {
                     Toast.makeText(MainActivity.this, result, Toast.LENGTH_SHORT).show();
-            } else
+                    return;
+                }
+            } else {
                 Toast.makeText(MainActivity.this, R.string.error_message, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            // Creating The ViewPagerAdapter and Passing Fragment Manager, Titles fot the Tabs and Number Of Tabs.
+            adapter = new ViewPagerAdapter(getSupportFragmentManager(), Titles, noOfTabs);
+            pager.setAdapter(adapter);
         }
     }
 }
