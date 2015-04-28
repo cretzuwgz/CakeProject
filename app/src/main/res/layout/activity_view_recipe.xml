@@ -76,7 +76,6 @@
             android:gravity="center_vertical"
             android:maxLines="1"
             android:minHeight="?attr/actionBarSize"
-            android:paddingLeft="40dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@android:color/white" />
 
@@ -91,5 +90,6 @@
         android:scaleType="center"
         android:src="@drawable/ic_favorite"
         app:fab_colorNormal="@color/accent"
+        app:fab_colorPressed="@color/primary_dark"
         app:fab_colorRipple="@color/primary_dark" />
 </FrameLayout>

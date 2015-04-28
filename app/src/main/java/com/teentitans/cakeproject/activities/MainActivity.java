@@ -39,8 +39,8 @@ public class MainActivity extends ActionBarActivity {
     private ViewPager pager;
     private ViewPagerAdapter adapter;
     private SlidingTabLayout tabs;
-    private CharSequence Titles[] = {"Recommended", "Recent", "Top", "Search"};
-    private int noOfTabs = 4;
+    private CharSequence Titles[] = {"Recommended", "Recent", "Top"};
+    private int noOfTabs = 3;
     private ArrayList<RecipeVO> recommendedRecipes;
     private ArrayList<RecipeVO> topRecipes;
     private ArrayList<RecipeVO> recentRecipes;
@@ -78,7 +78,7 @@ public class MainActivity extends ActionBarActivity {
 
         // Assiging the Sliding Tab Layout View
         tabs = (SlidingTabLayout) findViewById(R.id.tabs);
-        tabs.setDistributeEvenly(true); // To make the Tabs Fixed set this true, This makes the tabs Space Evenly in Available width
+//        tabs.setDistributeEvenly(true); // To make the Tabs Fixed set this true, This makes the tabs Space Evenly in Available width
 
         // Setting Custom Color for the Scroll bar indicator of the Tab View
         tabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
@@ -105,16 +105,16 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        return super.onOptionsItemSelected(item);
-    }
+        if (item.getItemId() == android.R.id.home)
+            if (mDrawerLayout.isDrawerOpen(Gravity.START | Gravity.LEFT)) {
+                mDrawerLayout.closeDrawers();
+                return true;
+            } else {
+                mDrawerLayout.openDrawer(Gravity.START | Gravity.LEFT);
+                return true;
+            }
 
-    @Override
-    public void onBackPressed() {
-        if (mDrawerLayout.isDrawerOpen(Gravity.START | Gravity.LEFT)) {
-            mDrawerLayout.closeDrawers();
-            return;
-        }
-        super.onBackPressed();
+        return super.onOptionsItemSelected(item);
     }
 
     private ArrayList<RecipeVO> getRecipesFrom(String response) {
@@ -140,6 +140,16 @@ public class MainActivity extends ActionBarActivity {
             return null;
         }
         return recipeList;
+    }
+
+    public void setAdapter() {
+        if (recommendedRecipes != null && recentRecipes != null && topRecipes != null) {
+            // Creating The ViewPagerAdapter and Passing Fragment Manager, Titles fot the Tabs and Number Of Tabs.
+            adapter = new ViewPagerAdapter(getSupportFragmentManager(), Titles, noOfTabs);
+            pager.setAdapter(adapter);
+            // Setting the ViewPager For the SlidingTabsLayout
+            tabs.setViewPager(pager);
+        }
     }
 
     public class ViewPagerAdapter extends FragmentStatePagerAdapter {
@@ -169,9 +179,6 @@ public class MainActivity extends ActionBarActivity {
                 }
                 case 2: {
                     return RecipesFragment.create(getPageTitle(position).toString(), topRecipes);
-                }
-                case 3: {
-                    return RecipesFragment.create(getPageTitle(position).toString(), new ArrayList<RecipeVO>());
                 }
             }
             return null;
@@ -238,20 +245,16 @@ public class MainActivity extends ActionBarActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            // Setting the ViewPager For the SlidingTabsLayout
-            tabs.setViewPager(pager);
             if (result != null) {
                 if (result.equals("Connection failed")) {
                     Toast.makeText(MainActivity.this, result, Toast.LENGTH_SHORT).show();
-                    return;
+                } else {
+                    setAdapter();
                 }
             } else {
                 Toast.makeText(MainActivity.this, R.string.error_message, Toast.LENGTH_SHORT).show();
-                return;
             }
-            // Creating The ViewPagerAdapter and Passing Fragment Manager, Titles fot the Tabs and Number Of Tabs.
-            adapter = new ViewPagerAdapter(getSupportFragmentManager(), Titles, noOfTabs);
-            pager.setAdapter(adapter);
+
         }
     }
 }

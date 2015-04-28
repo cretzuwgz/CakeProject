@@ -1,6 +1,6 @@
 package com.teentitans.cakeproject.utils;
 
-import android.content.Context;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,19 +10,18 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.teentitans.cakeproject.R;
-import com.teentitans.cakeproject.activities.MainActivity;
 import com.teentitans.cakeproject.activities.ViewRecipeActivity;
 
 import java.util.ArrayList;
 
 public class CustomRecycleViewAdapter extends RecyclerView.Adapter<CustomRecycleViewAdapter.ViewHolder> {
-    private static Context context;
+    private ActionBarActivity parentActivity;
     private ArrayList<RecipeVO> recipes;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public CustomRecycleViewAdapter(ArrayList<RecipeVO> recipes, Context context) {
+    public CustomRecycleViewAdapter(ArrayList<RecipeVO> recipes, ActionBarActivity parent) {
         this.recipes = recipes;
-        this.context = context;
+        this.parentActivity = parent;
     }
 
     // Create new views (invoked by the layout manager)
@@ -33,7 +32,7 @@ public class CustomRecycleViewAdapter extends RecyclerView.Adapter<CustomRecycle
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_recipe_list, parent, false);
         // set the view's size, margins, paddings and layout parameters
-        return new ViewHolder(v);
+        return new ViewHolder(v, parentActivity);
     }
 
     // Replace the contents of a view (invoked by the layout manager)
@@ -46,7 +45,7 @@ public class CustomRecycleViewAdapter extends RecyclerView.Adapter<CustomRecycle
             holder.lTags.setText(recipes.get(position).getFirstXTags(recipes.get(position).getTags().size()));
         else if (recipes.get(position).getTags().size() != 0)
             holder.lTags.setText(recipes.get(position).getFirstXTags(3));
-        Picasso.with(context).load(recipes.get(position).getpLink().replaceAll("\\\\", "")).placeholder(R.drawable.img_placeholder).into(holder.recipeImage);
+        Picasso.with(parentActivity).load(recipes.get(position).getpLink().replaceAll("\\\\", "")).placeholder(R.drawable.img_placeholder).into(holder.recipeImage);
         holder.recipeRating.setRating(Integer.valueOf(recipes.get(position).getRating()));
         holder.itemView.setTag(recipes.get(position));
     }
@@ -66,19 +65,21 @@ public class CustomRecycleViewAdapter extends RecyclerView.Adapter<CustomRecycle
         public TextView recipeTitle;
         public TextView lTags;
         public RatingBar recipeRating;
+        public ActionBarActivity parent;
 
-        public ViewHolder(View v) {
+        public ViewHolder(View v, ActionBarActivity parent) {
             super(v);
             recipeImage = (CustomImageView) v.findViewById(R.id.recipeImage);
             recipeTitle = (TextView) v.findViewById(R.id.recipeTitle);
             lTags = (TextView) v.findViewById(R.id.lTags);
             recipeRating = (RatingBar) v.findViewById(R.id.recipeRating);
+            this.parent = parent;
             v.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-            ViewRecipeActivity.navigate((MainActivity) context, view.findViewById(R.id.recipeImage), (RecipeVO) view.getTag());
+            ViewRecipeActivity.navigate(parent, view.findViewById(R.id.recipeImage), (RecipeVO) view.getTag());
         }
     }
 

@@ -77,17 +77,26 @@ public class ViewRecipeActivity extends ActionBarActivity implements ObservableS
         initActivityTransitions();
         ActivityCompat.postponeEnterTransition(this);
         setContentView(R.layout.activity_view_recipe);
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+
+        mToolbar = findViewById(R.id.toolbar);
+        mToolbar.setBackgroundColor(Color.TRANSPARENT);
+
+        setSupportActionBar((Toolbar) mToolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        ((Toolbar) mToolbar).setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
         mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
         mFlexibleSpaceShowFabOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_show_fab_offset);
         mActionBarSize = getActionBarSize();
         mToolbarColor = getResources().getColor(R.color.primary);
 
-        mToolbar = findViewById(R.id.toolbar);
-        mToolbar.setBackgroundColor(Color.TRANSPARENT);
         mImageView = findViewById(R.id.image);
 
         final ImageView image = (ImageView) mImageView;
@@ -123,9 +132,10 @@ public class ViewRecipeActivity extends ActionBarActivity implements ObservableS
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
-        }
+//        if (item.getItemId() == android.R.id.home) {
+//            NavUtils.navigateUpFromSameTask(this);
+//            return true;
+//        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -159,10 +169,14 @@ public class ViewRecipeActivity extends ActionBarActivity implements ObservableS
 
         // Translate title text
         int maxTitleTranslationY = (int) (mFlexibleSpaceImageHeight - mTitleView.getHeight() * scale);
+        int titleTranslationX = scrollY + 5;
         int titleTranslationY = maxTitleTranslationY - scrollY;
+
         if (TOOLBAR_IS_STICKY) {
+            titleTranslationX = Math.min(mTitleView.getHeight(), titleTranslationX);
             titleTranslationY = Math.max(0, titleTranslationY);
         }
+        ViewHelper.setTranslationX(mTitleView, titleTranslationX);
         ViewHelper.setTranslationY(mTitleView, titleTranslationY);
         ViewHelper.setTranslationY(mTextOverlayView, titleTranslationY);
 
