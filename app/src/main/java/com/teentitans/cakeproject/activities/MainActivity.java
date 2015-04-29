@@ -3,6 +3,7 @@ package com.teentitans.cakeproject.activities;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,7 +15,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -37,14 +37,16 @@ public class MainActivity extends ActionBarActivity {
     public static String URL_RECOMMENDED = "http://cakeproject.whostf.com/php/get_recommended.php";
     public static String URL_TOP = "http://cakeproject.whostf.com/php/get_top5.php";
     public static String URL_RECENT = "http://cakeproject.whostf.com/php/get_recent.php";
+    private static ArrayList<RecipeVO> recommendedRecipes;
+    private static ArrayList<RecipeVO> topRecipes;
+    private static ArrayList<RecipeVO> recentRecipes;
     private ViewPager pager;
     private SlidingTabLayout tabs;
     private CharSequence Titles[] = {"Recommended", "Recent", "Top"};
-    private ArrayList<RecipeVO> recommendedRecipes;
-    private ArrayList<RecipeVO> topRecipes;
-    private ArrayList<RecipeVO> recentRecipes;
     private DrawerLayout mDrawerLayout;
     private ProgressDialog progress;
+    private ActionBarDrawerToggle mDrawerToggle;
+    private boolean logout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,13 +54,12 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-        progress = new ProgressDialog(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         ListView listView = (ListView) findViewById(R.id.left_drawer);
 
-        ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.app_name, R.string.app_name);
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.app_name, R.string.app_name);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
 
@@ -70,7 +71,9 @@ public class MainActivity extends ActionBarActivity {
         navigationDrawerItems.add("NOT AVAILABLE IN BETA");
         navigationDrawerItems.add("NOT AVAILABLE IN BETA");
         navigationDrawerItems.add("NOT AVAILABLE IN BETA");
+
         listView.setAdapter(new ArrayAdapter<>(this, R.layout.item_drawer_list, navigationDrawerItems));
+
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             toolbar.setTitle(R.string.app_name);
@@ -85,7 +88,6 @@ public class MainActivity extends ActionBarActivity {
 
         // Assiging the Sliding Tab Layout View
         tabs = (SlidingTabLayout) findViewById(R.id.tabs);
-//        tabs.setDistributeEvenly(true); // To make the Tabs Fixed set this true, This makes the tabs Space Evenly in Available width
 
         // Setting Custom Color for the Scroll bar indicator of the Tab View
         tabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
@@ -94,15 +96,17 @@ public class MainActivity extends ActionBarActivity {
                 return getResources().getColor(R.color.primary_text);
             }
         });
-        progress.setMessage("Loading...");
-        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progress.setIndeterminate(true);
-        progress.show();
+        progress = new ProgressDialog(this);
+        if (recentRecipes == null || recommendedRecipes == null || topRecipes == null) {
+            progress.setMessage("Loading...");
+            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progress.setIndeterminate(true);
+            progress.show();
 
-        new GetRecipesTask("recommended").execute();
-        new GetRecipesTask("top").execute();
-        new GetRecipesTask("recent").execute();
-
+            new GetRecipesTask("recommended").execute();
+            new GetRecipesTask("top").execute();
+            new GetRecipesTask("recent").execute();
+        } else setAdapter();
     }
 
     @Override
@@ -113,10 +117,28 @@ public class MainActivity extends ActionBarActivity {
         // Associate searchable configuration with the SearchView
         SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView =
+        final SearchView searchView =
                 (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName()));
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                searchView.setQuery("", false);
+                searchView.setIconified(true);
+                Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                intent.setAction(Intent.ACTION_SEARCH);
+                intent.putExtra(SearchManager.QUERY, s);
+                startActivity(intent);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
 
         return true;
     }
@@ -124,16 +146,9 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if (item.getItemId() == android.R.id.home)
-            if (mDrawerLayout.isDrawerOpen(Gravity.START | Gravity.LEFT)) {
-                mDrawerLayout.closeDrawers();
-                return true;
-            } else {
-                mDrawerLayout.openDrawer(Gravity.START | Gravity.LEFT);
-                return true;
-            }
+        return mDrawerToggle.onOptionsItemSelected(item);
 
-        return super.onOptionsItemSelected(item);
+//        return super.onOptionsItemSelected(item);
     }
 
     public void setAdapter() {
@@ -144,7 +159,7 @@ public class MainActivity extends ActionBarActivity {
             pager.setAdapter(adapter);
             // Setting the ViewPager For the SlidingTabsLayout
             tabs.setViewPager(pager);
-            progress.hide();
+            progress.dismiss();
         }
     }
 

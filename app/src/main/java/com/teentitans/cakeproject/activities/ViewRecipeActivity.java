@@ -12,7 +12,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.Slide;
 import android.util.TypedValue;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -160,7 +159,7 @@ public class ViewRecipeActivity extends ActionBarActivity implements ObservableS
 
         // Translate title text
         int maxTitleTranslationY = (int) (mFlexibleSpaceImageHeight - mTitleView.getHeight() * scale);
-        int titleTranslationX = scrollY/3;
+        int titleTranslationX = scrollY / 3;
         int titleTranslationY = maxTitleTranslationY - scrollY;
 
         if (TOOLBAR_IS_STICKY) {
