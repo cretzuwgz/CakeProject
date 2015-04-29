@@ -1,5 +1,8 @@
 package com.teentitans.cakeproject.activities;
 
+import android.app.ProgressDialog;
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,6 +12,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
@@ -21,12 +25,9 @@ import com.teentitans.cakeproject.R;
 import com.teentitans.cakeproject.fragments.RecipesFragment;
 import com.teentitans.cakeproject.utils.ConnectionUtil;
 import com.teentitans.cakeproject.utils.RecipeVO;
+import com.teentitans.cakeproject.utils.RecipesUtil;
 import com.teentitans.cakeproject.utils.SlidingTabLayout;
 import com.teentitans.cakeproject.utils.ZoomOutPageTransformer;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,16 +38,13 @@ public class MainActivity extends ActionBarActivity {
     public static String URL_TOP = "http://cakeproject.whostf.com/php/get_top5.php";
     public static String URL_RECENT = "http://cakeproject.whostf.com/php/get_recent.php";
     private ViewPager pager;
-    private ViewPagerAdapter adapter;
     private SlidingTabLayout tabs;
     private CharSequence Titles[] = {"Recommended", "Recent", "Top"};
-    private int noOfTabs = 3;
     private ArrayList<RecipeVO> recommendedRecipes;
     private ArrayList<RecipeVO> topRecipes;
     private ArrayList<RecipeVO> recentRecipes;
-    private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
-    private ListView listView;
+    private ProgressDialog progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,15 +52,24 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+        progress = new ProgressDialog(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        listView = (ListView) findViewById(R.id.left_drawer);
+        ListView listView = (ListView) findViewById(R.id.left_drawer);
 
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.app_name, R.string.app_name);
+        ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.app_name, R.string.app_name);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
-        String[] navigationDrawerItems = new String[7];
+
+        ArrayList<String> navigationDrawerItems = new ArrayList<>();
+        navigationDrawerItems.add("NOT AVAILABLE IN BETA");
+        navigationDrawerItems.add("NOT AVAILABLE IN BETA");
+        navigationDrawerItems.add("NOT AVAILABLE IN BETA");
+        navigationDrawerItems.add("NOT AVAILABLE IN BETA");
+        navigationDrawerItems.add("NOT AVAILABLE IN BETA");
+        navigationDrawerItems.add("NOT AVAILABLE IN BETA");
+        navigationDrawerItems.add("NOT AVAILABLE IN BETA");
         listView.setAdapter(new ArrayAdapter<>(this, R.layout.item_drawer_list, navigationDrawerItems));
         if (toolbar != null) {
             setSupportActionBar(toolbar);
@@ -87,10 +94,14 @@ public class MainActivity extends ActionBarActivity {
                 return getResources().getColor(R.color.primary_text);
             }
         });
+        progress.setMessage("Loading...");
+        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progress.setIndeterminate(true);
+        progress.show();
 
-        new GetRecipesTask().execute("recommended");
-        new GetRecipesTask().execute("top");
-        new GetRecipesTask().execute("recent");
+        new GetRecipesTask("recommended").execute();
+        new GetRecipesTask("top").execute();
+        new GetRecipesTask("recent").execute();
 
     }
 
@@ -98,6 +109,14 @@ public class MainActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
 
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        // Associate searchable configuration with the SearchView
+        SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView =
+                (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));
 
         return true;
     }
@@ -117,38 +136,15 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private ArrayList<RecipeVO> getRecipesFrom(String response) {
-        JSONArray recipesJson;
-        ArrayList<RecipeVO> recipeList = new ArrayList<>();
-
-        try {
-            recipesJson = new JSONObject(response).getJSONArray("recipes");
-        } catch (JSONException e) {
-            return null;
-        }
-        try {
-            for (int i = 0; i < recipesJson.length(); i++) {
-                JSONObject recipe = recipesJson.getJSONObject(i);
-                RecipeVO recipeVO = new RecipeVO(recipe.getString("id"), recipe.getString("title"), recipe.getString("date"), recipe.getString("uploader"), recipe.getString("description"), recipe.getString("p_link"), recipe.getString("rating"), recipe.getString("difficulty"), recipe.getString("req_time"));
-                for (int j = 0; j < recipe.getJSONArray("tags").length(); j++)
-                    recipeVO.addTag(recipe.getJSONArray("tags").getString(j));
-                recipeList.add(recipeVO);
-
-            }
-
-        } catch (JSONException e) {
-            return null;
-        }
-        return recipeList;
-    }
-
     public void setAdapter() {
         if (recommendedRecipes != null && recentRecipes != null && topRecipes != null) {
             // Creating The ViewPagerAdapter and Passing Fragment Manager, Titles fot the Tabs and Number Of Tabs.
-            adapter = new ViewPagerAdapter(getSupportFragmentManager(), Titles, noOfTabs);
+            int noOfTabs = 3;
+            ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager(), Titles, noOfTabs);
             pager.setAdapter(adapter);
             // Setting the ViewPager For the SlidingTabsLayout
             tabs.setViewPager(pager);
+            progress.hide();
         }
     }
 
@@ -201,15 +197,21 @@ public class MainActivity extends ActionBarActivity {
 
     private class GetRecipesTask extends AsyncTask<String, String, String> {
 
+        String param;
+
+        public GetRecipesTask(String parameter) {
+            param = parameter;
+        }
+
         protected String doInBackground(String... args) {
 
             String response;
 
             try {
-                switch (args[0]) {
+                switch (param) {
                     case "recommended": {
                         response = ConnectionUtil.getResponseFromURL(URL_RECOMMENDED);
-                        recommendedRecipes = getRecipesFrom(response);
+                        recommendedRecipes = RecipesUtil.getRecipesFrom(response);
 
                         if (response == null)
                             return "Connection failed";
@@ -218,7 +220,7 @@ public class MainActivity extends ActionBarActivity {
                     }
                     case "top": {
                         response = ConnectionUtil.getResponseFromURL(URL_TOP);
-                        topRecipes = getRecipesFrom(response);
+                        topRecipes = RecipesUtil.getRecipesFrom(response);
 
                         if (response == null)
                             return "Connection failed";
@@ -227,7 +229,7 @@ public class MainActivity extends ActionBarActivity {
                     }
                     case "recent": {
                         response = ConnectionUtil.getResponseFromURL(URL_RECENT);
-                        recentRecipes = getRecipesFrom(response);
+                        recentRecipes = RecipesUtil.getRecipesFrom(response);
 
                         if (response == null)
                             return "Connection failed";

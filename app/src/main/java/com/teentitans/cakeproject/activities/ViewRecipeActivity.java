@@ -130,15 +130,6 @@ public class ViewRecipeActivity extends ActionBarActivity implements ObservableS
         });
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-//        if (item.getItemId() == android.R.id.home) {
-//            NavUtils.navigateUpFromSameTask(this);
-//            return true;
-//        }
-        return super.onOptionsItemSelected(item);
-    }
-
     private void initActivityTransitions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Slide transition = new Slide();
@@ -169,7 +160,7 @@ public class ViewRecipeActivity extends ActionBarActivity implements ObservableS
 
         // Translate title text
         int maxTitleTranslationY = (int) (mFlexibleSpaceImageHeight - mTitleView.getHeight() * scale);
-        int titleTranslationX = scrollY + 5;
+        int titleTranslationX = scrollY/3;
         int titleTranslationY = maxTitleTranslationY - scrollY;
 
         if (TOOLBAR_IS_STICKY) {
