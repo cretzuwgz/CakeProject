@@ -52,7 +52,6 @@ public class ConnectionUtil {
         request.flush();
         request.close();
 
-
         InputStream isr = new BufferedInputStream(connection.getInputStream());
         byte[] bytes = new byte[10000];
         ByteArrayOutputStream baos = new ByteArrayOutputStream(10000);

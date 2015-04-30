@@ -15,6 +15,7 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,7 +38,6 @@ public class ViewRecipeActivity extends ActionBarActivity implements ObservableS
     private View mImageView;
     private View mOverlayView;
     private View mTextOverlayView;
-    private ObservableScrollView mScrollView;
     private TextView mTitleView;
     private View mFab;
     private int mActionBarSize;
@@ -84,7 +84,11 @@ public class ViewRecipeActivity extends ActionBarActivity implements ObservableS
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        ((Toolbar) mToolbar).setNavigationOnClickListener(new View.OnClickListener() {
+        RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar);
+
+        ratingBar.setRating(Float.valueOf(recipe.getRating()));
+
+                ((Toolbar) mToolbar).setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
@@ -105,7 +109,8 @@ public class ViewRecipeActivity extends ActionBarActivity implements ObservableS
         mImageView = findViewById(R.id.image);
         mOverlayView = findViewById(R.id.overlay);
         mTextOverlayView = findViewById(R.id.overlay_text);
-        mScrollView = (ObservableScrollView) findViewById(R.id.scroll);
+
+        ObservableScrollView mScrollView = (ObservableScrollView) findViewById(R.id.scroll);
         mScrollView.setScrollViewCallbacks(this);
         mTitleView = (TextView) findViewById(R.id.title);
         mTitleView.setText(recipe.getTitle());

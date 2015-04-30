@@ -43,10 +43,8 @@ public class MainActivity extends ActionBarActivity {
     private ViewPager pager;
     private SlidingTabLayout tabs;
     private CharSequence Titles[] = {"Recommended", "Recent", "Top"};
-    private DrawerLayout mDrawerLayout;
     private ProgressDialog progress;
     private ActionBarDrawerToggle mDrawerToggle;
-    private boolean logout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +54,8 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         ListView listView = (ListView) findViewById(R.id.left_drawer);
 
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.app_name, R.string.app_name);
@@ -86,7 +85,7 @@ public class MainActivity extends ActionBarActivity {
 
         pager.setPageTransformer(true, new ZoomOutPageTransformer());
 
-        // Assiging the Sliding Tab Layout View
+        // Assigning the Sliding Tab Layout View
         tabs = (SlidingTabLayout) findViewById(R.id.tabs);
 
         // Setting Custom Color for the Scroll bar indicator of the Tab View
@@ -97,16 +96,19 @@ public class MainActivity extends ActionBarActivity {
             }
         });
         progress = new ProgressDialog(this);
+
         if (recentRecipes == null || recommendedRecipes == null || topRecipes == null) {
             progress.setMessage("Loading...");
             progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             progress.setIndeterminate(true);
             progress.show();
 
-            new GetRecipesTask("recommended").execute();
-            new GetRecipesTask("top").execute();
-            new GetRecipesTask("recent").execute();
-        } else setAdapter();
+            new GetRecipesTask().execute("recommended");
+            new GetRecipesTask().execute("top");
+            new GetRecipesTask().execute("recent");
+        }
+
+        else setAdapter();
     }
 
     @Override
@@ -210,20 +212,14 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-    private class GetRecipesTask extends AsyncTask<String, String, String> {
-
-        String param;
-
-        public GetRecipesTask(String parameter) {
-            param = parameter;
-        }
+    private class GetRecipesTask extends AsyncTask<String, Void, String> {
 
         protected String doInBackground(String... args) {
 
             String response;
 
             try {
-                switch (param) {
+                switch (args[0]) {
                     case "recommended": {
                         response = ConnectionUtil.getResponseFromURL(URL_RECOMMENDED);
                         recommendedRecipes = RecipesUtil.getRecipesFrom(response);
