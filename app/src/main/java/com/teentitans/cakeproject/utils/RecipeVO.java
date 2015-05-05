@@ -57,7 +57,7 @@ public class RecipeVO implements Parcelable {
         this.reqTime = in.readString();
         Bundle b = in.readBundle();
         //TODO fix this!!!
-        this.ingredients = ((ArrayList<IngredientVO>) b.getSerializable("ingredients"));
+        this.ingredients = (ArrayList<IngredientVO>) b.getSerializable("ingredients");
         this.tags = (ArrayList<String>) b.getSerializable("tags");
     }
 

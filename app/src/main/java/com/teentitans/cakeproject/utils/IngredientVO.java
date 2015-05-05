@@ -1,19 +1,18 @@
 package com.teentitans.cakeproject.utils;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import java.io.Serializable;
 
-public class IngredientVO implements Parcelable {
+public class IngredientVO implements Serializable {
 
-    public static final Parcelable.Creator<IngredientVO> CREATOR = new Parcelable.Creator<IngredientVO>() {
-        public IngredientVO createFromParcel(Parcel in) {
-            return new IngredientVO(in);
-        }
-
-        public IngredientVO[] newArray(int size) {
-            return new IngredientVO[size];
-        }
-    };
+//    public static final Parcelable.Creator<IngredientVO> CREATOR = new Parcelable.Creator<IngredientVO>() {
+//        public IngredientVO createFromParcel(Parcel in) {
+//            return new IngredientVO(in);
+//        }
+//
+//        public IngredientVO[] newArray(int size) {
+//            return new IngredientVO[size];
+//        }
+//    };
 
     private String name;
     private String quantity;
@@ -25,11 +24,11 @@ public class IngredientVO implements Parcelable {
         this.measurement = measurement;
     }
 
-    public IngredientVO(Parcel in) {
-        this.name = in.readString();
-        this.quantity = in.readString();
-        this.measurement = in.readString();
-    }
+//    public IngredientVO(Parcel in) {
+//        this.name = in.readString();
+//        this.quantity = in.readString();
+//        this.measurement = in.readString();
+//    }
 
     public String getName() {
         return name;
@@ -43,17 +42,17 @@ public class IngredientVO implements Parcelable {
         return measurement;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-
-        dest.writeString(name);
-        dest.writeString(quantity);
-        dest.writeString(measurement);
-
-    }
+//    @Override
+//    public int describeContents() {
+//        return 0;
+//    }
+//
+//    @Override
+//    public void writeToParcel(Parcel dest, int flags) {
+//
+//        dest.writeString(name);
+//        dest.writeString(quantity);
+//        dest.writeString(measurement);
+//
+//    }
 }
