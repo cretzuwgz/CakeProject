@@ -21,7 +21,7 @@ public class RecipesFragment extends Fragment {
 
     public static final String ARG_TITLE = "title";
     public static final String ARG_RECIPES = "recipes";
-    ArrayList<RecipeVO> recipes;
+    private ArrayList<RecipeVO> recipes;
     private String title;
 
     public static RecipesFragment create(String title, ArrayList<RecipeVO> recipes) {
@@ -67,6 +67,5 @@ public class RecipesFragment extends Fragment {
 
         return v;
     }
-
 }
 

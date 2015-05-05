@@ -66,11 +66,15 @@ public class RegisterPageFragment extends Fragment {
         } else if (mPageNumber == 2) {
             final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_register_step2, container, false);
             Button btnRegister = (Button) rootView.findViewById(R.id.btnRegister);
+            final EditText etTags = (EditText) rootView.findViewById(R.id.etTags);
 
             btnRegister.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    new RegisterDataTask(rootView).execute();
+                    if (!etTags.getText().toString().isEmpty())
+                        new RegisterDataTask(rootView).execute(etTags.getText().toString());
+                    else
+                        Toast.makeText(getActivity(), "Favorite tags required", Toast.LENGTH_LONG).show();
                 }
             });
 
@@ -108,7 +112,7 @@ public class RegisterPageFragment extends Fragment {
             EditText etPassword = (EditText) rootView.findViewById(R.id.etPassword);
 
             if (etUsername.getText().length() < 4) {
-                return "Username too short.";
+                return "Username too short";
             }
             Boolean userAlreadyExists = userAlreadyInDB(etUsername.getText().toString());
 
@@ -117,17 +121,17 @@ public class RegisterPageFragment extends Fragment {
             }
 
             if (userAlreadyExists) {
-                return "Username already exists.";
+                return "Username already exists";
             }
 
             if (etPassword.getText().length() < 4) {
-                return "Password too short.";
+                return "Password too short";
             }
 
             Spinner genderSpinner = (Spinner) rootView.findViewById(R.id.sGender);
-            Spinner expecienceSpinner = (Spinner) rootView.findViewById(R.id.sExperience);
+            Spinner experienceSpinner = (Spinner) rootView.findViewById(R.id.sExperience);
 
-            user = new UserVO(null, etUsername.getText().toString(), etPassword.getText().toString(), null, genderSpinner.getSelectedItem().toString(), expecienceSpinner.getSelectedItem().toString());
+            user = new UserVO(null, etUsername.getText().toString(), etPassword.getText().toString(), null, genderSpinner.getSelectedItemPosition() + 1, experienceSpinner.getSelectedItemPosition() + 1);
 
             return "OK";
         }
@@ -172,7 +176,7 @@ public class RegisterPageFragment extends Fragment {
             super.onPreExecute();
             pDialog = new ProgressDialog(getActivity());
             pDialog.setMessage("Processing...");
-            pDialog.setIndeterminate(false);
+            pDialog.setIndeterminate(true);
             pDialog.setCancelable(false);
             pDialog.show();
         }
@@ -185,8 +189,7 @@ public class RegisterPageFragment extends Fragment {
             if (user == null)
                 return "There was a problem with registering. Please go to step 1.";
 
-            EditText etTags = (EditText) rootView.findViewById(R.id.etTags);
-            String response = sendDataToDB(etTags.getText().toString());
+            String response = sendDataToDB(args[0]);
             if (response == null)
                 return "Connection problem.";
 
@@ -206,8 +209,8 @@ public class RegisterPageFragment extends Fragment {
 
         protected String sendDataToDB(String tags) {
 
-            String url = "http://cakeproject.whostf.com/php/add_username.php";
-            String parameters = "username=" + user.getUsername() + "&password=" + user.getPassword() + "&gender=" + user.getPassword() + "&experience=" + user.getExperience();
+            String url = "http://cakeproject.whostf.com/php/add_user.php";
+            String parameters = "username=" + user.getUsername() + "&password=" + user.getPassword() + "&gender=" + user.getGender() + "&experience=" + user.getExperience() + "&tags=" + tags;
 
             try {
                 return ConnectionUtil.getResponseFromURL(url, parameters);

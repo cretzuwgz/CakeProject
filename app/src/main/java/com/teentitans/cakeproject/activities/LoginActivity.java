@@ -75,7 +75,7 @@ public class LoginActivity extends ActionBarActivity {
             super.onPreExecute();
             pDialog = new ProgressDialog(LoginActivity.this);
             pDialog.setMessage("Logging in...");
-            pDialog.setIndeterminate(false);
+            pDialog.setIndeterminate(true);
             pDialog.setCancelable(false);
             pDialog.show();
         }
@@ -100,7 +100,7 @@ public class LoginActivity extends ActionBarActivity {
             }
 
             try {
-                userVO = new UserVO(userJson.getString("id"), userJson.getString("username"), null, userJson.getString("date"), userJson.getString("gender"), userJson.getString("experience"));
+                userVO = new UserVO(userJson.getString("id"), userJson.getString("username"), null, userJson.getString("date"), Integer.valueOf(userJson.getString("gender")), Integer.valueOf(userJson.getString("experience")));
             } catch (JSONException e) {
                 return null;
             }

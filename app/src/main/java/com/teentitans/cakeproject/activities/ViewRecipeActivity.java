@@ -3,6 +3,7 @@ package com.teentitans.cakeproject.activities;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -11,8 +12,10 @@ import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.Slide;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -27,13 +30,17 @@ import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.squareup.picasso.Picasso;
 import com.teentitans.cakeproject.R;
+import com.teentitans.cakeproject.utils.ConnectionUtil;
+import com.teentitans.cakeproject.utils.IngredientVO;
 import com.teentitans.cakeproject.utils.RecipeVO;
+
+import java.io.IOException;
 
 public class ViewRecipeActivity extends ActionBarActivity implements ObservableScrollViewCallbacks {
 
     private static final float MAX_TEXT_SCALE_DELTA = 0.3f;
     private static final boolean TOOLBAR_IS_STICKY = true;
-
+    RecipeVO recipe;
     private View mToolbar;
     private View mImageView;
     private View mOverlayView;
@@ -71,7 +78,7 @@ public class ViewRecipeActivity extends ActionBarActivity implements ObservableS
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        RecipeVO recipe = getIntent().getBundleExtra("bundle").getParcelable("recipe");
+        recipe = getIntent().getBundleExtra("bundle").getParcelable("recipe");
 
         initActivityTransitions();
         ActivityCompat.postponeEnterTransition(this);
@@ -84,11 +91,13 @@ public class ViewRecipeActivity extends ActionBarActivity implements ObservableS
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar);
+        new IncrementViewCounter().execute(recipe.getId());
+
+        final RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar);
 
         ratingBar.setRating(Float.valueOf(recipe.getRating()));
 
-                ((Toolbar) mToolbar).setNavigationOnClickListener(new View.OnClickListener() {
+        ((Toolbar) mToolbar).setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
@@ -104,7 +113,7 @@ public class ViewRecipeActivity extends ActionBarActivity implements ObservableS
 
         final ImageView image = (ImageView) mImageView;
         ViewCompat.setTransitionName(image, "image");
-        Picasso.with(this).load(recipe.getpLink()).placeholder(R.drawable.img_placeholder).into(image);
+        Picasso.with(this).load(recipe.getPLink()).placeholder(R.drawable.img_placeholder).into(image);
 
         mImageView = findViewById(R.id.image);
         mOverlayView = findViewById(R.id.overlay);
@@ -115,13 +124,50 @@ public class ViewRecipeActivity extends ActionBarActivity implements ObservableS
         mTitleView = (TextView) findViewById(R.id.title);
         mTitleView.setText(recipe.getTitle());
         setTitle(null);
+
+        TextView tvDescription = (TextView) findViewById(R.id.description);
+        tvDescription.setText(recipe.getDescription());
+
+        TextView tvTime = (TextView) findViewById(R.id.time);
+        tvTime.setText(recipe.getReqTime() + " minutes");
+
+        TextView tvIngredients = (TextView) findViewById(R.id.ingredients);
+
+        for (IngredientVO ingredient : recipe.getIngredients()) {
+            tvIngredients.append(ingredient.getName() + ": " + ingredient.getQuantity() + " " + ingredient.getMeasurement() + "\n");
+        }
+
+        TextView tvExperience = (TextView) findViewById(R.id.experience);
+
+        switch (recipe.getDifficulty()) {
+            case 1: {
+                tvExperience.setText("Beginner");
+                break;
+            }
+            case 2: {
+                tvExperience.setText("Medium");
+                break;
+            }
+            case 3: {
+                tvExperience.setText("Advanced");
+                break;
+            }
+            default: {
+                tvExperience.setText("Unknown");
+                break;
+            }
+        }
+
+
         mFab = findViewById(R.id.fab);
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(ViewRecipeActivity.this, "FAB is clicked", Toast.LENGTH_SHORT).show();
+                new AddToFavorites().execute(recipe.getId(), MainActivity.getUser().getId());
+                Toast.makeText(ViewRecipeActivity.this, "Recipe added to favorites", Toast.LENGTH_SHORT).show();
             }
         });
+
         mFabMargin = getResources().getDimensionPixelSize(R.dimen.margin_standard);
         ViewHelper.setScaleX(mFab, 0);
         ViewHelper.setScaleY(mFab, 0);
@@ -130,6 +176,14 @@ public class ViewRecipeActivity extends ActionBarActivity implements ObservableS
             @Override
             public void run() {
                 onScrollChanged(0, false, false);
+            }
+        });
+
+        Button btnRate = (Button) findViewById(R.id.btnRate);
+        btnRate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new RatingTask().execute(recipe.getId(), String.valueOf(ratingBar.getRating()));
             }
         });
     }
@@ -215,6 +269,7 @@ public class ViewRecipeActivity extends ActionBarActivity implements ObservableS
                 ViewHelper.setTranslationY(mToolbar, -scrollY);
             }
         }
+
     }
 
     @Override
@@ -238,6 +293,60 @@ public class ViewRecipeActivity extends ActionBarActivity implements ObservableS
             ViewPropertyAnimator.animate(mFab).cancel();
             ViewPropertyAnimator.animate(mFab).scaleX(0).scaleY(0).setDuration(200).start();
             mFabIsShown = false;
+        }
+    }
+
+    private class IncrementViewCounter extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected Void doInBackground(String... params) {
+
+            try {
+                ConnectionUtil.getResponseFromURL("http://cakeproject.whostf.com/php/viewed.php", "recipe_id=" + params[0]);
+            } catch (IOException e) {
+                Log.e("Increment View Counter", "error");
+            }
+            return null;
+        }
+    }
+
+    private class RatingTask extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected Void doInBackground(String... params) {
+
+            try {
+                String response = ConnectionUtil.getResponseFromURL("http://cakeproject.whostf.com/php/add_rating.php", "recipe_id=" + params[0] + "&rating=" + params[1]);
+                recipe.setRating(response);
+            } catch (IOException e) {
+                Log.e("Rating", "error");
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            Toast.makeText(ViewRecipeActivity.this, "Thank you", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private class AddToFavorites extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected Void doInBackground(String... params) {
+
+            try {
+                String response = ConnectionUtil.getResponseFromURL("http://cakeproject.whostf.com/php/add_favorite.php", "recipe_id=" + params[0] + "&user_id=" + params[1]);
+                recipe.setRating(response);
+            } catch (IOException e) {
+                Log.e("Favorite", "error");
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            Toast.makeText(ViewRecipeActivity.this, "Thank you", Toast.LENGTH_LONG).show();
         }
     }
 }

@@ -107,7 +107,7 @@ public class SearchActivity extends ActionBarActivity {
         @Override
         protected RecipesFragment doInBackground(String... params) {
             try {
-                String response = ConnectionUtil.getResponseFromURL(URL_TOP, params[0]);
+                String response = ConnectionUtil.getResponseFromURL(URL_TOP, "searchString=" + params[0]);
 
                 ArrayList<RecipeVO> recipes = RecipesUtil.getRecipesFrom(response);
                 return RecipesFragment.create("Search", recipes);
@@ -123,12 +123,11 @@ public class SearchActivity extends ActionBarActivity {
             progress.dismiss();
 
             if (fragment != null) {
-                if(fragment.getArguments().getSerializable("recipes")!=null)
+                if (fragment.getArguments().getSerializable("recipes") != null)
                     getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, fragment).commit();
                 else
                     Toast.makeText(SearchActivity.this, "Sorry, no recipes matched your search. Please try again", Toast.LENGTH_LONG).show();
-            }
-            else
+            } else
                 Toast.makeText(SearchActivity.this, R.string.error_message, Toast.LENGTH_SHORT).show();
 
         }

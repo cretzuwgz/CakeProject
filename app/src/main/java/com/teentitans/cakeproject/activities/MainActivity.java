@@ -27,6 +27,7 @@ import com.teentitans.cakeproject.utils.ConnectionUtil;
 import com.teentitans.cakeproject.utils.RecipeVO;
 import com.teentitans.cakeproject.utils.RecipesUtil;
 import com.teentitans.cakeproject.utils.SlidingTabLayout;
+import com.teentitans.cakeproject.utils.UserVO;
 import com.teentitans.cakeproject.utils.ZoomOutPageTransformer;
 
 import java.io.IOException;
@@ -40,11 +41,16 @@ public class MainActivity extends ActionBarActivity {
     private static ArrayList<RecipeVO> recommendedRecipes;
     private static ArrayList<RecipeVO> topRecipes;
     private static ArrayList<RecipeVO> recentRecipes;
+    private static UserVO user;
     private ViewPager pager;
     private SlidingTabLayout tabs;
     private CharSequence Titles[] = {"Recommended", "Recent", "Top"};
     private ProgressDialog progress;
     private ActionBarDrawerToggle mDrawerToggle;
+
+    public static UserVO getUser() {
+        return user;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +67,8 @@ public class MainActivity extends ActionBarActivity {
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.app_name, R.string.app_name);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
+
+        user = getIntent().getBundleExtra("bundle").getParcelable("user");
 
         ArrayList<String> navigationDrawerItems = new ArrayList<>();
         navigationDrawerItems.add("NOT AVAILABLE IN BETA");
@@ -101,14 +109,13 @@ public class MainActivity extends ActionBarActivity {
             progress.setMessage("Loading...");
             progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             progress.setIndeterminate(true);
+            progress.setCancelable(false);
             progress.show();
 
             new GetRecipesTask().execute("recommended");
             new GetRecipesTask().execute("top");
             new GetRecipesTask().execute("recent");
-        }
-
-        else setAdapter();
+        } else setAdapter();
     }
 
     @Override

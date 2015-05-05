@@ -38,8 +38,8 @@
                 xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                card_view:cardCornerRadius="3dp"
                 android:layout_marginBottom="5dp"
+                card_view:cardCornerRadius="3dp"
                 card_view:cardElevation="2dp"
                 card_view:cardUseCompatPadding="true">
 
@@ -55,36 +55,34 @@
 
                         <TextView
                             android:id="@+id/time"
-                            android:text="1h 30min"
                             android:layout_width="0dp"
-                            android:layout_weight="1"
                             android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:drawableLeft="@drawable/ic_action_alarm"
                             android:ellipsize="end"
                             android:gravity="center_vertical"
-                            android:padding="20dp"
-                            android:drawableLeft="@drawable/ic_action_alarm"
                             android:maxLines="1"
+                            android:padding="20dp"
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:textColor="@color/primary_text" />
 
                         <View
                             android:layout_width="1dp"
                             android:layout_height="match_parent"
-                            android:background="@color/secondary_text"
+                            android:layout_marginBottom="20dp"
                             android:layout_marginTop="20dp"
-                            android:layout_marginBottom="20dp" />
+                            android:background="@color/secondary_text" />
 
                         <TextView
                             android:id="@+id/experience"
-                            android:text="Avansat"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:drawableLeft="@drawable/ic_av_new_releases"
                             android:ellipsize="end"
                             android:gravity="center_vertical"
-                            android:padding="20dp"
-                            android:drawableLeft="@drawable/ic_av_new_releases"
                             android:maxLines="1"
+                            android:padding="20dp"
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:textColor="@color/primary_text" />
 
@@ -93,17 +91,17 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/secondary_text"
                         android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp" />
+                        android:layout_marginRight="20dp"
+                        android:background="@color/secondary_text" />
 
                     <TextView
+                        android:id="@+id/ingredients"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/primary_text"
                         android:padding="20dp"
                         android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="Ingredient\nIngredient\nIngredient\nIngredient\nIngredient\nIngredient" />
+                        android:textColor="@color/primary_text" />
 
                     <!--<android.support.v7.widget.RecyclerView-->
                     <!--android:layout_width="match_parent"-->
@@ -117,18 +115,18 @@
                 xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                card_view:cardCornerRadius="3dp"
                 android:layout_marginBottom="5dp"
+                card_view:cardCornerRadius="3dp"
                 card_view:cardElevation="2dp"
                 card_view:cardUseCompatPadding="true">
 
                 <TextView
+                    android:id="@+id/description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/primary_text"
                     android:padding="10dp"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/lipsum" />
+                    android:textColor="@color/primary_text" />
 
             </android.support.v7.widget.CardView>
 
@@ -137,20 +135,45 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
+                card_view:cardBackgroundColor="@color/primary"
                 card_view:cardCornerRadius="3dp"
                 card_view:cardElevation="2dp"
-                card_view:cardBackgroundColor="@color/primary"
                 card_view:cardUseCompatPadding="true">
 
-                <RatingBar
-                    android:id="@+id/ratingBar"
-                    android:layout_gravity="center"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:numStars="5"
-                    android:layout_margin="10dp"
-                    android:stepSize=".5"
-                    android:minHeight="?actionBarSize" />
+                    android:orientation="vertical">
+
+
+                    <RatingBar
+                        android:id="@+id/ratingBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="10dp"
+                        android:minHeight="?actionBarSize"
+                        android:numStars="5"
+                        android:stepSize="1" />
+
+                    <com.balysv.materialripple.MaterialRippleLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        app:mrl_rippleAlpha="0.7"
+                        app:mrl_rippleColor="@color/primary"
+                        app:mrl_rippleDelayClick="false"
+                        app:mrl_rippleHover="true"
+                        app:mrl_rippleOverlay="true">
+
+                        <Button
+                            android:id="@+id/btnRate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@color/accent"
+                            android:text="Rate me!" />
+                    </com.balysv.materialripple.MaterialRippleLayout>
+                </LinearLayout>
             </android.support.v7.widget.CardView>
 
         </LinearLayout>

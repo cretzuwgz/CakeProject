@@ -20,9 +20,22 @@ public class RecipesUtil {
         try {
             for (int i = 0; i < recipesJson.length(); i++) {
                 JSONObject recipe = recipesJson.getJSONObject(i);
-                RecipeVO recipeVO = new RecipeVO(recipe.getString("id"), recipe.getString("title"), recipe.getString("date"), recipe.getString("uploader"), recipe.getString("description"), recipe.getString("p_link"), recipe.getString("rating"), recipe.getString("difficulty"), recipe.getString("req_time"));
-                for (int j = 0; j < recipe.getJSONArray("tags").length(); j++)
-                    recipeVO.addTag(recipe.getJSONArray("tags").getString(j));
+                int difficulty = recipe.getString("difficulty").equals("null") ? 0 : Integer.valueOf(recipe.getString("difficulty"));
+                RecipeVO recipeVO = new RecipeVO(recipe.getString("id"), recipe.getString("title"), recipe.getString("date"), recipe.getString("uploader"), recipe.getString("description"), recipe.getString("p_link"), recipe.getString("rating"), difficulty, recipe.getString("req_time"));
+
+                JSONArray array = recipe.getJSONArray("tags");
+
+                for (int j = 0; j < array.length(); j++)
+                    recipeVO.addTag(array.getString(j));
+
+                array = recipe.getJSONArray("ingredients");
+
+                for (int j = 0; j < array.length(); j++) {
+                    IngredientVO currentIngredient;
+                    JSONObject jsonIngredient = array.getJSONObject(j);
+                    currentIngredient = new IngredientVO(jsonIngredient.getString("name"), jsonIngredient.getString("quantity"), jsonIngredient.getString("unit"));
+                    recipeVO.addIngredient(currentIngredient);
+                }
                 recipeList.add(recipeVO);
 
             }

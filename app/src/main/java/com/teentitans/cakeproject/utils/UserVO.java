@@ -14,14 +14,15 @@ public class UserVO implements Parcelable {
             return new UserVO[size];
         }
     };
+
     private String id;
     private String username;
     private String password;
     private String date;
-    private String gender;
-    private String experience;
+    private int gender;
+    private int experience;
 
-    public UserVO(String id, String username, String password, String date, String gender, String experience) {
+    public UserVO(String id, String username, String password, String date, int gender, int experience) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -34,12 +35,16 @@ public class UserVO implements Parcelable {
         id = in.readString();
         username = in.readString();
         date = in.readString();
-        gender = in.readString();
-        experience = in.readString();
+        gender = in.readInt();
+        experience = in.readInt();
     }
 
     public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getUsername() {
@@ -54,11 +59,11 @@ public class UserVO implements Parcelable {
         return date;
     }
 
-    public String getGender() {
+    public int getGender() {
         return gender;
     }
 
-    public String getExperience() {
+    public int getExperience() {
         return experience;
     }
 
@@ -72,7 +77,7 @@ public class UserVO implements Parcelable {
         parcel.writeString(id);
         parcel.writeString(username);
         parcel.writeString(date);
-        parcel.writeString(gender);
-        parcel.writeString(experience);
+        parcel.writeInt(gender);
+        parcel.writeInt(experience);
     }
 }
