@@ -17,6 +17,8 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -68,10 +70,11 @@ public class MainActivity extends ActionBarActivity {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
 
-        user = getIntent().getBundleExtra("bundle").getParcelable("user");
+        if (user == null)
+            user = getIntent().getBundleExtra("bundle").getParcelable("user");
 
         ArrayList<String> navigationDrawerItems = new ArrayList<>();
-        navigationDrawerItems.add("NOT AVAILABLE IN BETA");
+        navigationDrawerItems.add("Settings");
         navigationDrawerItems.add("NOT AVAILABLE IN BETA");
         navigationDrawerItems.add("NOT AVAILABLE IN BETA");
         navigationDrawerItems.add("NOT AVAILABLE IN BETA");
@@ -81,6 +84,18 @@ public class MainActivity extends ActionBarActivity {
 
         listView.setAdapter(new ArrayAdapter<>(this, R.layout.item_drawer_list, navigationDrawerItems));
 
+        listView.setClickable(true);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+
+                if (position == 0) {
+                    Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             toolbar.setTitle(R.string.app_name);

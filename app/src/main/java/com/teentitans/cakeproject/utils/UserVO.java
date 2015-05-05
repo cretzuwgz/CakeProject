@@ -3,6 +3,8 @@ package com.teentitans.cakeproject.utils;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+
 public class UserVO implements Parcelable {
 
     public static final Parcelable.Creator<UserVO> CREATOR = new Parcelable.Creator<UserVO>() {
@@ -21,6 +23,7 @@ public class UserVO implements Parcelable {
     private String date;
     private int gender;
     private int experience;
+    private ArrayList<String> favoriteTags;
 
     public UserVO(String id, String username, String password, String date, int gender, int experience) {
         this.id = id;
@@ -29,14 +32,17 @@ public class UserVO implements Parcelable {
         this.date = date;
         this.gender = gender;
         this.experience = experience;
+        favoriteTags = new ArrayList<>();
     }
 
+    @SuppressWarnings("unchecked")
     private UserVO(Parcel in) {
         id = in.readString();
         username = in.readString();
         date = in.readString();
         gender = in.readInt();
         experience = in.readInt();
+        favoriteTags = (ArrayList<String>) in.readSerializable();
     }
 
     public String getId() {
@@ -67,6 +73,14 @@ public class UserVO implements Parcelable {
         return experience;
     }
 
+    public ArrayList<String> getFavoriteTags() {
+        return favoriteTags;
+    }
+
+    public void addTag(String tag) {
+        favoriteTags.add(tag);
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -79,5 +93,6 @@ public class UserVO implements Parcelable {
         parcel.writeString(date);
         parcel.writeInt(gender);
         parcel.writeInt(experience);
+        parcel.writeSerializable(favoriteTags);
     }
 }

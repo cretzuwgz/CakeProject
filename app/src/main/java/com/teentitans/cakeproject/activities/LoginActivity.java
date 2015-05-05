@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,6 +15,7 @@ import com.teentitans.cakeproject.R;
 import com.teentitans.cakeproject.utils.ConnectionUtil;
 import com.teentitans.cakeproject.utils.UserVO;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -27,7 +27,7 @@ public class LoginActivity extends ActionBarActivity {
     UserVO userVO;
     private Button btnLogin;
     private TextView btnRegister;
-    private TextView btnForgotPassword;
+    //    private TextView btnForgotPassword;
     private View.OnClickListener onClick = new View.OnClickListener() {
         public void onClick(View v) {
             if (v.equals(btnLogin)) {
@@ -35,8 +35,9 @@ public class LoginActivity extends ActionBarActivity {
             } else if (v.equals(btnRegister)) {
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(intent);
-            } else if (v.equals(btnForgotPassword))
-                Log.e("OnClick", "ForgotPassword Clicked");
+//            } else if (v.equals(btnForgotPassword))
+//                Log.e("OnClick", "ForgotPassword Clicked");
+            }
         }
     };
 
@@ -48,11 +49,11 @@ public class LoginActivity extends ActionBarActivity {
 
         btnLogin = (Button) findViewById(R.id.btnLogin);
         btnRegister = (TextView) findViewById(R.id.btnRegister);
-        btnForgotPassword = (TextView) findViewById(R.id.btnForgotPassword);
+//        btnForgotPassword = (TextView) findViewById(R.id.btnForgotPassword);
 
         btnLogin.setOnClickListener(onClick);
         btnRegister.setOnClickListener(onClick);
-        btnForgotPassword.setOnClickListener(onClick);
+//        btnForgotPassword.setOnClickListener(onClick);
 
     }
 
@@ -95,12 +96,18 @@ public class LoginActivity extends ActionBarActivity {
 
             try {
                 userJson = new JSONObject(response).getJSONArray("user").getJSONObject(0);
+
             } catch (JSONException e) {
                 return null;
             }
 
             try {
                 userVO = new UserVO(userJson.getString("id"), userJson.getString("username"), null, userJson.getString("date"), Integer.valueOf(userJson.getString("gender")), Integer.valueOf(userJson.getString("experience")));
+                JSONArray array = userJson.getJSONArray("tags");
+
+                for (int j = 0; j < array.length(); j++)
+                    userVO.addTag(array.getString(j));
+
             } catch (JSONException e) {
                 return null;
             }
