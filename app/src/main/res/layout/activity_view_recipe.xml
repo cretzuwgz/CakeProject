@@ -8,8 +8,7 @@
         android:id="@+id/image"
         android:layout_width="match_parent"
         android:layout_height="@dimen/flexible_space_image_height"
-        android:scaleType="centerCrop"
-        android:src="@drawable/cake_bg" />
+        android:scaleType="centerCrop" />
 
     <View
         android:id="@+id/overlay"
@@ -100,7 +99,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="20dp"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
                         android:textColor="@color/primary_text" />
 
                     <!--<android.support.v7.widget.RecyclerView-->

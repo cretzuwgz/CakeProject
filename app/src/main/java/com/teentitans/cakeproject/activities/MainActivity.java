@@ -75,12 +75,10 @@ public class MainActivity extends ActionBarActivity {
 
         ArrayList<String> navigationDrawerItems = new ArrayList<>();
         navigationDrawerItems.add("Settings");
-        navigationDrawerItems.add("NOT AVAILABLE IN BETA");
-        navigationDrawerItems.add("NOT AVAILABLE IN BETA");
-        navigationDrawerItems.add("NOT AVAILABLE IN BETA");
-        navigationDrawerItems.add("NOT AVAILABLE IN BETA");
-        navigationDrawerItems.add("NOT AVAILABLE IN BETA");
-        navigationDrawerItems.add("NOT AVAILABLE IN BETA");
+        navigationDrawerItems.add("Uploads");
+        navigationDrawerItems.add("Favorites");
+        navigationDrawerItems.add("Upload new recipe");
+        navigationDrawerItems.add("Logout");
 
         listView.setAdapter(new ArrayAdapter<>(this, R.layout.item_drawer_list, navigationDrawerItems));
 
@@ -90,12 +88,35 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 
-                if (position == 0) {
-                    Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-                    startActivity(intent);
+
+                switch (position) {
+                    case 0: {
+                        Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                        startActivity(intent);
+                        break;
+                    }
+                    case 1: {
+                        //TODO launch RecipesListActivity(uploaded)
+                        break;
+                    }
+                    case 2: {
+                        //TODO launch RecipesListActivity(favorites)
+                        break;
+                    }
+                    case 3: {
+                        //TODO launch NewRecipeActivity
+                        break;
+                    }
+                    case 4: {
+                        finish();
+                        break;
+                    }
+                    default:
+                        break;
                 }
             }
         });
+
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             toolbar.setTitle(R.string.app_name);

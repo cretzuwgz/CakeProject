@@ -149,4 +149,15 @@ public class RecipeVO implements Parcelable {
         bundle.putSerializable("tags", tags);
         parcel.writeBundle(bundle);
     }
+
+    public String getTagsAsString() {
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (String tag : tags)
+            stringBuilder.append(tag).append(",");
+
+        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+        return stringBuilder.toString();
+    }
 }

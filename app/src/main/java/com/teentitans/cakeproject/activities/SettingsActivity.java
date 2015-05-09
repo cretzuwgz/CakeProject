@@ -31,7 +31,7 @@ public class SettingsActivity extends ActionBarActivity {
         final EditText etUsername = (EditText) findViewById(R.id.etUsername);
         final EditText etOldPwd = (EditText) findViewById(R.id.etOldPwd);
         final EditText etNewPwd = (EditText) findViewById(R.id.etNewPwd);
-        EditText etTags = (EditText) findViewById(R.id.etTags);
+        final EditText etTags = (EditText) findViewById(R.id.etTags);
 
         Button btnUpdateInfo = (Button) findViewById(R.id.btnUpdateInfo);
         Button btnChangePwd = (Button) findViewById(R.id.btnChangePwd);
@@ -60,15 +60,19 @@ public class SettingsActivity extends ActionBarActivity {
             }
         });
 
+        btnUpdateTags.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!etTags.getText().toString().isEmpty() && etTags.getText().toString().equals(MainActivity.getUser().getFavoriteTagsAsString()))
+                    new UpdateFavoriteTagsTask().execute(etTags.getText().toString());
+                else
+                    Toast.makeText(SettingsActivity.this, "Both fields are required", Toast.LENGTH_LONG).show();
+            }
+        });
+
         etUsername.setText(MainActivity.getUser().getUsername());
 
-        for (String tag : MainActivity.getUser().getFavoriteTags()) {
-            etTags.append(tag);
-            etTags.append(",");
-        }
-        String text = etTags.getText().toString();
-        Log.e("AICI", text);
-        etTags.setText(text.substring(0, text.length() - 1));
+        etTags.setText(MainActivity.getUser().getFavoriteTagsAsString());
 
         sGender.setSelection(MainActivity.getUser().getGender() - 1);
         sExperience.setSelection(MainActivity.getUser().getExperience() - 1);
@@ -112,7 +116,11 @@ public class SettingsActivity extends ActionBarActivity {
 
         @Override
         protected void onPostExecute(String response) {
-            if (!response.equals("OK"))
+            if (response == null)
+                Toast.makeText(SettingsActivity.this, R.string.error_message, Toast.LENGTH_LONG).show();
+            else if (!response.equals("OK"))
+                Toast.makeText(SettingsActivity.this, "Info changed", Toast.LENGTH_LONG).show();
+            else
                 Toast.makeText(SettingsActivity.this, response, Toast.LENGTH_LONG).show();
         }
     }
@@ -142,6 +150,33 @@ public class SettingsActivity extends ActionBarActivity {
                 Toast.makeText(SettingsActivity.this, "Old password is wrong", Toast.LENGTH_LONG).show();
             else
                 Toast.makeText(SettingsActivity.this, "Password changed", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public class UpdateFavoriteTagsTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String response = null;
+
+            try {
+                response = ConnectionUtil.getResponseFromURL("http://cakeproject.whostf.com/php/change_tags.php", "tags=" + params[0]);
+            } catch (IOException e) {
+                Log.e("Update favorite tags", "error");
+            }
+
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+
+            if (response == null)
+                Toast.makeText(SettingsActivity.this, R.string.error_message, Toast.LENGTH_LONG).show();
+            else
+                Toast.makeText(SettingsActivity.this, response, Toast.LENGTH_LONG).show();
+
         }
     }
 }

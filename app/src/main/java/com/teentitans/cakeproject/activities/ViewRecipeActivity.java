@@ -26,6 +26,7 @@ import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
+import com.melnykov.fab.FloatingActionButton;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.squareup.picasso.Picasso;
@@ -40,7 +41,7 @@ public class ViewRecipeActivity extends ActionBarActivity implements ObservableS
 
     private static final float MAX_TEXT_SCALE_DELTA = 0.3f;
     private static final boolean TOOLBAR_IS_STICKY = true;
-    RecipeVO recipe;
+    private RecipeVO recipe;
     private View mToolbar;
     private View mImageView;
     private View mOverlayView;
@@ -53,6 +54,7 @@ public class ViewRecipeActivity extends ActionBarActivity implements ObservableS
     private int mFabMargin;
     private int mToolbarColor;
     private boolean mFabIsShown;
+    private boolean isViewedByUploader;
 
     public static void navigate(ActionBarActivity activity, View transitionImage, RecipeVO recipe) {
         Intent intent = new Intent(activity, ViewRecipeActivity.class);
@@ -79,6 +81,8 @@ public class ViewRecipeActivity extends ActionBarActivity implements ObservableS
         super.onCreate(savedInstanceState);
 
         recipe = getIntent().getBundleExtra("bundle").getParcelable("recipe");
+
+        isViewedByUploader = MainActivity.getUser().getUsername().equals(recipe.getUploader());
 
         initActivityTransitions();
         ActivityCompat.postponeEnterTransition(this);
@@ -158,13 +162,24 @@ public class ViewRecipeActivity extends ActionBarActivity implements ObservableS
             }
         }
 
-
         mFab = findViewById(R.id.fab);
+        if (isViewedByUploader) {
+            ((FloatingActionButton) mFab).setColorNormal(Color.YELLOW);
+            ((FloatingActionButton) mFab).setImageResource(android.R.drawable.ic_menu_edit);
+        }
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AddToFavorites().execute(recipe.getId(), MainActivity.getUser().getId());
-                Toast.makeText(ViewRecipeActivity.this, "Recipe added to favorites", Toast.LENGTH_SHORT).show();
+                if (isViewedByUploader) {
+                    Intent intent = new Intent(ViewRecipeActivity.this, EditRecipeActivity.class);
+                    Bundle b = new Bundle();
+                    b.putParcelable("recipe", recipe);
+                    intent.putExtra("bundle", b);
+                    startActivity(intent);
+                } else {
+                    new AddToFavorites().execute(recipe.getId(), MainActivity.getUser().getId());
+                    Toast.makeText(ViewRecipeActivity.this, "Recipe added to favorites", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
