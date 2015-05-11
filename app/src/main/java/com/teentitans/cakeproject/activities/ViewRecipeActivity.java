@@ -56,6 +56,7 @@ public class ViewRecipeActivity extends ActionBarActivity implements ObservableS
     private boolean mFabIsShown;
     private boolean isViewedByUploader;
 
+
     public static void navigate(ActionBarActivity activity, View transitionImage, RecipeVO recipe) {
         Intent intent = new Intent(activity, ViewRecipeActivity.class);
         Bundle b = new Bundle();

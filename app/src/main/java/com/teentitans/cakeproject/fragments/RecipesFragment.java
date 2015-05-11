@@ -33,6 +33,9 @@ public class RecipesFragment extends Fragment {
         return fragment;
     }
 
+    public String getTitle() {
+        return title;
+    }
 
     @Override
     @SuppressWarnings("unchecked")

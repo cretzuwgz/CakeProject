@@ -96,11 +96,15 @@ public class MainActivity extends ActionBarActivity {
                         break;
                     }
                     case 1: {
-                        //TODO launch RecipesListActivity(uploaded)
+                        Intent intent = new Intent(MainActivity.this, RecipesListActivity.class);
+                        intent.putExtra("activityFor", "uploaded");
+                        startActivity(intent);
                         break;
                     }
                     case 2: {
-                        //TODO launch RecipesListActivity(favorites)
+                        Intent intent = new Intent(MainActivity.this, RecipesListActivity.class);
+                        intent.putExtra("activityFor", "favorites");
+                        startActivity(intent);
                         break;
                     }
                     case 3: {

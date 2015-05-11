@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -22,15 +23,15 @@ import com.teentitans.cakeproject.utils.RecipesUtil;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class SearchActivity extends ActionBarActivity {
+public class RecipesListActivity extends ActionBarActivity {
 
-    public static String URL_TOP = "http://cakeproject.whostf.com/php/search.php";
     private ProgressDialog progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search);
+        setContentView(R.layout.activity_recipes_list);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         progress = new ProgressDialog(this);
 
@@ -39,20 +40,9 @@ public class SearchActivity extends ActionBarActivity {
             toolbar.setTitle(R.string.app_name);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        handleIntent(getIntent());
-    }
 
-    @Override
-    protected void onNewIntent(Intent intent) {
-        handleIntent(intent);
-    }
-
-    private void handleIntent(Intent intent) {
-
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            new GetRecipesTask().execute(query);
-        }
+        String activityFor = getIntent().getStringExtra("activityFor");
+        new GetRecipesTask().execute(activityFor);
     }
 
     @Override
@@ -73,7 +63,7 @@ public class SearchActivity extends ActionBarActivity {
             public boolean onQueryTextSubmit(String s) {
                 searchView.setQuery("", false);
                 searchView.setIconified(true);
-                Intent intent = new Intent(SearchActivity.this, SearchActivity.class);
+                Intent intent = new Intent(RecipesListActivity.this, SearchActivity.class);
                 intent.setAction(Intent.ACTION_SEARCH);
                 intent.putExtra(SearchManager.QUERY, s);
                 startActivity(intent);
@@ -99,7 +89,7 @@ public class SearchActivity extends ActionBarActivity {
 
         @Override
         protected void onPreExecute() {
-            progress.setMessage("Searching...");
+            progress.setMessage("Loading...");
             progress.setIndeterminate(true);
             progress.show();
         }
@@ -107,11 +97,17 @@ public class SearchActivity extends ActionBarActivity {
         @Override
         protected RecipesFragment doInBackground(String... params) {
             try {
-                String response = ConnectionUtil.getResponseFromURL(URL_TOP, "searchString=" + params[0]);
-
-                ArrayList<RecipeVO> recipes = RecipesUtil.getRecipesFrom(response);
-                return RecipesFragment.create("Search", recipes);
-
+                String response;
+                ArrayList<RecipeVO> recipes;
+                if (params[0].equals("uploaded")) {
+                    response = ConnectionUtil.getResponseFromURL("http://cakeproject.whostf.com/php/get_recommended.php", "userId=" + MainActivity.getUser().getId());   //TODO php and modify URL
+                    recipes = RecipesUtil.getRecipesFrom(response);
+                    return RecipesFragment.create("Uploaded", recipes);
+                } else {
+                    response = ConnectionUtil.getResponseFromURL("http://cakeproject.whostf.com/php/get_top5.php", "userId=" + MainActivity.getUser().getId());  //TODO php and modify URL
+                    recipes = RecipesUtil.getRecipesFrom(response);
+                    return RecipesFragment.create("Favorites", recipes);
+                }
             } catch (IOException e) {
                 return null;
             }
@@ -123,12 +119,18 @@ public class SearchActivity extends ActionBarActivity {
             progress.dismiss();
 
             if (fragment != null) {
-                if (fragment.getArguments().getSerializable("recipes") != null)
+                if (fragment.getArguments().getSerializable("recipes") != null) {
                     getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, fragment).commit();
-                else
-                    Toast.makeText(SearchActivity.this, "Sorry, no recipes matched your search. Please try again", Toast.LENGTH_LONG).show();
+                    Log.e("TITLU", fragment.getTitle());//TODO oaa:fix this
+                } else {
+
+                    if (fragment.getTitle().equals("Uploaded"))
+                        Toast.makeText(RecipesListActivity.this, "You don't have any uploaded recipes.", Toast.LENGTH_LONG).show();
+                    else if (fragment.getTitle().equals("Favorites"))
+                        Toast.makeText(RecipesListActivity.this, "You don't have any favorite recipes.", Toast.LENGTH_LONG).show();
+                }
             } else
-                Toast.makeText(SearchActivity.this, R.string.error_message, Toast.LENGTH_SHORT).show();
+                Toast.makeText(RecipesListActivity.this, R.string.error_message, Toast.LENGTH_SHORT).show();
 
         }
     }

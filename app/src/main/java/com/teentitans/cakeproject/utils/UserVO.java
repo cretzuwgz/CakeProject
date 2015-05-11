@@ -84,7 +84,8 @@ public class UserVO implements Parcelable {
         for (String tag : favoriteTags)
             stringBuilder.append(tag).append(",");
 
-        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+        if (!stringBuilder.toString().isEmpty())
+            stringBuilder.deleteCharAt(stringBuilder.length() - 1);
         return stringBuilder.toString();
     }
 

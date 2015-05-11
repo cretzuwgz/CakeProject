@@ -72,8 +72,14 @@
         </activity>
         <activity
             android:name=".activities.EditRecipeActivity"
-            android:label="@string/app_name"
-            android:parentActivityName=".activities.MainActivity">
+            android:label="@string/app_name">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.teentitans.cakeproject.activities.MainActivity" />
+        </activity>
+        <activity
+            android:name=".activities.RecipesListActivity"
+            android:label="@string/app_name">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.teentitans.cakeproject.activities.MainActivity" />
