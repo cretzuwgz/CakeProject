@@ -205,9 +205,10 @@ public class SettingsActivity extends ActionBarActivity {
 
             if (response == null)
                 Toast.makeText(SettingsActivity.this, R.string.error_message, Toast.LENGTH_LONG).show();
-            else
+            else {
+                MainActivity.setToUpdate();
                 Toast.makeText(SettingsActivity.this, response, Toast.LENGTH_LONG).show();
-
+            }
         }
     }
 }

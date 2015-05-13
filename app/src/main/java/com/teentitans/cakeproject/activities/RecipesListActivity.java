@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -100,11 +99,11 @@ public class RecipesListActivity extends ActionBarActivity {
                 String response;
                 ArrayList<RecipeVO> recipes;
                 if (params[0].equals("uploaded")) {
-                    response = ConnectionUtil.getResponseFromURL("http://cakeproject.whostf.com/php/get_recommended.php", "userId=" + MainActivity.getUser().getId());   //TODO php and modify URL
+                    response = ConnectionUtil.getResponseFromURL("http://cakeproject.whostf.com/php/get_recommended.php");//, "userId=" + MainActivity.getUser().getId());   //TODO php and modify URL
                     recipes = RecipesUtil.getRecipesFrom(response);
                     return RecipesFragment.create("Uploaded", recipes);
                 } else {
-                    response = ConnectionUtil.getResponseFromURL("http://cakeproject.whostf.com/php/get_top5.php", "userId=" + MainActivity.getUser().getId());  //TODO php and modify URL
+                    response = ConnectionUtil.getResponseFromURL("http://cakeproject.whostf.com/php/get_top5.php");//, "userId=" + MainActivity.getUser().getId());  //TODO php and modify URL
                     recipes = RecipesUtil.getRecipesFrom(response);
                     return RecipesFragment.create("Favorites", recipes);
                 }
@@ -121,7 +120,6 @@ public class RecipesListActivity extends ActionBarActivity {
             if (fragment != null) {
                 if (fragment.getArguments().getSerializable("recipes") != null) {
                     getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, fragment).commit();
-                    Log.e("TITLU", fragment.getTitle());//TODO oaa:fix this
                 } else {
 
                     if (fragment.getTitle().equals("Uploaded"))

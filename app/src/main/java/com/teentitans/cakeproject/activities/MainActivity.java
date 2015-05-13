@@ -44,6 +44,7 @@ public class MainActivity extends ActionBarActivity {
     private static ArrayList<RecipeVO> topRecipes;
     private static ArrayList<RecipeVO> recentRecipes;
     private static UserVO user;
+    private static boolean toUpdate = true;
     private ViewPager pager;
     private SlidingTabLayout tabs;
     private CharSequence Titles[] = {"Recommended", "Recent", "Top"};
@@ -52,6 +53,10 @@ public class MainActivity extends ActionBarActivity {
 
     public static UserVO getUser() {
         return user;
+    }
+
+    public static void setToUpdate() {
+        toUpdate = true;
     }
 
     @Override
@@ -145,17 +150,28 @@ public class MainActivity extends ActionBarActivity {
         });
         progress = new ProgressDialog(this);
 
-        if (recentRecipes == null || recommendedRecipes == null || topRecipes == null) {
-            progress.setMessage("Loading...");
-            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            progress.setIndeterminate(true);
-            progress.setCancelable(false);
-            progress.show();
 
-            new GetRecipesTask().execute("recommended");
-            new GetRecipesTask().execute("top");
-            new GetRecipesTask().execute("recent");
-        } else setAdapter();
+        if (needsUpdate())
+            updateData();
+        else setAdapter();
+    }
+
+    private boolean needsUpdate() {
+        return recentRecipes == null || recommendedRecipes == null || topRecipes == null || toUpdate;
+    }
+
+    private void updateData() {
+        progress.setMessage("Loading...");
+        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progress.setIndeterminate(true);
+        progress.setCancelable(false);
+        progress.show();
+
+        new GetRecipesTask().execute("recommended");
+        new GetRecipesTask().execute("top");
+        new GetRecipesTask().execute("recent");
+
+        toUpdate = false;
     }
 
     @Override
@@ -198,6 +214,15 @@ public class MainActivity extends ActionBarActivity {
         return mDrawerToggle.onOptionsItemSelected(item);
 
 //        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (needsUpdate())
+            updateData();
+        else
+            setAdapter();
     }
 
     public void setAdapter() {

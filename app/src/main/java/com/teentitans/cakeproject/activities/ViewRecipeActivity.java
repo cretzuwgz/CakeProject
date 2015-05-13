@@ -343,6 +343,7 @@ public class ViewRecipeActivity extends ActionBarActivity implements ObservableS
         @Override
         protected void onPostExecute(Void aVoid) {
             Toast.makeText(ViewRecipeActivity.this, "Thank you", Toast.LENGTH_LONG).show();
+            MainActivity.setToUpdate();
         }
     }
 

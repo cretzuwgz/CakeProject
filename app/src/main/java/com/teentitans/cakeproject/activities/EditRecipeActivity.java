@@ -148,8 +148,10 @@ public class EditRecipeActivity extends ActionBarActivity {
         protected void onPostExecute(String response) {
             if (response == null)
                 Toast.makeText(EditRecipeActivity.this, R.string.error_message, Toast.LENGTH_LONG).show();
-            else
+            else {
                 Toast.makeText(EditRecipeActivity.this, response, Toast.LENGTH_LONG).show();
+                MainActivity.setToUpdate();
+            }
         }
     }
 
@@ -168,7 +170,8 @@ public class EditRecipeActivity extends ActionBarActivity {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            finish();
+            MainActivity.setToUpdate();
+            finish();//TODO oaa:go back to MainActivity
         }
     }
 }

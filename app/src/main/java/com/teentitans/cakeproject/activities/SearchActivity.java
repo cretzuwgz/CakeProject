@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 public class SearchActivity extends ActionBarActivity {
 
-    public static String URL_TOP = "http://cakeproject.whostf.com/php/search.php";
+    public static String URL_SEARCH = "http://cakeproject.whostf.com/php/search.php";
     private ProgressDialog progress;
 
     @Override
@@ -107,7 +107,7 @@ public class SearchActivity extends ActionBarActivity {
         @Override
         protected RecipesFragment doInBackground(String... params) {
             try {
-                String response = ConnectionUtil.getResponseFromURL(URL_TOP, "searchString=" + params[0]);
+                String response = ConnectionUtil.getResponseFromURL(URL_SEARCH, "searchString=" + params[0]);//TODO php
 
                 ArrayList<RecipeVO> recipes = RecipesUtil.getRecipesFrom(response);
                 return RecipesFragment.create("Search", recipes);
