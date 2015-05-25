@@ -113,7 +113,7 @@ public class MainActivity extends ActionBarActivity {
                         break;
                     }
                     case 3: {
-                        //TODO launch NewRecipeActivity
+                        //TODO oaa: launch NewRecipeActivity
                         break;
                     }
                     case 4: {

@@ -192,7 +192,7 @@ public class SettingsActivity extends ActionBarActivity {
             String response = null;
 
             try {
-                response = ConnectionUtil.getResponseFromURL("http://cakeproject.whostf.com/php/change_tags.php", "user_id"+params[0]+"&tags=" + params[1]);//TODO php Update fav tags
+                response = ConnectionUtil.getResponseFromURL("http://cakeproject.whostf.com/php/change_tags.php", "user_id"+params[0]+"&tags=" + params[1]);
             } catch (IOException e) {
                 Log.e("Update favorite tags", "error");
             }

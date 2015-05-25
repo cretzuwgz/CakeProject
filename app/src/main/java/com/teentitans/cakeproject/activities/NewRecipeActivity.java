@@ -17,7 +17,7 @@ public class NewRecipeActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_recipe);
-        //TODO: oaa:finish this
+        //TODO: oaa: finish this
     }
 
     @Override
