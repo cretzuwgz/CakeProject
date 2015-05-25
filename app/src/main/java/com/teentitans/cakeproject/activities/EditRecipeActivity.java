@@ -171,7 +171,9 @@ public class EditRecipeActivity extends ActionBarActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             MainActivity.setToUpdate();
-            finish();//TODO oaa:go back to MainActivity
+            Intent intent = new Intent(EditRecipeActivity.this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // Removes other Activities from stack
+            startActivity(intent);
         }
     }
 }
