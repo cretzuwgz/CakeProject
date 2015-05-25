@@ -107,7 +107,7 @@ public class SearchActivity extends ActionBarActivity {
         @Override
         protected RecipesFragment doInBackground(String... params) {
             try {
-                String response = ConnectionUtil.getResponseFromURL(URL_SEARCH, "searchString=" + params[0]);//TODO php
+                String response = ConnectionUtil.getResponseFromURL(URL_SEARCH, "searchString=" + params[0]);//TODO php Search
 
                 ArrayList<RecipeVO> recipes = RecipesUtil.getRecipesFrom(response);
                 return RecipesFragment.create("Search", recipes);

@@ -99,11 +99,11 @@ public class RecipesListActivity extends ActionBarActivity {
                 String response;
                 ArrayList<RecipeVO> recipes;
                 if (params[0].equals("uploaded")) {
-                    response = ConnectionUtil.getResponseFromURL("http://cakeproject.whostf.com/php/get_recommended.php");//, "userId=" + MainActivity.getUser().getId());   //TODO php and modify URL
+                    response = ConnectionUtil.getResponseFromURL("http://cakeproject.whostf.com/php/get_recommended.php");//, "userId=" + MainActivity.getUser().getId());   //TODO php Uploaded and modify URL
                     recipes = RecipesUtil.getRecipesFrom(response);
                     return RecipesFragment.create("Uploaded", recipes);
                 } else {
-                    response = ConnectionUtil.getResponseFromURL("http://cakeproject.whostf.com/php/get_top5.php");//, "userId=" + MainActivity.getUser().getId());  //TODO php and modify URL
+                    response = ConnectionUtil.getResponseFromURL("http://cakeproject.whostf.com/php/get_top5.php");//, "userId=" + MainActivity.getUser().getId());  //TODO php Favaorites and modify URL
                     recipes = RecipesUtil.getRecipesFrom(response);
                     return RecipesFragment.create("Favorites", recipes);
                 }

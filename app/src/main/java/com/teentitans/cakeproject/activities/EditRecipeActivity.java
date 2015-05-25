@@ -137,7 +137,7 @@ public class EditRecipeActivity extends ActionBarActivity {
             String parameters = "recipeId=" + params[0] + "&title=" + params[1] + "&reqTime=" + params[2] + "&difficulty=" + params[3] + "&description=" + params[4] + "&tags=" + params[5];
             String response = null;
             try {
-                response = ConnectionUtil.getResponseFromURL("http://cakeproject.whostf.com/php/update_recipe.php", parameters);//TODO php
+                response = ConnectionUtil.getResponseFromURL("http://cakeproject.whostf.com/php/update_recipe.php", parameters);
             } catch (IOException e) {
                 Log.e("Update Recipe", "error");
             }
@@ -161,7 +161,7 @@ public class EditRecipeActivity extends ActionBarActivity {
         protected Void doInBackground(String... params) {
 
             try {
-                ConnectionUtil.getResponseFromURL("http://cakeproject.whostf.com/php/delete_recipe.php", "recipeId=" + params[0]);//TODO php
+                ConnectionUtil.getResponseFromURL("http://cakeproject.whostf.com/php/delete_recipe.php", "recipeId=" + params[0]);
             } catch (IOException e) {
                 Log.e("Delete Recipe", "error");
             }

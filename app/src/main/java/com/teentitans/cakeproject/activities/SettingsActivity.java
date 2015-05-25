@@ -68,7 +68,7 @@ public class SettingsActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 if (!etTags.getText().toString().isEmpty() && etTags.getText().toString().equals(MainActivity.getUser().getFavoriteTagsAsString()))
-                    new UpdateFavoriteTagsTask().execute(etTags.getText().toString());
+                    new UpdateFavoriteTagsTask().execute(MainActivity.getUser().getId(),etTags.getText().toString());
                 else
                     Toast.makeText(SettingsActivity.this, "Both fields are required", Toast.LENGTH_LONG).show();
             }
@@ -192,7 +192,7 @@ public class SettingsActivity extends ActionBarActivity {
             String response = null;
 
             try {
-                response = ConnectionUtil.getResponseFromURL("http://cakeproject.whostf.com/php/change_tags.php", "tags=" + params[0]);//TODO php
+                response = ConnectionUtil.getResponseFromURL("http://cakeproject.whostf.com/php/change_tags.php", "user_id"+params[0]+"&tags=" + params[1]);//TODO php Update fav tags
             } catch (IOException e) {
                 Log.e("Update favorite tags", "error");
             }
