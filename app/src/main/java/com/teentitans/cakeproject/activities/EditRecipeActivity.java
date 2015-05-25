@@ -161,7 +161,7 @@ public class EditRecipeActivity extends ActionBarActivity {
         protected Void doInBackground(String... params) {
 
             try {
-                ConnectionUtil.getResponseFromURL("http://cakeproject.whostf.com/php/delete_recipe.php", "recipeId=" + params[0]);
+                ConnectionUtil.loadURL("http://cakeproject.whostf.com/php/delete_recipe.php", "recipeId=" + params[0]);
             } catch (IOException e) {
                 Log.e("Delete Recipe", "error");
             }
