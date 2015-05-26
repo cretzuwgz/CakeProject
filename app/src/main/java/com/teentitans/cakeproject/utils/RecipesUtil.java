@@ -43,6 +43,10 @@ public class RecipesUtil {
         } catch (JSONException e) {
             return null;
         }
+
+        if (recipeList.size() == 0)
+            return null;
+
         return recipeList;
     }
 }

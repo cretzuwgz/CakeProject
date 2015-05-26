@@ -110,6 +110,7 @@ public class SearchActivity extends ActionBarActivity {
                 String response = ConnectionUtil.getResponseFromURL(URL_SEARCH, "searchString=" + params[0]);
 
                 ArrayList<RecipeVO> recipes = RecipesUtil.getRecipesFrom(response);
+
                 return RecipesFragment.create("Search", recipes);
 
             } catch (IOException e) {
