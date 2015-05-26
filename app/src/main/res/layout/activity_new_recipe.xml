@@ -170,14 +170,14 @@
 
                 <EditText
                     android:id="@+id/etIngredients"
-                    android:hint="@string/prompt_tags_recipe"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:entries="@array/gender_array"
                     android:gravity="center"
+                    android:hint="@string/prompt_tags_recipe"
                     android:textColor="@color/primary_text"
-                    android:textColorHint="@color/secondary_text"/>
+                    android:textColorHint="@color/secondary_text" />
             </LinearLayout>
 
             <LinearLayout

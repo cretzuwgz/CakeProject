@@ -7,10 +7,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 public class ConnectionUtil {
+
+    public static void loadURL(String link) throws IOException {
+
+        HttpURLConnection connection;
+
+        URL url = new URL(link);
+        connection = (HttpURLConnection) url.openConnection();
+        connection.setDoOutput(true);
+        connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        connection.disconnect();
+    }
 
     public static void loadURL(String link, String parameters) throws IOException {
 

@@ -113,7 +113,8 @@ public class MainActivity extends ActionBarActivity {
                         break;
                     }
                     case 3: {
-                        //TODO oaa: launch NewRecipeActivity
+                        Intent intent = new Intent(MainActivity.this, NewRecipeActivity.class);
+                        startActivity(intent);
                         break;
                     }
                     case 4: {

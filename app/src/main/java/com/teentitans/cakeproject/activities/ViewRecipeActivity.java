@@ -55,6 +55,7 @@ public class ViewRecipeActivity extends ActionBarActivity implements ObservableS
     private int mToolbarColor;
     private boolean mFabIsShown;
     private boolean isViewedByUploader;
+    private Button btnRate;
 
     //TODO: remove from favorites
 
@@ -197,10 +198,11 @@ public class ViewRecipeActivity extends ActionBarActivity implements ObservableS
             }
         });
 
-        Button btnRate = (Button) findViewById(R.id.btnRate);
+        btnRate = (Button) findViewById(R.id.btnRate);
         btnRate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                btnRate.setEnabled(false);
                 new RatingTask().execute(recipe.getId(), String.valueOf(ratingBar.getRating()));
             }
         });
@@ -345,6 +347,7 @@ public class ViewRecipeActivity extends ActionBarActivity implements ObservableS
         @Override
         protected void onPostExecute(Void aVoid) {
             Toast.makeText(ViewRecipeActivity.this, "Thank you", Toast.LENGTH_LONG).show();
+            btnRate.setVisibility(View.GONE);
             MainActivity.setToUpdate();
         }
     }
