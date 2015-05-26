@@ -11,35 +11,6 @@ import java.net.URL;
 
 public class ConnectionUtil {
 
-    public static void loadURL(String link) throws IOException {
-
-        HttpURLConnection connection;
-
-        URL url = new URL(link);
-        connection = (HttpURLConnection) url.openConnection();
-        connection.setDoOutput(true);
-        connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-        connection.disconnect();
-    }
-
-    public static void loadURL(String link, String parameters) throws IOException {
-
-        HttpURLConnection connection;
-        OutputStreamWriter request;
-
-        URL url = new URL(link);
-        connection = (HttpURLConnection) url.openConnection();
-        connection.setDoOutput(true);
-        connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-        connection.setRequestMethod("POST");
-
-        request = new OutputStreamWriter(connection.getOutputStream());
-        request.write(parameters);
-        request.flush();
-        request.close();
-        connection.disconnect();
-    }
-
     public static String getResponseFromURL(String link) throws IOException {
 
         HttpURLConnection connection;
