@@ -134,7 +134,7 @@ public class EditRecipeActivity extends ActionBarActivity {
 
         @Override
         protected String doInBackground(String... params) {
-            String parameters = "recipeId=" + params[0] + "&title=" + params[1] + "&reqTime=" + params[2] + "&difficulty=" + params[3] + "&description=" + params[4] + "&tags=" + params[5];
+            String parameters = "recipe_id=" + params[0] + "&title=" + params[1] + "&req_time=" + params[2] + "&difficulty=" + params[3] + "&description=" + params[4] + "&tags=" + params[5];
             String response = null;
             try {
                 response = ConnectionUtil.getResponseFromURL("http://cakeproject.whostf.com/php/update_recipe.php", parameters);
