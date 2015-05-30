@@ -131,7 +131,7 @@ public class RegisterPageFragment extends Fragment {
             Spinner genderSpinner = (Spinner) rootView.findViewById(R.id.sGender);
             Spinner experienceSpinner = (Spinner) rootView.findViewById(R.id.sExperience);
 
-            user = new UserVO(null, etUsername.getText().toString(), etPassword.getText().toString(), null, genderSpinner.getSelectedItemPosition() + 1, experienceSpinner.getSelectedItemPosition() + 1);
+            user = new UserVO(null, etUsername.getText().toString(), etPassword.getText().toString(), null, genderSpinner.getSelectedItemPosition() + 1, experienceSpinner.getSelectedItemPosition() + 1, false);
 
             return "OK";
         }

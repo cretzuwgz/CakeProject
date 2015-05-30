@@ -113,26 +113,26 @@
             </com.balysv.materialripple.MaterialRippleLayout>
         </LinearLayout>
 
-        <!--<com.balysv.materialripple.MaterialRippleLayout-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_margin="10dp"-->
-        <!--app:mrl_rippleAlpha="0.7"-->
-        <!--app:mrl_rippleColor="@color/primary"-->
-        <!--app:mrl_rippleDelayClick="false"-->
-        <!--app:mrl_rippleHover="true"-->
-        <!--app:mrl_rippleOverlay="true">-->
+        <com.balysv.materialripple.MaterialRippleLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            app:mrl_rippleAlpha="0.7"
+            app:mrl_rippleColor="@color/primary"
+            app:mrl_rippleDelayClick="false"
+            app:mrl_rippleHover="true"
+            app:mrl_rippleOverlay="true">
 
-        <!--<TextView-->
-        <!--android:id="@+id/btnForgotPassword"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:clickable="true"-->
-        <!--android:text="@string/action_forgot_password"-->
-        <!--android:textAppearance="?android:attr/textAppearanceMedium"-->
-        <!--android:textColor="@color/secondary_text"-->
-        <!--android:textStyle="bold" />-->
-        <!--</com.balysv.materialripple.MaterialRippleLayout>-->
+            <TextView
+                android:id="@+id/btnGuestLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:text="@string/guest_login"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/secondary_text"
+                android:textStyle="bold" />
+        </com.balysv.materialripple.MaterialRippleLayout>
     </LinearLayout>
 
 </LinearLayout>

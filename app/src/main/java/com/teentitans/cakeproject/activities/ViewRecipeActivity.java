@@ -1,5 +1,7 @@
 package com.teentitans.cakeproject.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -137,7 +139,7 @@ public class ViewRecipeActivity extends ActionBarActivity implements ObservableS
         tvDescription.setText(recipe.getDescription());
 
         TextView tvTime = (TextView) findViewById(R.id.time);
-        tvTime.setText(recipe.getReqTime() + " minutes");
+        tvTime.setText(recipe.getReqTime() + "\nminutes");
 
         TextView tvIngredients = (TextView) findViewById(R.id.ingredients);
 
@@ -174,7 +176,9 @@ public class ViewRecipeActivity extends ActionBarActivity implements ObservableS
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isViewedByUploader) {
+                if (MainActivity.getUser().isGuest()) {
+                    showRegisterAlertDialog();
+                } else if (isViewedByUploader) {
                     Intent intent = new Intent(ViewRecipeActivity.this, EditRecipeActivity.class);
                     Bundle b = new Bundle();
                     b.putParcelable("recipe", recipe);
@@ -202,8 +206,12 @@ public class ViewRecipeActivity extends ActionBarActivity implements ObservableS
         btnRate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                btnRate.setEnabled(false);
-                new RatingTask().execute(recipe.getId(), String.valueOf(ratingBar.getRating()));
+                if (MainActivity.getUser().isGuest()) {
+                    showRegisterAlertDialog();
+                } else {
+                    btnRate.setEnabled(false);
+                    new RatingTask().execute(recipe.getId(), String.valueOf(ratingBar.getRating()));
+                }
             }
         });
     }
@@ -215,6 +223,28 @@ public class ViewRecipeActivity extends ActionBarActivity implements ObservableS
             getWindow().setEnterTransition(transition);
             getWindow().setReturnTransition(transition);
         }
+    }
+
+    private void showRegisterAlertDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(ViewRecipeActivity.this);
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                Intent intent = new Intent(ViewRecipeActivity.this, RegisterActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        builder.setTitle("Do you want to register?");
+        builder.setMessage("This feature is available only for registered users");
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     @Override

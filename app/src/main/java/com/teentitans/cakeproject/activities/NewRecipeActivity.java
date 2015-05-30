@@ -56,9 +56,9 @@ public class NewRecipeActivity extends ActionBarActivity {
                 String pictureLink = etPicture.getText().toString();
                 String reqTime = etReqTime.getText().toString();
                 String difficulty = String.valueOf(sDifficulty.getSelectedItemPosition() + 1);
-                String ingredients = etIngredients.getText().toString();
-                String description = etDescription.getText().toString();
-                String tags = etTags.getText().toString();
+                String ingredients = etIngredients.getText().toString().replaceAll(" ", "%20");
+                String description = etDescription.getText().toString().replaceAll(" ", "%20");
+                String tags = etTags.getText().toString().replaceAll(" ", "%20");
 
                 if (pictureLink.isEmpty())
                     pictureLink = "NULL";

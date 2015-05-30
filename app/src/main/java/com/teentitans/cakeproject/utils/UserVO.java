@@ -23,15 +23,17 @@ public class UserVO implements Parcelable {
     private String date;
     private int gender;
     private int experience;
+    private Boolean isGuest;
     private ArrayList<String> favoriteTags;
 
-    public UserVO(String id, String username, String password, String date, int gender, int experience) {
+    public UserVO(String id, String username, String password, String date, int gender, int experience, Boolean isGuest) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.date = date;
         this.gender = gender;
         this.experience = experience;
+        this.isGuest = isGuest;
         favoriteTags = new ArrayList<>();
     }
 
@@ -42,6 +44,7 @@ public class UserVO implements Parcelable {
         date = in.readString();
         gender = in.readInt();
         experience = in.readInt();
+        isGuest = (Boolean) in.readValue(null);
         favoriteTags = (ArrayList<String>) in.readSerializable();
     }
 
@@ -71,6 +74,10 @@ public class UserVO implements Parcelable {
 
     public int getExperience() {
         return experience;
+    }
+
+    public Boolean isGuest() {
+        return isGuest;
     }
 
     public ArrayList<String> getFavoriteTags() {
@@ -105,6 +112,7 @@ public class UserVO implements Parcelable {
         parcel.writeString(date);
         parcel.writeInt(gender);
         parcel.writeInt(experience);
+        parcel.writeValue(isGuest);
         parcel.writeSerializable(favoriteTags);
     }
 }

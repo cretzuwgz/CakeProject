@@ -63,7 +63,7 @@ public class EditRecipeActivity extends ActionBarActivity {
         update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new UpdateRecipeTask().execute(recipe.getId(), title.getText().toString(), reqTime.getText().toString(), String.valueOf(difficulty.getSelectedItemPosition() + 1), description.getText().toString(), tags.getText().toString());
+                new UpdateRecipeTask().execute(recipe.getId(), title.getText().toString(), reqTime.getText().toString(), String.valueOf(difficulty.getSelectedItemPosition() + 1), description.getText().toString().replaceAll(" ", "%20"), tags.getText().toString().replaceAll(" ", "%20"));
             }
         });
 

@@ -1,8 +1,10 @@
 package com.teentitans.cakeproject.activities;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -71,12 +73,12 @@ public class MainActivity extends ActionBarActivity {
         DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         ListView listView = (ListView) findViewById(R.id.left_drawer);
 
+        if (user == null)
+            user = getIntent().getBundleExtra("bundle").getParcelable("user");
+
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.app_name, R.string.app_name);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
-
-        if (user == null)
-            user = getIntent().getBundleExtra("bundle").getParcelable("user");
 
         ArrayList<String> navigationDrawerItems = new ArrayList<>();
         navigationDrawerItems.add("Settings");
@@ -93,37 +95,57 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 
+                if (user.isGuest()) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
+                        }
+                    });
+                    builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
 
-                switch (position) {
-                    case 0: {
-                        Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-                        startActivity(intent);
-                        break;
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                        }
+                    });
+                    builder.setTitle("Do you want to register?");
+                    builder.setMessage("Side menu is available only for registered users");
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                } else
+                    switch (position) {
+                        case 0: {
+                            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                            startActivity(intent);
+                            break;
+                        }
+                        case 1: {
+                            Intent intent = new Intent(MainActivity.this, RecipesListActivity.class);
+                            intent.putExtra("activityFor", "uploaded");
+                            startActivity(intent);
+                            break;
+                        }
+                        case 2: {
+                            Intent intent = new Intent(MainActivity.this, RecipesListActivity.class);
+                            intent.putExtra("activityFor", "favorites");
+                            startActivity(intent);
+                            break;
+                        }
+                        case 3: {
+                            Intent intent = new Intent(MainActivity.this, NewRecipeActivity.class);
+                            startActivity(intent);
+                            break;
+                        }
+                        case 4: {
+                            finish();
+                            break;
+                        }
+                        default:
+                            break;
                     }
-                    case 1: {
-                        Intent intent = new Intent(MainActivity.this, RecipesListActivity.class);
-                        intent.putExtra("activityFor", "uploaded");
-                        startActivity(intent);
-                        break;
-                    }
-                    case 2: {
-                        Intent intent = new Intent(MainActivity.this, RecipesListActivity.class);
-                        intent.putExtra("activityFor", "favorites");
-                        startActivity(intent);
-                        break;
-                    }
-                    case 3: {
-                        Intent intent = new Intent(MainActivity.this, NewRecipeActivity.class);
-                        startActivity(intent);
-                        break;
-                    }
-                    case 4: {
-                        finish();
-                        break;
-                    }
-                    default:
-                        break;
-                }
             }
         });
 
@@ -158,6 +180,9 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private boolean needsUpdate() {
+        if (user.isGuest())
+            return recentRecipes == null || toUpdate;
+
         return recentRecipes == null || recommendedRecipes == null || topRecipes == null || toUpdate;
     }
 
@@ -168,44 +193,58 @@ public class MainActivity extends ActionBarActivity {
         progress.setCancelable(false);
         progress.show();
 
-        new GetRecipesTask().execute("recommended");
-        new GetRecipesTask().execute("top");
+        if (!user.isGuest()) {
+            new GetRecipesTask().execute("recommended");
+            new GetRecipesTask().execute("top");
+        }
         new GetRecipesTask().execute("recent");
 
         toUpdate = false;
     }
 
     @Override
+    protected void onDestroy() {
+        user = null;
+        recentRecipes = null;
+        recommendedRecipes = null;
+        topRecipes = null;
+        super.onDestroy();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        if (user.isGuest())
+            getMenuInflater().inflate(R.menu.menu_guest, menu);
+        else {
+            getMenuInflater().inflate(R.menu.menu_main, menu);
 
-        // Associate searchable configuration with the SearchView
-        SearchManager searchManager =
-                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        final SearchView searchView =
-                (SearchView) menu.findItem(R.id.action_search).getActionView();
-        searchView.setSearchableInfo(
-                searchManager.getSearchableInfo(getComponentName()));
+            // Associate searchable configuration with the SearchView
+            SearchManager searchManager =
+                    (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+            final SearchView searchView =
+                    (SearchView) menu.findItem(R.id.action_search).getActionView();
+            searchView.setSearchableInfo(
+                    searchManager.getSearchableInfo(getComponentName()));
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                searchView.setQuery("", false);
-                searchView.setIconified(true);
-                Intent intent = new Intent(MainActivity.this, SearchActivity.class);
-                intent.setAction(Intent.ACTION_SEARCH);
-                intent.putExtra(SearchManager.QUERY, s);
-                startActivity(intent);
-                return true;
-            }
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    searchView.setQuery("", false);
+                    searchView.setIconified(true);
+                    Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                    intent.setAction(Intent.ACTION_SEARCH);
+                    intent.putExtra(SearchManager.QUERY, s);
+                    startActivity(intent);
+                    return true;
+                }
 
-            @Override
-            public boolean onQueryTextChange(String s) {
-                return false;
-            }
-        });
-
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    return false;
+                }
+            });
+        }
         return true;
     }
 
@@ -227,7 +266,16 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void setAdapter() {
-        if (recommendedRecipes != null && recentRecipes != null && topRecipes != null) {
+        if (user.isGuest()) {
+            // Creating The ViewPagerAdapter and Passing Fragment Manager, Titles fot the Tabs and Number Of Tabs.
+            int noOfTabs = 1;
+            CharSequence x[] = {"Recent"};
+            ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager(), x, noOfTabs);
+            pager.setAdapter(adapter);
+            // Setting the ViewPager For the SlidingTabsLayout
+            tabs.setViewPager(pager);
+            progress.dismiss();
+        } else if (recommendedRecipes != null && recentRecipes != null && topRecipes != null) {
             // Creating The ViewPagerAdapter and Passing Fragment Manager, Titles fot the Tabs and Number Of Tabs.
             int noOfTabs = 3;
             ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager(), Titles, noOfTabs);
@@ -256,6 +304,9 @@ public class MainActivity extends ActionBarActivity {
         //This method return the fragment for the every position in the View Pager
         @Override
         public Fragment getItem(int position) {
+            if (user.isGuest())
+                return RecipesFragment.create(getPageTitle(position).toString(), recentRecipes);
+
             switch (position) {
                 case 0: {
                     return RecipesFragment.create(getPageTitle(position).toString(), recommendedRecipes);

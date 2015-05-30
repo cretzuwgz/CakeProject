@@ -27,7 +27,7 @@ public class LoginActivity extends ActionBarActivity {
     UserVO userVO;
     private Button btnLogin;
     private TextView btnRegister;
-    //    private TextView btnForgotPassword;
+    private TextView btnGuestLogin;
     private View.OnClickListener onClick = new View.OnClickListener() {
         public void onClick(View v) {
             if (v.equals(btnLogin)) {
@@ -35,8 +35,13 @@ public class LoginActivity extends ActionBarActivity {
             } else if (v.equals(btnRegister)) {
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(intent);
-//            } else if (v.equals(btnForgotPassword))
-//                Log.e("OnClick", "ForgotPassword Clicked");
+            } else if (v.equals(btnGuestLogin)) {
+                userVO = new UserVO("id", "username", null, "date", 0, 0, true);
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                Bundle b = new Bundle();
+                b.putParcelable("user", userVO);
+                intent.putExtra("bundle", b);
+                startActivity(intent);
             }
         }
     };
@@ -49,11 +54,11 @@ public class LoginActivity extends ActionBarActivity {
 
         btnLogin = (Button) findViewById(R.id.btnLogin);
         btnRegister = (TextView) findViewById(R.id.btnRegister);
-//        btnForgotPassword = (TextView) findViewById(R.id.btnForgotPassword);
+        btnGuestLogin = (TextView) findViewById(R.id.btnGuestLogin);
 
         btnLogin.setOnClickListener(onClick);
         btnRegister.setOnClickListener(onClick);
-//        btnForgotPassword.setOnClickListener(onClick);
+        btnGuestLogin.setOnClickListener(onClick);
 
     }
 
@@ -102,7 +107,7 @@ public class LoginActivity extends ActionBarActivity {
             }
 
             try {
-                userVO = new UserVO(userJson.getString("id"), userJson.getString("username"), null, userJson.getString("date"), Integer.valueOf(userJson.getString("gender")), Integer.valueOf(userJson.getString("experience")));
+                userVO = new UserVO(userJson.getString("id"), userJson.getString("username"), null, userJson.getString("date"), Integer.valueOf(userJson.getString("gender")), Integer.valueOf(userJson.getString("experience")), false);
                 JSONArray array = userJson.getJSONArray("tags");
 
                 for (int j = 0; j < array.length(); j++)

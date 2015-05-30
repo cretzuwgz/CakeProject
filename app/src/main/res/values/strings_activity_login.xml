@@ -5,6 +5,6 @@
     <string name="sign_in">Don\'t have an account?</string>
     <string name="action_sign_in">Register now!</string>
     <string name="action_sign_in_short">LOGIN</string>
-    <string name="action_forgot_password">Forgot Username or Password?</string>
+    <string name="guest_login">Login as Guest</string>
     <string name="error_login">Login failed. Check username and password</string>
 </resources>
