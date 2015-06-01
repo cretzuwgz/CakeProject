@@ -345,7 +345,7 @@ public class MainActivity extends ActionBarActivity {
             try {
                 switch (args[0]) {
                     case "recommended": {
-                        response = ConnectionUtil.getResponseFromURL(URL_RECOMMENDED);
+                        response = ConnectionUtil.getResponseFromURL(URL_RECOMMENDED,"user_id="+user.getId());
                         recommendedRecipes = RecipesUtil.getRecipesFrom(response);
 
                         if (response == null)
