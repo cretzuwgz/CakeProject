@@ -22,7 +22,7 @@ public class RecipesFragment extends Fragment {
     public static final String ARG_TITLE = "title";
     public static final String ARG_RECIPES = "recipes";
     private ArrayList<RecipeVO> recipes;
-    private String title;
+    private String title = "";
 
     public static RecipesFragment create(String title, ArrayList<RecipeVO> recipes) {
         RecipesFragment fragment = new RecipesFragment();
