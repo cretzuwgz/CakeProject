@@ -73,7 +73,7 @@ public class MainActivity extends ActionBarActivity {
         DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         ListView listView = (ListView) findViewById(R.id.left_drawer);
 
-        if (user == null)
+        if (getIntent().getBundleExtra("bundle").getParcelable("user") != null)
             user = getIntent().getBundleExtra("bundle").getParcelable("user");
 
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.app_name, R.string.app_name);
@@ -204,7 +204,6 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onDestroy() {
-        user = null;
         recentRecipes = null;
         recommendedRecipes = null;
         topRecipes = null;
@@ -345,7 +344,7 @@ public class MainActivity extends ActionBarActivity {
             try {
                 switch (args[0]) {
                     case "recommended": {
-                        response = ConnectionUtil.getResponseFromURL(URL_RECOMMENDED,"user_id="+user.getId());
+                        response = ConnectionUtil.getResponseFromURL(URL_RECOMMENDED, "user_id=" + user.getId());
                         recommendedRecipes = RecipesUtil.getRecipesFrom(response);
 
                         if (response == null)
