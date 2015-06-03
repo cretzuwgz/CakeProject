@@ -73,7 +73,7 @@ public class MainActivity extends ActionBarActivity {
         DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         ListView listView = (ListView) findViewById(R.id.left_drawer);
 
-        if (getIntent().getBundleExtra("bundle").getParcelable("user") != null)
+        if (getIntent().getBundleExtra("bundle") != null)
             user = getIntent().getBundleExtra("bundle").getParcelable("user");
 
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.app_name, R.string.app_name);
