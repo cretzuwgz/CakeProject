@@ -44,7 +44,7 @@ public class UserVO implements Parcelable {
         date = in.readString();
         gender = in.readInt();
         experience = in.readInt();
-        isGuest = (Boolean) in.readValue(null);
+        isGuest = (Boolean) in.readValue(getClass().getClassLoader());
         favoriteTags = (ArrayList<String>) in.readSerializable();
     }
 

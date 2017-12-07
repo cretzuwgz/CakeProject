@@ -11,7 +11,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.Slide;
 import android.util.Log;
@@ -39,7 +39,7 @@ import com.teentitans.cakeproject.utils.RecipeVO;
 
 import java.io.IOException;
 
-public class ViewRecipeActivity extends ActionBarActivity implements ObservableScrollViewCallbacks {
+public class ViewRecipeActivity extends AppCompatActivity implements ObservableScrollViewCallbacks {
 
     private static final float MAX_TEXT_SCALE_DELTA = 0.3f;
     private static final boolean TOOLBAR_IS_STICKY = true;
@@ -62,7 +62,7 @@ public class ViewRecipeActivity extends ActionBarActivity implements ObservableS
     //TODO: remove from favorites
 
 
-    public static void navigate(ActionBarActivity activity, View transitionImage, RecipeVO recipe) {
+    public static void navigate(AppCompatActivity activity, View transitionImage, RecipeVO recipe) {
         Intent intent = new Intent(activity, ViewRecipeActivity.class);
         Bundle b = new Bundle();
         b.putParcelable("recipe", recipe);
@@ -103,16 +103,11 @@ public class ViewRecipeActivity extends ActionBarActivity implements ObservableS
 
         new IncrementViewCounter().execute(recipe.getId());
 
-        final RatingBar ratingBar = (RatingBar) findViewById(R.id.ratingBar);
+        final RatingBar ratingBar = findViewById(R.id.ratingBar);
 
         ratingBar.setRating(Float.valueOf(recipe.getRating()));
 
-        ((Toolbar) mToolbar).setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        ((Toolbar) mToolbar).setNavigationOnClickListener(v -> onBackPressed());
 
         mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
         mFlexibleSpaceShowFabOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_show_fab_offset);
@@ -129,41 +124,41 @@ public class ViewRecipeActivity extends ActionBarActivity implements ObservableS
         mOverlayView = findViewById(R.id.overlay);
         mTextOverlayView = findViewById(R.id.overlay_text);
 
-        ObservableScrollView mScrollView = (ObservableScrollView) findViewById(R.id.scroll);
+        ObservableScrollView mScrollView = findViewById(R.id.scroll);
         mScrollView.setScrollViewCallbacks(this);
-        mTitleView = (TextView) findViewById(R.id.title);
+        mTitleView = findViewById(R.id.title);
         mTitleView.setText(recipe.getTitle());
         setTitle(null);
 
-        TextView tvDescription = (TextView) findViewById(R.id.description);
+        TextView tvDescription = findViewById(R.id.description);
         tvDescription.setText(recipe.getDescription());
 
-        TextView tvTime = (TextView) findViewById(R.id.time);
-        tvTime.setText(recipe.getReqTime() + "\nminutes");
+        TextView tvTime = findViewById(R.id.time);
+        tvTime.setText(getString(R.string.req_time).replace("{{time}}", recipe.getReqTime()));
 
-        TextView tvIngredients = (TextView) findViewById(R.id.ingredients);
+        TextView tvIngredients = findViewById(R.id.ingredients);
 
         for (IngredientVO ingredient : recipe.getIngredients()) {
             tvIngredients.append(ingredient.getName() + ": " + ingredient.getQuantity() + " " + ingredient.getMeasurement() + "\n");
         }
 
-        TextView tvExperience = (TextView) findViewById(R.id.experience);
+        TextView tvExperience = findViewById(R.id.experience);
 
         switch (recipe.getDifficulty()) {
             case 1: {
-                tvExperience.setText("Beginner");
+                tvExperience.setText(R.string.beginner);
                 break;
             }
             case 2: {
-                tvExperience.setText("Medium");
+                tvExperience.setText(R.string.medium);
                 break;
             }
             case 3: {
-                tvExperience.setText("Advanced");
+                tvExperience.setText(R.string.advanced);
                 break;
             }
             default: {
-                tvExperience.setText("Unknown");
+                tvExperience.setText(R.string.unknown);
                 break;
             }
         }
@@ -173,21 +168,18 @@ public class ViewRecipeActivity extends ActionBarActivity implements ObservableS
             ((FloatingActionButton) mFab).setColorNormal(Color.YELLOW);
             ((FloatingActionButton) mFab).setImageResource(android.R.drawable.ic_menu_edit);
         }
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (MainActivity.getUser().isGuest()) {
-                    showRegisterAlertDialog();
-                } else if (isViewedByUploader) {
-                    Intent intent = new Intent(ViewRecipeActivity.this, EditRecipeActivity.class);
-                    Bundle b = new Bundle();
-                    b.putParcelable("recipe", recipe);
-                    intent.putExtra("bundle", b);
-                    startActivity(intent);
-                } else {
-                    new AddToFavorites().execute(recipe.getId(), MainActivity.getUser().getId());
-                    Toast.makeText(ViewRecipeActivity.this, "Recipe added to favorites", Toast.LENGTH_SHORT).show();
-                }
+        mFab.setOnClickListener(v -> {
+            if (MainActivity.getUser().isGuest()) {
+                showRegisterAlertDialog();
+            } else if (isViewedByUploader) {
+                Intent intent = new Intent(ViewRecipeActivity.this, EditRecipeActivity.class);
+                Bundle b = new Bundle();
+                b.putParcelable("recipe", recipe);
+                intent.putExtra("bundle", b);
+                startActivity(intent);
+            } else {
+                new AddToFavorites().execute(recipe.getId(), MainActivity.getUser().getId());
+                Toast.makeText(ViewRecipeActivity.this, "Recipe added to favorites", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -195,23 +187,15 @@ public class ViewRecipeActivity extends ActionBarActivity implements ObservableS
         ViewHelper.setScaleX(mFab, 0);
         ViewHelper.setScaleY(mFab, 0);
 
-        ScrollUtils.addOnGlobalLayoutListener(mScrollView, new Runnable() {
-            @Override
-            public void run() {
-                onScrollChanged(0, false, false);
-            }
-        });
+        ScrollUtils.addOnGlobalLayoutListener(mScrollView, () -> onScrollChanged(0, false, false));
 
-        btnRate = (Button) findViewById(R.id.btnRate);
-        btnRate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (MainActivity.getUser().isGuest()) {
-                    showRegisterAlertDialog();
-                } else {
-                    btnRate.setEnabled(false);
-                    new RatingTask().execute(recipe.getId(), String.valueOf(ratingBar.getRating()));
-                }
+        btnRate = findViewById(R.id.btnRate);
+        btnRate.setOnClickListener(v -> {
+            if (MainActivity.getUser().isGuest()) {
+                showRegisterAlertDialog();
+            } else {
+                btnRate.setEnabled(false);
+                new RatingTask().execute(recipe.getId(), String.valueOf(ratingBar.getRating()));
             }
         });
     }
@@ -227,19 +211,12 @@ public class ViewRecipeActivity extends ActionBarActivity implements ObservableS
 
     private void showRegisterAlertDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(ViewRecipeActivity.this);
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                Intent intent = new Intent(ViewRecipeActivity.this, RegisterActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-            }
+        builder.setPositiveButton("Yes", (dialog, id) -> {
+            Intent intent = new Intent(ViewRecipeActivity.this, RegisterActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
         });
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-
-            }
+        builder.setNegativeButton("No", (dialogInterface, i) -> {
         });
         builder.setTitle("Do you want to register?");
         builder.setMessage("This feature is available only for registered users");
@@ -285,17 +262,8 @@ public class ViewRecipeActivity extends ActionBarActivity implements ObservableS
                 -scrollY + mFlexibleSpaceImageHeight - mFab.getHeight() / 2,
                 mActionBarSize - mFab.getHeight() / 2,
                 maxFabTranslationY);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-            // On pre-honeycomb, ViewHelper.setTranslationX/Y does not set margin,
-            // which causes FAB's OnClickListener not working.
-            FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mFab.getLayoutParams();
-            lp.leftMargin = mOverlayView.getWidth() - mFabMargin - mFab.getWidth();
-            lp.topMargin = (int) fabTranslationY;
-            mFab.requestLayout();
-        } else {
-            ViewHelper.setTranslationX(mFab, mOverlayView.getWidth() - mFabMargin - mFab.getWidth());
-            ViewHelper.setTranslationY(mFab, fabTranslationY);
-        }
+        ViewHelper.setTranslationX(mFab, mOverlayView.getWidth() - mFabMargin - mFab.getWidth());
+        ViewHelper.setTranslationY(mFab, fabTranslationY);
 
         // Show/hide FAB
         if (fabTranslationY < mFlexibleSpaceShowFabOffset) {

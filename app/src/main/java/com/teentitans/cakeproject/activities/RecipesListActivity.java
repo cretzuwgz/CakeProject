@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -22,7 +22,7 @@ import com.teentitans.cakeproject.utils.RecipesUtil;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class RecipesListActivity extends ActionBarActivity {
+public class RecipesListActivity extends AppCompatActivity {
 
     private ProgressDialog progress;
 
@@ -31,7 +31,7 @@ public class RecipesListActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipes_list);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         progress = new ProgressDialog(this);
 
         if (toolbar != null) {

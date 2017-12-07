@@ -30,7 +30,7 @@ public class RecipeVO implements Parcelable {
     private ArrayList<IngredientVO> ingredients;
     private ArrayList<String> tags;
 
-    public RecipeVO(String id, String title, String date, String uploader, String description, String pLink, String rating, int difficulty, String reqTime) {
+    RecipeVO(String id, String title, String date, String uploader, String description, String pLink, String rating, int difficulty, String reqTime) {
         this.id = id;
         this.title = title;
         this.date = date;
@@ -45,7 +45,7 @@ public class RecipeVO implements Parcelable {
     }
 
     @SuppressWarnings("unchecked")
-    public RecipeVO(Parcel in) {
+    private RecipeVO(Parcel in) {
         this.id = in.readString();
         this.title = in.readString();
         this.date = in.readString();
@@ -55,7 +55,7 @@ public class RecipeVO implements Parcelable {
         this.rating = in.readString();
         this.difficulty = in.readInt();
         this.reqTime = in.readString();
-        Bundle b = in.readBundle();
+        Bundle b = in.readBundle(getClass().getClassLoader());
         this.ingredients = (ArrayList<IngredientVO>) b.getSerializable("ingredients");
         this.tags = (ArrayList<String>) b.getSerializable("tags");
     }
@@ -108,8 +108,8 @@ public class RecipeVO implements Parcelable {
         return ingredients;
     }
 
-    public String getFirstXTags(int x) {
-        StringBuffer buffer = new StringBuffer();
+    String getFirstXTags(int x) {
+        StringBuilder buffer = new StringBuilder();
 
         for (int i = 0; i < x - 1; i++)
             buffer.append(tags.get(i)).append(", ");
@@ -119,11 +119,11 @@ public class RecipeVO implements Parcelable {
         return buffer.toString().trim();
     }
 
-    public void addTag(String tag) {
+    void addTag(String tag) {
         tags.add(tag);
     }
 
-    public void addIngredient(IngredientVO ingredient) {
+    void addIngredient(IngredientVO ingredient) {
         ingredients.add(ingredient);
     }
 

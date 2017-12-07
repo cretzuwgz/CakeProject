@@ -1,6 +1,6 @@
 package com.teentitans.cakeproject.utils;
 
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,11 +15,11 @@ import com.teentitans.cakeproject.activities.ViewRecipeActivity;
 import java.util.ArrayList;
 
 public class CustomRecycleViewAdapter extends RecyclerView.Adapter<CustomRecycleViewAdapter.ViewHolder> {
-    private ActionBarActivity parentActivity;
+    private AppCompatActivity parentActivity;
     private ArrayList<RecipeVO> recipes;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public CustomRecycleViewAdapter(ArrayList<RecipeVO> recipes, ActionBarActivity parent) {
+    public CustomRecycleViewAdapter(ArrayList<RecipeVO> recipes, AppCompatActivity parent) {
         this.recipes = recipes;
         this.parentActivity = parent;
     }
@@ -66,18 +66,18 @@ public class CustomRecycleViewAdapter extends RecyclerView.Adapter<CustomRecycle
     // you provide access to all the views for a data item in a view holder
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         // each data item is just a string in this case
-        public CustomImageView recipeImage;
-        public TextView recipeTitle;
-        public TextView lTags;
-        public RatingBar recipeRating;
-        public ActionBarActivity parent;
+        CustomImageView recipeImage;
+        TextView recipeTitle;
+        TextView lTags;
+        RatingBar recipeRating;
+        AppCompatActivity parent;
 
-        public ViewHolder(View v, ActionBarActivity parent) {
+        ViewHolder(View v, AppCompatActivity parent) {
             super(v);
-            recipeImage = (CustomImageView) v.findViewById(R.id.recipeImage);
-            recipeTitle = (TextView) v.findViewById(R.id.recipeTitle);
-            lTags = (TextView) v.findViewById(R.id.lTags);
-            recipeRating = (RatingBar) v.findViewById(R.id.recipeRating);
+            recipeImage = v.findViewById(R.id.recipeImage);
+            recipeTitle = v.findViewById(R.id.recipeTitle);
+            lTags = v.findViewById(R.id.lTags);
+            recipeRating = v.findViewById(R.id.recipeRating);
             this.parent = parent;
             v.setOnClickListener(this);
         }

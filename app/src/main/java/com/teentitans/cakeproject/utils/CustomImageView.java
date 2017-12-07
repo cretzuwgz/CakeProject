@@ -1,10 +1,10 @@
 package com.teentitans.cakeproject.utils;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 
-public class CustomImageView extends ImageView {
+public class CustomImageView extends AppCompatImageView {
     public CustomImageView(Context context) {
         super(context);
     }

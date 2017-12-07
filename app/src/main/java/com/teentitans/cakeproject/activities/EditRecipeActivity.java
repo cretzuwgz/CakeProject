@@ -3,17 +3,15 @@ package com.teentitans.cakeproject.activities;
 import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -25,7 +23,7 @@ import com.teentitans.cakeproject.utils.RecipeVO;
 
 import java.io.IOException;
 
-public class EditRecipeActivity extends ActionBarActivity {
+public class EditRecipeActivity extends AppCompatActivity {
 
     private RecipeVO recipe;
 
@@ -36,7 +34,7 @@ public class EditRecipeActivity extends ActionBarActivity {
 
         recipe = getIntent().getBundleExtra("bundle").getParcelable("recipe");
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
 
 
         if (toolbar != null) {
@@ -45,14 +43,14 @@ public class EditRecipeActivity extends ActionBarActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        final EditText title = (EditText) findViewById(R.id.etTitle);
-        final EditText reqTime = (EditText) findViewById(R.id.etReqTime);
-        final Spinner difficulty = (Spinner) findViewById(R.id.sDifficulty);
-        final EditText description = (EditText) findViewById(R.id.etDescription);
-        final EditText tags = (EditText) findViewById(R.id.etTags);
+        final EditText title = findViewById(R.id.etTitle);
+        final EditText reqTime = findViewById(R.id.etReqTime);
+        final Spinner difficulty = findViewById(R.id.sDifficulty);
+        final EditText description = findViewById(R.id.etDescription);
+        final EditText tags = findViewById(R.id.etTags);
 
-        Button update = (Button) findViewById(R.id.btnUpdateRecipe);
-        Button delete = (Button) findViewById(R.id.btnDeleteRecipe);
+        Button update = findViewById(R.id.btnUpdateRecipe);
+        Button delete = findViewById(R.id.btnDeleteRecipe);
 
         title.setText(recipe.getTitle());
         reqTime.setText(recipe.getReqTime());
@@ -60,33 +58,15 @@ public class EditRecipeActivity extends ActionBarActivity {
         description.setText(recipe.getDescription());
         tags.setText(recipe.getTagsAsString());
 
-        update.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new UpdateRecipeTask().execute(recipe.getId(), title.getText().toString(), reqTime.getText().toString(), String.valueOf(difficulty.getSelectedItemPosition() + 1), description.getText().toString().replaceAll(" ", "%20"), tags.getText().toString().replaceAll(" ", "%20"));
-            }
-        });
+        update.setOnClickListener(v -> new UpdateRecipeTask().execute(recipe.getId(), title.getText().toString(), reqTime.getText().toString(), String.valueOf(difficulty.getSelectedItemPosition() + 1), description.getText().toString().replaceAll(" ", "%20"), tags.getText().toString().replaceAll(" ", "%20")));
 
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(EditRecipeActivity.this);
-                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        new DeleteRecipeTask().execute(recipe.getId());
-                    }
-                });
-                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                    }
-                });
-                builder.setTitle("Are you sure you want to delete this recipe?");
-                AlertDialog dialog = builder.create();
-                dialog.show();
-            }
+        delete.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(EditRecipeActivity.this);
+            builder.setPositiveButton("Yes", (dialog, id) -> new DeleteRecipeTask().execute(recipe.getId()));
+            builder.setNegativeButton("No", (dialogInterface, i) -> {});
+            builder.setTitle("Are you sure you want to delete this recipe?");
+            AlertDialog dialog = builder.create();
+            dialog.show();
         });
     }
 

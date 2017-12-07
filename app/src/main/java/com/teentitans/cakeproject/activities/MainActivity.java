@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,14 +12,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -37,7 +34,7 @@ import com.teentitans.cakeproject.utils.ZoomOutPageTransformer;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
 
     public static String URL_RECOMMENDED = "http://cakeproject.whostf.com/php/get_recommended.php";
     public static String URL_TOP = "http://cakeproject.whostf.com/php/get_top5.php";
@@ -68,16 +65,16 @@ public class MainActivity extends ActionBarActivity {
 
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
 
-        DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ListView listView = (ListView) findViewById(R.id.left_drawer);
+        DrawerLayout mDrawerLayout = findViewById(R.id.drawer_layout);
+        ListView listView = findViewById(R.id.left_drawer);
 
         if (getIntent().getBundleExtra("bundle") != null)
             user = getIntent().getBundleExtra("bundle").getParcelable("user");
 
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.app_name, R.string.app_name);
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
 
         ArrayList<String> navigationDrawerItems = new ArrayList<>();
@@ -90,64 +87,54 @@ public class MainActivity extends ActionBarActivity {
         listView.setAdapter(new ArrayAdapter<>(this, R.layout.item_drawer_list, navigationDrawerItems));
 
         listView.setClickable(true);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listView.setOnItemClickListener((arg0, arg1, position, arg3) -> {
 
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-
-                if (user.isGuest()) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
+                    if (user.isGuest()) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                        builder.setPositiveButton("Yes", (dialog, id) -> {
                             Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
+                        });
+                        builder.setNegativeButton("No", (dialogInterface, i) -> {
+                        });
+                        builder.setTitle("Do you want to register?");
+                        builder.setMessage("Side menu is available only for registered users");
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+                    } else
+                        switch (position) {
+                            case 0: {
+                                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                                startActivity(intent);
+                                break;
+                            }
+                            case 1: {
+                                Intent intent = new Intent(MainActivity.this, RecipesListActivity.class);
+                                intent.putExtra("activityFor", "uploaded");
+                                startActivity(intent);
+                                break;
+                            }
+                            case 2: {
+                                Intent intent = new Intent(MainActivity.this, RecipesListActivity.class);
+                                intent.putExtra("activityFor", "favorites");
+                                startActivity(intent);
+                                break;
+                            }
+                            case 3: {
+                                Intent intent = new Intent(MainActivity.this, NewRecipeActivity.class);
+                                startActivity(intent);
+                                break;
+                            }
+                            case 4: {
+                                finish();
+                                break;
+                            }
+                            default:
+                                break;
                         }
-                    });
-                    builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-
-                        }
-                    });
-                    builder.setTitle("Do you want to register?");
-                    builder.setMessage("Side menu is available only for registered users");
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
-                } else
-                    switch (position) {
-                        case 0: {
-                            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-                            startActivity(intent);
-                            break;
-                        }
-                        case 1: {
-                            Intent intent = new Intent(MainActivity.this, RecipesListActivity.class);
-                            intent.putExtra("activityFor", "uploaded");
-                            startActivity(intent);
-                            break;
-                        }
-                        case 2: {
-                            Intent intent = new Intent(MainActivity.this, RecipesListActivity.class);
-                            intent.putExtra("activityFor", "favorites");
-                            startActivity(intent);
-                            break;
-                        }
-                        case 3: {
-                            Intent intent = new Intent(MainActivity.this, NewRecipeActivity.class);
-                            startActivity(intent);
-                            break;
-                        }
-                        case 4: {
-                            finish();
-                            break;
-                        }
-                        default:
-                            break;
-                    }
-            }
-        });
+                }
+        );
 
         if (toolbar != null) {
             setSupportActionBar(toolbar);
@@ -157,22 +144,16 @@ public class MainActivity extends ActionBarActivity {
         }
 
         // Assigning ViewPager View and setting the adapter
-        pager = (ViewPager) findViewById(R.id.pager);
+        pager = findViewById(R.id.pager);
 
         pager.setPageTransformer(true, new ZoomOutPageTransformer());
 
         // Assigning the Sliding Tab Layout View
-        tabs = (SlidingTabLayout) findViewById(R.id.tabs);
+        tabs = findViewById(R.id.tabs);
 
         // Setting Custom Color for the Scroll bar indicator of the Tab View
-        tabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
-            @Override
-            public int getIndicatorColor(int position) {
-                return getResources().getColor(R.color.primary_text);
-            }
-        });
+        tabs.setCustomTabColorizer(position -> getResources().getColor(R.color.primary_text));
         progress = new ProgressDialog(this);
-
 
         if (needsUpdate())
             updateData();
@@ -223,8 +204,10 @@ public class MainActivity extends ActionBarActivity {
                     (SearchManager) getSystemService(Context.SEARCH_SERVICE);
             final SearchView searchView =
                     (SearchView) menu.findItem(R.id.action_search).getActionView();
-            searchView.setSearchableInfo(
-                    searchManager.getSearchableInfo(getComponentName()));
+            if (searchManager != null) {
+                searchView.setSearchableInfo(
+                        searchManager.getSearchableInfo(getComponentName()));
+            }
 
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
@@ -292,7 +275,7 @@ public class MainActivity extends ActionBarActivity {
 
 
         // Build a Constructor and assign the passed Values to appropriate values in the class
-        public ViewPagerAdapter(FragmentManager fm, CharSequence mTitles[], int noOfTabs) {
+        ViewPagerAdapter(FragmentManager fm, CharSequence mTitles[], int noOfTabs) {
             super(fm);
 
             this.Titles = mTitles;
@@ -303,21 +286,23 @@ public class MainActivity extends ActionBarActivity {
         //This method return the fragment for the every position in the View Pager
         @Override
         public Fragment getItem(int position) {
+            CharSequence pageTitle = getPageTitle(position);
+            if (pageTitle == null)
+                return null;
+
             if (user.isGuest())
-                return RecipesFragment.create(getPageTitle(position).toString(), recentRecipes);
+                return RecipesFragment.create(pageTitle.toString(), recentRecipes);
 
             switch (position) {
-                case 0: {
-                    return RecipesFragment.create(getPageTitle(position).toString(), recommendedRecipes);
-                }
-                case 1: {
-                    return RecipesFragment.create(getPageTitle(position).toString(), recentRecipes);
-                }
-                case 2: {
-                    return RecipesFragment.create(getPageTitle(position).toString(), topRecipes);
-                }
+                case 0:
+                    return RecipesFragment.create(pageTitle.toString(), recommendedRecipes);
+                case 1:
+                    return RecipesFragment.create(pageTitle.toString(), recentRecipes);
+                case 2:
+                    return RecipesFragment.create(pageTitle.toString(), topRecipes);
+                default:
+                    return null;
             }
-            return null;
         }
 
         // This method return the titles for the Tabs in the Tab Strip

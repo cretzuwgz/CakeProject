@@ -4,7 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,7 +21,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
-public class LoginActivity extends ActionBarActivity {
+public class LoginActivity extends AppCompatActivity {
 
     private static String URL_LOGIN = "http://cakeproject.whostf.com/php/get_user.php";
     UserVO userVO;
@@ -52,9 +52,9 @@ public class LoginActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        btnLogin = (Button) findViewById(R.id.btnLogin);
-        btnRegister = (TextView) findViewById(R.id.btnRegister);
-        btnGuestLogin = (TextView) findViewById(R.id.btnGuestLogin);
+        btnLogin = findViewById(R.id.btnLogin);
+        btnRegister = findViewById(R.id.btnRegister);
+        btnGuestLogin = findViewById(R.id.btnGuestLogin);
 
         btnLogin.setOnClickListener(onClick);
         btnRegister.setOnClickListener(onClick);

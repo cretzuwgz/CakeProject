@@ -54,28 +54,20 @@ public class RegisterPageFragment extends Fragment {
 
         if (mPageNumber == 1) {
             final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_register_step1, container, false);
-            Button btnNext = (Button) rootView.findViewById(R.id.btnNext);
+            Button btnNext = rootView.findViewById(R.id.btnNext);
 
-            btnNext.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    new CheckRegisterDataTask(rootView).execute();
-                }
-            });
+            btnNext.setOnClickListener(view -> new CheckRegisterDataTask(rootView).execute());
             return rootView;
         } else if (mPageNumber == 2) {
             final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_register_step2, container, false);
-            Button btnRegister = (Button) rootView.findViewById(R.id.btnRegister);
-            final EditText etTags = (EditText) rootView.findViewById(R.id.etTags);
+            Button btnRegister = rootView.findViewById(R.id.btnRegister);
+            final EditText etTags = rootView.findViewById(R.id.etTags);
 
-            btnRegister.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (!etTags.getText().toString().isEmpty())
-                        new RegisterDataTask(rootView).execute(etTags.getText().toString());
-                    else
-                        Toast.makeText(getActivity(), "Favorite tags required", Toast.LENGTH_LONG).show();
-                }
+            btnRegister.setOnClickListener(view -> {
+                if (!etTags.getText().toString().isEmpty())
+                    new RegisterDataTask(rootView).execute(etTags.getText().toString());
+                else
+                    Toast.makeText(getActivity(), "Favorite tags required", Toast.LENGTH_LONG).show();
             });
 
             return rootView;
@@ -108,8 +100,8 @@ public class RegisterPageFragment extends Fragment {
          */
         protected String doInBackground(String... args) {
 
-            EditText etUsername = (EditText) rootView.findViewById(R.id.etUsername);
-            EditText etPassword = (EditText) rootView.findViewById(R.id.etPassword);
+            EditText etUsername = rootView.findViewById(R.id.etUsername);
+            EditText etPassword = rootView.findViewById(R.id.etPassword);
 
             if (etUsername.getText().length() < 4) {
                 return "Username too short";
@@ -128,8 +120,8 @@ public class RegisterPageFragment extends Fragment {
                 return "Password too short";
             }
 
-            Spinner genderSpinner = (Spinner) rootView.findViewById(R.id.sGender);
-            Spinner experienceSpinner = (Spinner) rootView.findViewById(R.id.sExperience);
+            Spinner genderSpinner = rootView.findViewById(R.id.sGender);
+            Spinner experienceSpinner = rootView.findViewById(R.id.sExperience);
 
             user = new UserVO(null, etUsername.getText().toString(), etPassword.getText().toString(), null, genderSpinner.getSelectedItemPosition() + 1, experienceSpinner.getSelectedItemPosition() + 1, false);
 
@@ -207,7 +199,7 @@ public class RegisterPageFragment extends Fragment {
             }
         }
 
-        protected String sendDataToDB(String tags) {
+        String sendDataToDB(String tags) {
 
             String url = "http://cakeproject.whostf.com/php/add_user.php";
             String parameters = "username=" + user.getUsername() + "&password=" + user.getPassword() + "&gender=" + user.getGender() + "&experience=" + user.getExperience() + "&tags=" + tags;

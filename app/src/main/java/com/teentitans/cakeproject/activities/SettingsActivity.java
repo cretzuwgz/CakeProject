@@ -5,13 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -22,7 +21,7 @@ import com.teentitans.cakeproject.utils.ConnectionUtil;
 
 import java.io.IOException;
 
-public class SettingsActivity extends ActionBarActivity {
+public class SettingsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,48 +29,39 @@ public class SettingsActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_settings);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
 
-        final EditText etUsername = (EditText) findViewById(R.id.etUsername);
-        final EditText etOldPwd = (EditText) findViewById(R.id.etOldPwd);
-        final EditText etNewPwd = (EditText) findViewById(R.id.etNewPwd);
-        final EditText etTags = (EditText) findViewById(R.id.etTags);
+        final EditText etUsername = findViewById(R.id.etUsername);
+        final EditText etOldPwd = findViewById(R.id.etOldPwd);
+        final EditText etNewPwd = findViewById(R.id.etNewPwd);
+        final EditText etTags = findViewById(R.id.etTags);
 
-        Button btnUpdateInfo = (Button) findViewById(R.id.btnUpdateInfo);
-        Button btnChangePwd = (Button) findViewById(R.id.btnChangePwd);
-        Button btnUpdateTags = (Button) findViewById(R.id.btnUpdateTags);
+        Button btnUpdateInfo = findViewById(R.id.btnUpdateInfo);
+        Button btnChangePwd = findViewById(R.id.btnChangePwd);
+        Button btnUpdateTags = findViewById(R.id.btnUpdateTags);
 
-        final Spinner sGender = (Spinner) findViewById(R.id.sGender);
-        final Spinner sExperience = (Spinner) findViewById(R.id.sExperience);
+        final Spinner sGender = findViewById(R.id.sGender);
+        final Spinner sExperience = findViewById(R.id.sExperience);
 
-        btnUpdateInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!etUsername.getText().toString().equals(MainActivity.getUser().getUsername())
-                        || sGender.getSelectedItemPosition() + 1 != MainActivity.getUser().getGender()
-                        || sExperience.getSelectedItemPosition() + 1 != MainActivity.getUser().getExperience())
-                    new UpdateInfoTask().execute(MainActivity.getUser().getId(), etUsername.getText().toString(), String.valueOf(sGender.getSelectedItemPosition() + 1), String.valueOf(sExperience.getSelectedItemPosition() + 1));
-            }
+        btnUpdateInfo.setOnClickListener(view -> {
+            if (!etUsername.getText().toString().equals(MainActivity.getUser().getUsername())
+                    || sGender.getSelectedItemPosition() + 1 != MainActivity.getUser().getGender()
+                    || sExperience.getSelectedItemPosition() + 1 != MainActivity.getUser().getExperience())
+                new UpdateInfoTask().execute(MainActivity.getUser().getId(), etUsername.getText().toString(), String.valueOf(sGender.getSelectedItemPosition() + 1), String.valueOf(sExperience.getSelectedItemPosition() + 1));
         });
 
-        btnChangePwd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!etOldPwd.getText().toString().isEmpty() && !etNewPwd.getText().toString().isEmpty()) {
-                    new ChangePasswordTask().execute(MainActivity.getUser().getId(), etOldPwd.getText().toString(), etNewPwd.getText().toString());
-                } else
-                    Toast.makeText(SettingsActivity.this, "Both fields are required", Toast.LENGTH_LONG).show();
-            }
+        btnChangePwd.setOnClickListener(view -> {
+            if (!etOldPwd.getText().toString().isEmpty() && !etNewPwd.getText().toString().isEmpty()) {
+                new ChangePasswordTask().execute(MainActivity.getUser().getId(), etOldPwd.getText().toString(), etNewPwd.getText().toString());
+            } else
+                Toast.makeText(SettingsActivity.this, "Both fields are required", Toast.LENGTH_LONG).show();
         });
 
-        btnUpdateTags.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!etTags.getText().toString().isEmpty() && !etTags.getText().toString().equals(MainActivity.getUser().getFavoriteTagsAsString()))
-                    new UpdateFavoriteTagsTask().execute(MainActivity.getUser().getId(), etTags.getText().toString());
-                else
-                    Toast.makeText(SettingsActivity.this, "Please check tags!", Toast.LENGTH_LONG).show();
-            }
+        btnUpdateTags.setOnClickListener(v -> {
+            if (!etTags.getText().toString().isEmpty() && !etTags.getText().toString().equals(MainActivity.getUser().getFavoriteTagsAsString()))
+                new UpdateFavoriteTagsTask().execute(MainActivity.getUser().getId(), etTags.getText().toString());
+            else
+                Toast.makeText(SettingsActivity.this, "Please check tags!", Toast.LENGTH_LONG).show();
         });
 
         etUsername.setText(MainActivity.getUser().getUsername());

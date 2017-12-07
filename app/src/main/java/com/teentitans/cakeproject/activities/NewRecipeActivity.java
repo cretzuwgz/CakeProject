@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -22,14 +22,14 @@ import com.teentitans.cakeproject.utils.ConnectionUtil;
 
 import java.io.IOException;
 
-public class NewRecipeActivity extends ActionBarActivity {
+public class NewRecipeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_recipe);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
 
         if (toolbar != null) {
             setSupportActionBar(toolbar);
@@ -37,39 +37,36 @@ public class NewRecipeActivity extends ActionBarActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        final EditText etTitle = (EditText) findViewById(R.id.etTitle);
-        final EditText etPicture = (EditText) findViewById(R.id.etPicture);
-        final EditText etReqTime = (EditText) findViewById(R.id.etReqTime);
-        final Spinner sDifficulty = (Spinner) findViewById(R.id.sDifficulty);
-        final EditText etIngredients = (EditText) findViewById(R.id.etIngredients);
-        final EditText etDescription = (EditText) findViewById(R.id.etDescription);
-        final EditText etTags = (EditText) findViewById(R.id.etTags);
+        final EditText etTitle = findViewById(R.id.etTitle);
+        final EditText etPicture = findViewById(R.id.etPicture);
+        final EditText etReqTime = findViewById(R.id.etReqTime);
+        final Spinner sDifficulty = findViewById(R.id.sDifficulty);
+        final EditText etIngredients = findViewById(R.id.etIngredients);
+        final EditText etDescription = findViewById(R.id.etDescription);
+        final EditText etTags = findViewById(R.id.etTags);
 
-        Button btnAdd = (Button) findViewById(R.id.btnAddRecipe);
+        Button btnAdd = findViewById(R.id.btnAddRecipe);
 
 
-        btnAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        btnAdd.setOnClickListener(v -> {
 
-                String title = etTitle.getText().toString();
-                String pictureLink = etPicture.getText().toString();
-                String reqTime = etReqTime.getText().toString();
-                String difficulty = String.valueOf(sDifficulty.getSelectedItemPosition() + 1);
-                String ingredients = etIngredients.getText().toString().replaceAll(" ", "%20");
-                String description = etDescription.getText().toString().replaceAll(" ", "%20");
-                String tags = etTags.getText().toString().replaceAll(" ", "%20");
+            String title = etTitle.getText().toString();
+            String pictureLink = etPicture.getText().toString();
+            String reqTime = etReqTime.getText().toString();
+            String difficulty = String.valueOf(sDifficulty.getSelectedItemPosition() + 1);
+            String ingredients = etIngredients.getText().toString().replaceAll(" ", "%20");
+            String description = etDescription.getText().toString().replaceAll(" ", "%20");
+            String tags = etTags.getText().toString().replaceAll(" ", "%20");
 
-                if (pictureLink.isEmpty())
-                    pictureLink = "NULL";
+            if (pictureLink.isEmpty())
+                pictureLink = "NULL";
 
-                if (title.isEmpty() || reqTime.isEmpty() || difficulty.isEmpty() || ingredients.isEmpty() || description.isEmpty() || tags.isEmpty())
-                    Toast.makeText(NewRecipeActivity.this, "Please complete all the required fields", Toast.LENGTH_LONG).show();
-                else if (!ingredients.matches("(\\w+:\\w+:\\w+,\\s?)*(\\w+:\\w+:\\w+)"))
-                    Toast.makeText(NewRecipeActivity.this, "Please put the ingredients in the correct format (ingredient:quantity:measurement)", Toast.LENGTH_LONG).show();
-                else {
-                    new AddRecipeTask().execute(title, MainActivity.getUser().getId(), pictureLink, reqTime, difficulty, ingredients, description, tags);
-                }
+            if (title.isEmpty() || reqTime.isEmpty() || difficulty.isEmpty() || ingredients.isEmpty() || description.isEmpty() || tags.isEmpty())
+                Toast.makeText(NewRecipeActivity.this, "Please complete all the required fields", Toast.LENGTH_LONG).show();
+            else if (!ingredients.matches("(\\w+:\\w+:\\w+,\\s?)*(\\w+:\\w+:\\w+)"))
+                Toast.makeText(NewRecipeActivity.this, "Please put the ingredients in the correct format (ingredient:quantity:measurement)", Toast.LENGTH_LONG).show();
+            else {
+                new AddRecipeTask().execute(title, MainActivity.getUser().getId(), pictureLink, reqTime, difficulty, ingredients, description, tags);
             }
         });
 
