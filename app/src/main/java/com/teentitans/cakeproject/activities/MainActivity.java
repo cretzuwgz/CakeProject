@@ -16,6 +16,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -36,9 +37,9 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static String URL_RECOMMENDED = "http://cakeproject.whostf.com/php/get_recommended.php";
-    public static String URL_TOP = "http://cakeproject.whostf.com/php/get_top5.php";
-    public static String URL_RECENT = "http://cakeproject.whostf.com/php/get_recent.php";
+    public static String URL_RECOMMENDED = "https://cakeproject.000webhostapp.com/php/get_recommended.php";
+    public static String URL_TOP = "https://cakeproject.000webhostapp.com/php/get_top5.php";
+    public static String URL_RECENT = "https://cakeproject.000webhostapp.com/php/get_recent.php";
     private static ArrayList<RecipeVO> recommendedRecipes;
     private static ArrayList<RecipeVO> topRecipes;
     private static ArrayList<RecipeVO> recentRecipes;
@@ -330,6 +331,7 @@ public class MainActivity extends AppCompatActivity {
                 switch (args[0]) {
                     case "recommended": {
                         response = ConnectionUtil.getResponseFromURL(URL_RECOMMENDED, "user_id=" + user.getId());
+                        Log.w("recommended",response);
                         recommendedRecipes = RecipesUtil.getRecipesFrom(response);
 
                         if (response == null)
@@ -340,7 +342,7 @@ public class MainActivity extends AppCompatActivity {
                     case "top": {
                         response = ConnectionUtil.getResponseFromURL(URL_TOP);
                         topRecipes = RecipesUtil.getRecipesFrom(response);
-
+                        Log.w("top",response);
                         if (response == null)
                             return "Connection failed";
                         else
@@ -349,7 +351,7 @@ public class MainActivity extends AppCompatActivity {
                     case "recent": {
                         response = ConnectionUtil.getResponseFromURL(URL_RECENT);
                         recentRecipes = RecipesUtil.getRecipesFrom(response);
-
+                        Log.w("recent",response);
                         if (response == null)
                             return "Connection failed";
                         else
@@ -357,6 +359,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             } catch (IOException e) {
+                Log.w("ioexc",e.toString());
                 return null;
             }
 

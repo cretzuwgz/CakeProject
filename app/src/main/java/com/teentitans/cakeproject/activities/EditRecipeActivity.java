@@ -117,7 +117,7 @@ public class EditRecipeActivity extends AppCompatActivity {
             String parameters = "recipe_id=" + params[0] + "&title=" + params[1] + "&req_time=" + params[2] + "&difficulty=" + params[3] + "&description=" + params[4] + "&tags=" + params[5];
             String response = null;
             try {
-                response = ConnectionUtil.getResponseFromURL("http://cakeproject.whostf.com/php/update_recipe.php", parameters);
+                response = ConnectionUtil.getResponseFromURL("https://cakeproject.000webhostapp.com/php/update_recipe.php", parameters);
             } catch (IOException e) {
                 Log.e("Update Recipe", "error");
             }
@@ -141,7 +141,7 @@ public class EditRecipeActivity extends AppCompatActivity {
         protected Void doInBackground(String... params) {
 
             try {
-                ConnectionUtil.getResponseFromURL("http://cakeproject.whostf.com/php/delete_recipe.php", "recipe_id=" + params[0]);
+                ConnectionUtil.getResponseFromURL("https://cakeproject.000webhostapp.com/php/delete_recipe.php", "recipe_id=" + params[0]);
             } catch (IOException e) {
                 Log.e("Delete Recipe", "error");
             }

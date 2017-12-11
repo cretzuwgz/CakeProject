@@ -120,7 +120,7 @@ public class NewRecipeActivity extends AppCompatActivity {
 
             String response = null;
             try {
-                response = ConnectionUtil.getResponseFromURL("http://cakeproject.whostf.com/php/add_recipe.php", parameters);
+                response = ConnectionUtil.getResponseFromURL("https://cakeproject.000webhostapp.com/php/add_recipe.php", parameters);
             } catch (IOException e) {
                 Log.e("Add Recipe", "error");
             }

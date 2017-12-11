@@ -127,7 +127,7 @@ public class SettingsActivity extends AppCompatActivity {
 
             String response = null;
             try {
-                response = ConnectionUtil.getResponseFromURL("http://cakeproject.whostf.com/php/update_user.php", parameters);
+                response = ConnectionUtil.getResponseFromURL("https://cakeproject.000webhostapp.com/php/update_user.php", parameters);
             } catch (IOException e) {
                 Log.e("Update user", "error");
             }
@@ -154,7 +154,7 @@ public class SettingsActivity extends AppCompatActivity {
             String parameters = "userId=" + params[0] + "&oldPass=" + params[1] + "&newPass=" + params[2];
             String response = null;
             try {
-                response = ConnectionUtil.getResponseFromURL("http://cakeproject.whostf.com/php/change_pass.php", parameters);
+                response = ConnectionUtil.getResponseFromURL("https://cakeproject.000webhostapp.com/php/change_pass.php", parameters);
             } catch (IOException e) {
                 Log.e("Update user", "error");
             }
@@ -181,7 +181,7 @@ public class SettingsActivity extends AppCompatActivity {
             String response = null;
 
             try {
-                response = ConnectionUtil.getResponseFromURL("http://cakeproject.site11.com/change_tags.php", "user_id" + params[0] + "&tags=" + params[1]);
+                response = ConnectionUtil.getResponseFromURL("https://cakeproject.000webhostapp.com/change_tags.php", "user_id" + params[0] + "&tags=" + params[1]);
             } catch (IOException e) {
                 Log.e("Update favorite tags", "error");
             }

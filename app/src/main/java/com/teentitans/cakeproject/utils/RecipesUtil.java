@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class RecipesUtil {
 
@@ -15,7 +16,7 @@ public class RecipesUtil {
         try {
             recipesJson = new JSONObject(response).getJSONArray("recipes");
         } catch (JSONException e) {
-            return null;
+            return new ArrayList<>();
         }
         try {
             for (int i = 0; i < recipesJson.length(); i++) {
@@ -41,11 +42,11 @@ public class RecipesUtil {
             }
 
         } catch (JSONException e) {
-            return null;
+            return new ArrayList<>();
         }
 
-        if (recipeList.size() == 0)
-            return null;
+//        if (recipeList.size() == 0)
+//            return new ArrayList<>();
 
         return recipeList;
     }

@@ -320,7 +320,7 @@ public class ViewRecipeActivity extends AppCompatActivity implements ObservableS
         protected Void doInBackground(String... params) {
 
             try {
-                ConnectionUtil.getResponseFromURL("http://cakeproject.whostf.com/php/viewed.php", "recipe_id=" + params[0]);
+                ConnectionUtil.getResponseFromURL("https://cakeproject.000webhostapp.com/php/viewed.php", "recipe_id=" + params[0]);
             } catch (IOException e) {
                 Log.e("Increment View Counter", "error");
             }
@@ -334,7 +334,7 @@ public class ViewRecipeActivity extends AppCompatActivity implements ObservableS
         protected Void doInBackground(String... params) {
 
             try {
-                String response = ConnectionUtil.getResponseFromURL("http://cakeproject.whostf.com/php/add_rating.php", "recipe_id=" + params[0] + "&rating=" + params[1]);
+                String response = ConnectionUtil.getResponseFromURL("https://cakeproject.000webhostapp.com/php/add_rating.php", "recipe_id=" + params[0] + "&rating=" + params[1]);
                 recipe.setRating(response);
             } catch (IOException e) {
                 Log.e("Rating", "error");
@@ -356,7 +356,7 @@ public class ViewRecipeActivity extends AppCompatActivity implements ObservableS
         protected Void doInBackground(String... params) {
 
             try {
-                String response = ConnectionUtil.getResponseFromURL("http://cakeproject.whostf.com/php/add_favorite.php", "recipe_id=" + params[0] + "&user_id=" + params[1]);
+                String response = ConnectionUtil.getResponseFromURL("https://cakeproject.000webhostapp.com/php/add_favorite.php", "recipe_id=" + params[0] + "&user_id=" + params[1]);
                 recipe.setRating(response);
             } catch (IOException e) {
                 Log.e("Favorite", "error");

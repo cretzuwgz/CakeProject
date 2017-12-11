@@ -141,7 +141,7 @@ public class RegisterPageFragment extends Fragment {
 
         protected Boolean userAlreadyInDB(String username) {
 
-            String url = "http://cakeproject.whostf.com/php/check_username.php";
+            String url = "https://cakeproject.000webhostapp.com/php/check_username.php";
             String parameters = "username=" + username;
 
             try {
@@ -201,7 +201,7 @@ public class RegisterPageFragment extends Fragment {
 
         String sendDataToDB(String tags) {
 
-            String url = "http://cakeproject.whostf.com/php/add_user.php";
+            String url = "https://cakeproject.000webhostapp.com/php/add_user.php";
             String parameters = "username=" + user.getUsername() + "&password=" + user.getPassword() + "&gender=" + user.getGender() + "&experience=" + user.getExperience() + "&tags=" + tags;
 
             try {

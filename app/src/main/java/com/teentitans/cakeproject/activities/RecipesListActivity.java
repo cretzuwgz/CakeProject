@@ -99,11 +99,11 @@ public class RecipesListActivity extends AppCompatActivity {
                 String response;
                 ArrayList<RecipeVO> recipes;
                 if (params[0].equals("uploaded")) {
-                    response = ConnectionUtil.getResponseFromURL("http://cakeproject.whostf.com/php/get_uploaded_recipes.php", "user_id=" + MainActivity.getUser().getId());
+                    response = ConnectionUtil.getResponseFromURL("https://cakeproject.000webhostapp.com/php/get_uploaded_recipes.php", "user_id=" + MainActivity.getUser().getId());
                     recipes = RecipesUtil.getRecipesFrom(response);
                     return RecipesFragment.create("Uploaded", recipes);
                 } else {
-                    response = ConnectionUtil.getResponseFromURL("http://cakeproject.whostf.com/php/get_favorite_recipes.php", "user_id=" + MainActivity.getUser().getId());
+                    response = ConnectionUtil.getResponseFromURL("https://cakeproject.000webhostapp.com/php/get_favorite_recipes.php", "user_id=" + MainActivity.getUser().getId());
                     recipes = RecipesUtil.getRecipesFrom(response);
                     return RecipesFragment.create("Favorites", recipes);
                 }

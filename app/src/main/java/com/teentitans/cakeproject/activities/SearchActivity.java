@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 public class SearchActivity extends AppCompatActivity {
 
-    public static String URL_SEARCH = "http://cakeproject.whostf.com/php/search.php";
+    public static String URL_SEARCH = "https://cakeproject.000webhostapp.com/php/search.php";
     private ProgressDialog progress;
 
     @Override
