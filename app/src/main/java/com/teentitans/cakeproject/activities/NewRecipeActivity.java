@@ -24,9 +24,12 @@ import java.io.IOException;
 
 public class NewRecipeActivity extends AppCompatActivity {
 
+    private static NewRecipeActivity ACTIVITY;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ACTIVITY = this;
         setContentView(R.layout.activity_new_recipe);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -46,7 +49,6 @@ public class NewRecipeActivity extends AppCompatActivity {
         final EditText etTags = findViewById(R.id.etTags);
 
         Button btnAdd = findViewById(R.id.btnAddRecipe);
-
 
         btnAdd.setOnClickListener(v -> {
 
@@ -77,13 +79,10 @@ public class NewRecipeActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
         // Associate searchable configuration with the SearchView
-        SearchManager searchManager =
-                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        final SearchView searchView =
-                (SearchView) menu.findItem(R.id.action_search).getActionView();
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
 
-        searchView.setSearchableInfo(
-                searchManager.getSearchableInfo(getComponentName()));
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -112,7 +111,7 @@ public class NewRecipeActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public class AddRecipeTask extends AsyncTask<String, Void, String> {
+    private static class AddRecipeTask extends AsyncTask<String, Void, String> {
 
         @Override
         protected String doInBackground(String... params) {
@@ -120,7 +119,7 @@ public class NewRecipeActivity extends AppCompatActivity {
 
             String response = null;
             try {
-                response = ConnectionUtil.getResponseFromURL("https://cakeproject.000webhostapp.com/php/add_recipe.php", parameters);
+                response = ConnectionUtil.getResponseFromURL(ConnectionUtil.URL_BASE + "add_recipe.php", parameters);
             } catch (IOException e) {
                 Log.e("Add Recipe", "error");
             }
@@ -129,15 +128,14 @@ public class NewRecipeActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String response) {
-            if (response == null)
-                Toast.makeText(NewRecipeActivity.this, R.string.error_message, Toast.LENGTH_LONG).show();
-            else if (response.equals("OK")) {
+            if (response == null || !response.equals("OK"))
+                Toast.makeText(ACTIVITY, R.string.error_message, Toast.LENGTH_LONG).show();
+            else {
                 MainActivity.setToUpdate();
-                Intent intent = new Intent(NewRecipeActivity.this, RecipesListActivity.class);
+                Intent intent = new Intent(ACTIVITY, RecipesListActivity.class);
                 intent.putExtra("activityFor", "uploaded");
-                startActivity(intent);
-            } else
-                Toast.makeText(NewRecipeActivity.this, R.string.error_message, Toast.LENGTH_LONG).show();
+                ACTIVITY.startActivity(intent);
+            }
         }
     }
 }

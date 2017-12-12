@@ -1,12 +1,11 @@
 package com.teentitans.cakeproject.activities;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -22,123 +21,107 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends Activity {
 
-    private static String URL_LOGIN = "https://cakeproject.000webhostapp.com/php/get_user.php";
-    UserVO userVO;
-    private Button btnLogin;
-    private TextView btnRegister;
-    private TextView btnGuestLogin;
-    private View.OnClickListener onClick = new View.OnClickListener() {
-        public void onClick(View v) {
-            if (v.equals(btnLogin)) {
-                new LoginTask().execute();
-            } else if (v.equals(btnRegister)) {
-                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-                startActivity(intent);
-            } else if (v.equals(btnGuestLogin)) {
-                userVO = new UserVO("id", "username", null, "date", 0, 0, true);
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                Bundle b = new Bundle();
-                b.putParcelable("user", userVO);
-                intent.putExtra("bundle", b);
-                startActivity(intent);
-            }
-        }
-    };
+    private final static String URL_LOGIN = ConnectionUtil.URL_BASE + "get_user.php";
+    private static LoginActivity ACTIVITY;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        ACTIVITY = this;
         setContentView(R.layout.activity_login);
 
-        btnLogin = findViewById(R.id.btnLogin);
-        btnRegister = findViewById(R.id.btnRegister);
-        btnGuestLogin = findViewById(R.id.btnGuestLogin);
+        Button btnLogin = findViewById(R.id.btnLogin);
+        TextView btnRegister = findViewById(R.id.btnRegister);
+        TextView btnGuestLogin = findViewById(R.id.btnGuestLogin);
 
-        btnLogin.setOnClickListener(onClick);
-        btnRegister.setOnClickListener(onClick);
-        btnGuestLogin.setOnClickListener(onClick);
+        btnLogin.setOnClickListener(v -> new LoginTask().execute());
+        btnRegister.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, RegisterActivity.class)));
+        btnGuestLogin.setOnClickListener(v -> {
+            UserVO userVO = new UserVO("id", "username", null, "date", 0, 0, true);
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            Bundle b = new Bundle();
+            b.putParcelable("user", userVO);
+            intent.putExtra("bundle", b);
+            startActivity(intent);
+        });
 
     }
 
-    protected String tryLogin(String mUsername, String mPassword) {
+    private static class LoginTask extends AsyncTask<String, String, UserVO> {
 
-        String parameters = "username=" + mUsername + "&password=" + mPassword;
-        try {
-            return ConnectionUtil.getResponseFromURL(URL_LOGIN, parameters);
-        } catch (IOException e) {
-            Log.e(e.getMessage(),e.toString());
-            return null;
-        }
-    }
-
-    private class LoginTask extends AsyncTask<String, String, String> {
-
-        private ProgressDialog pDialog;
+        private ProgressDialog _progressDialog;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog = new ProgressDialog(LoginActivity.this);
-            pDialog.setMessage("Logging in...");
-            pDialog.setIndeterminate(true);
-            pDialog.setCancelable(false);
-            pDialog.show();
+            _progressDialog = new ProgressDialog(ACTIVITY);
+            _progressDialog.setMessage("Logging in...");
+            _progressDialog.setIndeterminate(true);
+            _progressDialog.setCancelable(false);
+            _progressDialog.show();
+        }
+
+        private String tryLogin(String mUsername, String mPassword) {
+
+            String parameters = "username=" + mUsername + "&password=" + mPassword;
+            try {
+                return ConnectionUtil.getResponseFromURL(URL_LOGIN, parameters);
+            } catch (IOException e) {
+                Log.e(e.getMessage(), e.toString());
+                return null;
+            }
         }
 
         /**
          * Login
          */
-        protected String doInBackground(String... args) {
+        protected UserVO doInBackground(String... args) {
 
-            EditText etUsername = (EditText) findViewById(R.id.etUsername);
-            EditText etPassword = (EditText) findViewById(R.id.etPassword);
+            EditText etUsername = ACTIVITY.findViewById(R.id.etUsername);
+            EditText etPassword = ACTIVITY.findViewById(R.id.etPassword);
 
             JSONObject userJson;
             String response = tryLogin(etUsername.getText().toString(), etPassword.getText().toString());
             if (response == null)
-                return "Connection failed";
+                return null;
 
             try {
                 userJson = new JSONObject(response).getJSONArray("user").getJSONObject(0);
-
             } catch (JSONException e) {
                 return null;
             }
 
+            UserVO userVO;
             try {
                 userVO = new UserVO(userJson.getString("id"), userJson.getString("username"), null, userJson.getString("date"), Integer.valueOf(userJson.getString("gender")), Integer.valueOf(userJson.getString("experience")), false);
-//                JSONArray array = userJson.getJSONArray("tags");
-//
-//                for (int j = 0; j < array.length(); j++)
-//                    userVO.addTag(array.getString(j));
-
+                if (userJson.has("tags")) {
+                    JSONArray array = userJson.getJSONArray("tags");
+                    for (int j = 0; j < array.length(); j++)
+                        userVO.addTag(array.getString(j));
+                }
             } catch (JSONException e) {
                 return null;
             }
 
-            return response;
+            return userVO;
         }
 
         @Override
-        protected void onPostExecute(String result) {
+        protected void onPostExecute(UserVO result) {
             super.onPostExecute(result);
-            pDialog.dismiss();
+            _progressDialog.dismiss();
 
             if (result != null) {
-                if (result.equals("Connection failed"))
-                    Toast.makeText(LoginActivity.this, result, Toast.LENGTH_SHORT).show();
-                else {
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    Bundle b = new Bundle();
-                    b.putParcelable("user", userVO);
-                    intent.putExtra("bundle", b);
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(ACTIVITY, MainActivity.class);
+                Bundle b = new Bundle();
+                b.putParcelable("user", result);
+                intent.putExtra("bundle", b);
+                ACTIVITY.startActivity(intent);
             } else
-                Toast.makeText(LoginActivity.this, R.string.error_login, Toast.LENGTH_SHORT).show();
+                Toast.makeText(ACTIVITY, R.string.error_login, Toast.LENGTH_SHORT).show();
         }
     }
 }

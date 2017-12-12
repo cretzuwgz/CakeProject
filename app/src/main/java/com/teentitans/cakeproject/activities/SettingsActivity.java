@@ -23,25 +23,27 @@ import java.io.IOException;
 
 public class SettingsActivity extends AppCompatActivity {
 
+    private static SettingsActivity ACTIVITY;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-
+        ACTIVITY = this;
         setContentView(R.layout.activity_settings);
         Toolbar toolbar = findViewById(R.id.toolbar);
 
-        final EditText etUsername = findViewById(R.id.etUsername);
-        final EditText etOldPwd = findViewById(R.id.etOldPwd);
-        final EditText etNewPwd = findViewById(R.id.etNewPwd);
-        final EditText etTags = findViewById(R.id.etTags);
+        EditText etUsername = findViewById(R.id.etUsername);
+        EditText etOldPwd = findViewById(R.id.etOldPwd);
+        EditText etNewPwd = findViewById(R.id.etNewPwd);
+        EditText etTags = findViewById(R.id.etTags);
 
         Button btnUpdateInfo = findViewById(R.id.btnUpdateInfo);
         Button btnChangePwd = findViewById(R.id.btnChangePwd);
         Button btnUpdateTags = findViewById(R.id.btnUpdateTags);
 
-        final Spinner sGender = findViewById(R.id.sGender);
-        final Spinner sExperience = findViewById(R.id.sExperience);
+        Spinner sGender = findViewById(R.id.sGender);
+        Spinner sExperience = findViewById(R.id.sExperience);
 
         btnUpdateInfo.setOnClickListener(view -> {
             if (!etUsername.getText().toString().equals(MainActivity.getUser().getUsername())
@@ -54,14 +56,14 @@ public class SettingsActivity extends AppCompatActivity {
             if (!etOldPwd.getText().toString().isEmpty() && !etNewPwd.getText().toString().isEmpty()) {
                 new ChangePasswordTask().execute(MainActivity.getUser().getId(), etOldPwd.getText().toString(), etNewPwd.getText().toString());
             } else
-                Toast.makeText(SettingsActivity.this, "Both fields are required", Toast.LENGTH_LONG).show();
+                Toast.makeText(ACTIVITY, "Both fields are required", Toast.LENGTH_LONG).show();
         });
 
         btnUpdateTags.setOnClickListener(v -> {
             if (!etTags.getText().toString().isEmpty() && !etTags.getText().toString().equals(MainActivity.getUser().getFavoriteTagsAsString()))
                 new UpdateFavoriteTagsTask().execute(MainActivity.getUser().getId(), etTags.getText().toString());
             else
-                Toast.makeText(SettingsActivity.this, "Please check tags!", Toast.LENGTH_LONG).show();
+                Toast.makeText(ACTIVITY, "Please check tags!", Toast.LENGTH_LONG).show();
         });
 
         etUsername.setText(MainActivity.getUser().getUsername());
@@ -83,20 +85,17 @@ public class SettingsActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
         // Associate searchable configuration with the SearchView
-        SearchManager searchManager =
-                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        final SearchView searchView =
-                (SearchView) menu.findItem(R.id.action_search).getActionView();
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        final SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
 
-        searchView.setSearchableInfo(
-                searchManager.getSearchableInfo(getComponentName()));
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
                 searchView.setQuery("", false);
                 searchView.setIconified(true);
-                Intent intent = new Intent(SettingsActivity.this, SearchActivity.class);
+                Intent intent = new Intent(ACTIVITY, SearchActivity.class);
                 intent.setAction(Intent.ACTION_SEARCH);
                 intent.putExtra(SearchManager.QUERY, s);
                 startActivity(intent);
@@ -105,6 +104,7 @@ public class SettingsActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String s) {
+
                 return false;
             }
         });
@@ -118,7 +118,7 @@ public class SettingsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public class UpdateInfoTask extends AsyncTask<String, Void, String> {
+    private static class UpdateInfoTask extends AsyncTask<String, Void, String> {
 
         @Override
         protected String doInBackground(String... params) {
@@ -127,7 +127,7 @@ public class SettingsActivity extends AppCompatActivity {
 
             String response = null;
             try {
-                response = ConnectionUtil.getResponseFromURL("https://cakeproject.000webhostapp.com/php/update_user.php", parameters);
+                response = ConnectionUtil.getResponseFromURL(ConnectionUtil.URL_BASE + "update_user.php", parameters);
             } catch (IOException e) {
                 Log.e("Update user", "error");
             }
@@ -138,15 +138,15 @@ public class SettingsActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String response) {
             if (response == null)
-                Toast.makeText(SettingsActivity.this, R.string.error_message, Toast.LENGTH_LONG).show();
+                Toast.makeText(ACTIVITY, R.string.error_message, Toast.LENGTH_LONG).show();
             else if (!response.equals("OK"))
-                Toast.makeText(SettingsActivity.this, "Info changed", Toast.LENGTH_LONG).show();
+                Toast.makeText(ACTIVITY, "Info changed", Toast.LENGTH_LONG).show();
             else
-                Toast.makeText(SettingsActivity.this, response, Toast.LENGTH_LONG).show();
+                Toast.makeText(ACTIVITY, response, Toast.LENGTH_LONG).show();
         }
     }
 
-    public class ChangePasswordTask extends AsyncTask<String, Void, String> {
+    private static class ChangePasswordTask extends AsyncTask<String, Void, String> {
 
         @Override
         protected String doInBackground(String... params) {
@@ -154,7 +154,7 @@ public class SettingsActivity extends AppCompatActivity {
             String parameters = "userId=" + params[0] + "&oldPass=" + params[1] + "&newPass=" + params[2];
             String response = null;
             try {
-                response = ConnectionUtil.getResponseFromURL("https://cakeproject.000webhostapp.com/php/change_pass.php", parameters);
+                response = ConnectionUtil.getResponseFromURL(ConnectionUtil.URL_BASE + "change_pass.php", parameters);
             } catch (IOException e) {
                 Log.e("Update user", "error");
             }
@@ -165,15 +165,15 @@ public class SettingsActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String response) {
             if (response == null)
-                Toast.makeText(SettingsActivity.this, R.string.error_message, Toast.LENGTH_LONG).show();
+                Toast.makeText(ACTIVITY, R.string.error_message, Toast.LENGTH_LONG).show();
             else if (response.equals("FAIL"))
-                Toast.makeText(SettingsActivity.this, "Old password is wrong", Toast.LENGTH_LONG).show();
+                Toast.makeText(ACTIVITY, "Old password is wrong", Toast.LENGTH_LONG).show();
             else
-                Toast.makeText(SettingsActivity.this, "Password changed", Toast.LENGTH_LONG).show();
+                Toast.makeText(ACTIVITY, "Password changed", Toast.LENGTH_LONG).show();
         }
     }
 
-    public class UpdateFavoriteTagsTask extends AsyncTask<String, Void, String> {
+    private static class UpdateFavoriteTagsTask extends AsyncTask<String, Void, String> {
 
         @Override
         protected String doInBackground(String... params) {
@@ -193,10 +193,10 @@ public class SettingsActivity extends AppCompatActivity {
         protected void onPostExecute(String response) {
 
             if (response == null)
-                Toast.makeText(SettingsActivity.this, R.string.error_message, Toast.LENGTH_LONG).show();
+                Toast.makeText(ACTIVITY, R.string.error_message, Toast.LENGTH_LONG).show();
             else {
                 MainActivity.setToUpdate();
-                Toast.makeText(SettingsActivity.this, response, Toast.LENGTH_LONG).show();
+                Toast.makeText(ACTIVITY, response, Toast.LENGTH_LONG).show();
             }
         }
     }

@@ -11,6 +11,8 @@ import java.net.URL;
 
 public class ConnectionUtil {
 
+    public static final String URL_BASE = "https://cakeproject.000webhostapp.com/php/";
+
     public static String getResponseFromURL(String link) throws IOException {
 
         HttpURLConnection connection;
@@ -32,7 +34,6 @@ public class ConnectionUtil {
         String response = new String(baos.toByteArray(), "UTF-8");
         isr.close();
         connection.disconnect();
-
         return response;
     }
 

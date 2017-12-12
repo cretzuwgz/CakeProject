@@ -4,115 +4,125 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class UserVO implements Parcelable {
 
     public static final Parcelable.Creator<UserVO> CREATOR = new Parcelable.Creator<UserVO>() {
         public UserVO createFromParcel(Parcel in) {
+
             return new UserVO(in);
         }
 
         public UserVO[] newArray(int size) {
+
             return new UserVO[size];
         }
     };
 
-    private String id;
-    private String username;
-    private String password;
-    private String date;
-    private int gender;
-    private int experience;
-    private Boolean isGuest;
-    private ArrayList<String> favoriteTags;
+    private String _id;
+    private String _username;
+    private String _password;
+    private String _date;
+    private int _gender;
+    private int _experience;
+    private Boolean _isGuest;
+    private ArrayList<String> _favoriteTags;
 
     public UserVO(String id, String username, String password, String date, int gender, int experience, Boolean isGuest) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.date = date;
-        this.gender = gender;
-        this.experience = experience;
-        this.isGuest = isGuest;
-        favoriteTags = new ArrayList<>();
+
+        _id = id;
+        _username = username;
+        _password = password;
+        _date = date;
+        _gender = gender;
+        _experience = experience;
+        _isGuest = isGuest;
+        _favoriteTags = new ArrayList<>();
     }
 
     @SuppressWarnings("unchecked")
     private UserVO(Parcel in) {
-        id = in.readString();
-        username = in.readString();
-        date = in.readString();
-        gender = in.readInt();
-        experience = in.readInt();
-        isGuest = (Boolean) in.readValue(getClass().getClassLoader());
-        favoriteTags = (ArrayList<String>) in.readSerializable();
+
+        _id = in.readString();
+        _username = in.readString();
+        _date = in.readString();
+        _gender = in.readInt();
+        _experience = in.readInt();
+        _isGuest = (Boolean) in.readValue(getClass().getClassLoader());
+        _favoriteTags = (ArrayList<String>) in.readSerializable();
     }
 
     public String getId() {
-        return id;
+
+        return _id;
     }
 
     public void setId(String id) {
-        this.id = id;
+
+        _id = id;
     }
 
     public String getUsername() {
-        return username;
+
+        return _username;
     }
 
     public String getPassword() {
-        return password;
+
+        return _password;
     }
 
     public String getDate() {
-        return date;
+
+        return _date;
     }
 
     public int getGender() {
-        return gender;
+
+        return _gender;
     }
 
     public int getExperience() {
-        return experience;
+
+        return _experience;
     }
 
     public Boolean isGuest() {
-        return isGuest;
+
+        return _isGuest;
     }
 
     public ArrayList<String> getFavoriteTags() {
-        return favoriteTags;
+
+        return _favoriteTags;
     }
 
     public String getFavoriteTagsAsString() {
 
-        StringBuilder stringBuilder = new StringBuilder();
-
-        for (String tag : favoriteTags)
-            stringBuilder.append(tag).append(",");
-
-        if (!stringBuilder.toString().isEmpty())
-            stringBuilder.deleteCharAt(stringBuilder.length() - 1);
-        return stringBuilder.toString();
+        return _favoriteTags.stream().collect(Collectors.joining(","));
     }
 
     public void addTag(String tag) {
-        favoriteTags.add(tag);
+
+        _favoriteTags.add(tag);
     }
 
     @Override
     public int describeContents() {
+
         return 0;
     }
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(id);
-        parcel.writeString(username);
-        parcel.writeString(date);
-        parcel.writeInt(gender);
-        parcel.writeInt(experience);
-        parcel.writeValue(isGuest);
-        parcel.writeSerializable(favoriteTags);
+
+        parcel.writeString(_id);
+        parcel.writeString(_username);
+        parcel.writeString(_date);
+        parcel.writeInt(_gender);
+        parcel.writeInt(_experience);
+        parcel.writeValue(_isGuest);
+        parcel.writeSerializable(_favoriteTags);
     }
 }

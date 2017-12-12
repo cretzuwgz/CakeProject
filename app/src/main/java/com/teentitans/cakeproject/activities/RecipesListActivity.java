@@ -24,15 +24,15 @@ import java.util.ArrayList;
 
 public class RecipesListActivity extends AppCompatActivity {
 
-    private ProgressDialog progress;
+    private static RecipesListActivity ACTIVITY;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ACTIVITY = this;
         setContentView(R.layout.activity_recipes_list);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        progress = new ProgressDialog(this);
 
         if (toolbar != null) {
             setSupportActionBar(toolbar);
@@ -84,13 +84,17 @@ public class RecipesListActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class GetRecipesTask extends AsyncTask<String, Void, RecipesFragment> {
+    private static class GetRecipesTask extends AsyncTask<String, Void, RecipesFragment> {
+
+        private ProgressDialog _progressDialog;
 
         @Override
         protected void onPreExecute() {
-            progress.setMessage("Loading...");
-            progress.setIndeterminate(true);
-            progress.show();
+
+            _progressDialog = new ProgressDialog(ACTIVITY);
+            _progressDialog.setMessage("Loading...");
+            _progressDialog.setIndeterminate(true);
+            _progressDialog.show();
         }
 
         @Override
@@ -99,11 +103,11 @@ public class RecipesListActivity extends AppCompatActivity {
                 String response;
                 ArrayList<RecipeVO> recipes;
                 if (params[0].equals("uploaded")) {
-                    response = ConnectionUtil.getResponseFromURL("https://cakeproject.000webhostapp.com/php/get_uploaded_recipes.php", "user_id=" + MainActivity.getUser().getId());
+                    response = ConnectionUtil.getResponseFromURL(ConnectionUtil.URL_BASE + "get_uploaded_recipes.php", "user_id=" + MainActivity.getUser().getId());
                     recipes = RecipesUtil.getRecipesFrom(response);
                     return RecipesFragment.create("Uploaded", recipes);
                 } else {
-                    response = ConnectionUtil.getResponseFromURL("https://cakeproject.000webhostapp.com/php/get_favorite_recipes.php", "user_id=" + MainActivity.getUser().getId());
+                    response = ConnectionUtil.getResponseFromURL(ConnectionUtil.URL_BASE + "get_favorite_recipes.php", "user_id=" + MainActivity.getUser().getId());
                     recipes = RecipesUtil.getRecipesFrom(response);
                     return RecipesFragment.create("Favorites", recipes);
                 }
@@ -115,20 +119,19 @@ public class RecipesListActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(RecipesFragment fragment) {
 
-            progress.dismiss();
+            _progressDialog.dismiss();
 
             if (fragment != null) {
                 if (fragment.getArguments().getSerializable("recipes") != null) {
-                    getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, fragment).commit();
+                   ACTIVITY.getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, fragment).commit();
                 } else {
-
                     if (fragment.getTitle().equals("Uploaded"))
-                        Toast.makeText(RecipesListActivity.this, "You don't have any uploaded recipes.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(ACTIVITY, "You don't have any uploaded recipes.", Toast.LENGTH_LONG).show();
                     else if (fragment.getTitle().equals("Favorites"))
-                        Toast.makeText(RecipesListActivity.this, "You don't have any favorite recipes.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(ACTIVITY, "You don't have any favorite recipes.", Toast.LENGTH_LONG).show();
                 }
             } else
-                Toast.makeText(RecipesListActivity.this, R.string.error_message, Toast.LENGTH_SHORT).show();
+                Toast.makeText(ACTIVITY, R.string.error_message, Toast.LENGTH_SHORT).show();
 
         }
     }

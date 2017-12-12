@@ -53,7 +53,7 @@
                     android:layout_width="0px"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawableLeft="@drawable/ic_action_label"
+                    android:drawableStart="@drawable/ic_action_label"
                     android:gravity="center|left"
                     android:nestedScrollingEnabled="true"
                     android:singleLine="true"
@@ -67,7 +67,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right|center"
-                    android:layout_marginLeft="15dp"
+                    android:layout_marginStart="15dp"
                     android:isIndicator="true"
                     android:numStars="5"
                     android:progressDrawable="@drawable/ratingbar" />

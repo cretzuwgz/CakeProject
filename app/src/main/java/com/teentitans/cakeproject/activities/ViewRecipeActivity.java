@@ -1,7 +1,6 @@
 package com.teentitans.cakeproject.activities;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -18,7 +17,6 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -58,9 +56,6 @@ public class ViewRecipeActivity extends AppCompatActivity implements ObservableS
     private boolean mFabIsShown;
     private boolean isViewedByUploader;
     private Button btnRate;
-
-    //TODO: remove from favorites
-
 
     public static void navigate(AppCompatActivity activity, View transitionImage, RecipeVO recipe) {
         Intent intent = new Intent(activity, ViewRecipeActivity.class);
@@ -139,7 +134,7 @@ public class ViewRecipeActivity extends AppCompatActivity implements ObservableS
         TextView tvIngredients = findViewById(R.id.ingredients);
 
         for (IngredientVO ingredient : recipe.getIngredients()) {
-            tvIngredients.append(ingredient.getName() + ": " + ingredient.getQuantity() + " " + ingredient.getMeasurement() + "\n");
+            tvIngredients.append(ingredient.get_name() + ": " + ingredient.getQuantity() + " " + ingredient.getMeasurement() + "\n");
         }
 
         TextView tvExperience = findViewById(R.id.experience);
@@ -201,12 +196,10 @@ public class ViewRecipeActivity extends AppCompatActivity implements ObservableS
     }
 
     private void initActivityTransitions() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Slide transition = new Slide();
-            transition.excludeTarget(android.R.id.statusBarBackground, true);
-            getWindow().setEnterTransition(transition);
-            getWindow().setReturnTransition(transition);
-        }
+        Slide transition = new Slide();
+        transition.excludeTarget(android.R.id.statusBarBackground, true);
+        getWindow().setEnterTransition(transition);
+        getWindow().setReturnTransition(transition);
     }
 
     private void showRegisterAlertDialog() {
@@ -314,13 +307,13 @@ public class ViewRecipeActivity extends AppCompatActivity implements ObservableS
         }
     }
 
-    private class IncrementViewCounter extends AsyncTask<String, Void, Void> {
+    private static class IncrementViewCounter extends AsyncTask<String, Void, Void> {
 
         @Override
         protected Void doInBackground(String... params) {
 
             try {
-                ConnectionUtil.getResponseFromURL("https://cakeproject.000webhostapp.com/php/viewed.php", "recipe_id=" + params[0]);
+                ConnectionUtil.getResponseFromURL(ConnectionUtil.URL_BASE + "viewed.php", "recipe_id=" + params[0]);
             } catch (IOException e) {
                 Log.e("Increment View Counter", "error");
             }
@@ -334,7 +327,7 @@ public class ViewRecipeActivity extends AppCompatActivity implements ObservableS
         protected Void doInBackground(String... params) {
 
             try {
-                String response = ConnectionUtil.getResponseFromURL("https://cakeproject.000webhostapp.com/php/add_rating.php", "recipe_id=" + params[0] + "&rating=" + params[1]);
+                String response = ConnectionUtil.getResponseFromURL(ConnectionUtil.URL_BASE + "add_rating.php", "recipe_id=" + params[0] + "&rating=" + params[1]);
                 recipe.setRating(response);
             } catch (IOException e) {
                 Log.e("Rating", "error");
@@ -356,7 +349,7 @@ public class ViewRecipeActivity extends AppCompatActivity implements ObservableS
         protected Void doInBackground(String... params) {
 
             try {
-                String response = ConnectionUtil.getResponseFromURL("https://cakeproject.000webhostapp.com/php/add_favorite.php", "recipe_id=" + params[0] + "&user_id=" + params[1]);
+                String response = ConnectionUtil.getResponseFromURL(ConnectionUtil.URL_BASE + "add_favorite.php", "recipe_id=" + params[0] + "&user_id=" + params[1]);
                 recipe.setRating(response);
             } catch (IOException e) {
                 Log.e("Favorite", "error");

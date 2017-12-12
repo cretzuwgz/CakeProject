@@ -4,25 +4,25 @@ import java.io.Serializable;
 
 public class IngredientVO implements Serializable {
 
-    private String name;
-    private String quantity;
-    private String measurement;
+    private String _name;
+    private String _quantity;
+    private String _measurement;
 
     IngredientVO(String name, String quantity, String measurement) {
-        this.name = name;
-        this.quantity = quantity;
-        this.measurement = measurement;
+        _name = name;
+        _quantity = quantity;
+        _measurement = measurement;
     }
 
-    public String getName() {
-        return name;
+    public String get_name() {
+        return _name;
     }
 
     public String getQuantity() {
-        return quantity;
+        return _quantity;
     }
 
     public String getMeasurement() {
-        return measurement;
+        return _measurement;
     }
 }

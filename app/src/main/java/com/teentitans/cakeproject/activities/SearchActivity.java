@@ -24,15 +24,17 @@ import java.util.ArrayList;
 
 public class SearchActivity extends AppCompatActivity {
 
-    public static String URL_SEARCH = "https://cakeproject.000webhostapp.com/php/search.php";
-    private ProgressDialog progress;
+    private static SearchActivity ACTIVITY;
+
+    public static String URL_SEARCH = ConnectionUtil.URL_BASE + "search.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+        ACTIVITY = this;
         setContentView(R.layout.activity_search);
         Toolbar toolbar = findViewById(R.id.toolbar);
-        progress = new ProgressDialog(this);
 
         if (toolbar != null) {
             setSupportActionBar(toolbar);
@@ -95,24 +97,25 @@ public class SearchActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class GetRecipesTask extends AsyncTask<String, Void, RecipesFragment> {
+    private static class GetRecipesTask extends AsyncTask<String, Void, RecipesFragment> {
+
+        private ProgressDialog _progressDialog;
 
         @Override
         protected void onPreExecute() {
-            progress.setMessage("Searching...");
-            progress.setIndeterminate(true);
-            progress.show();
+
+            _progressDialog =new ProgressDialog(ACTIVITY);
+            _progressDialog.setMessage("Searching...");
+            _progressDialog.setIndeterminate(true);
+            _progressDialog.show();
         }
 
         @Override
         protected RecipesFragment doInBackground(String... params) {
             try {
                 String response = ConnectionUtil.getResponseFromURL(URL_SEARCH, "searchString=" + params[0]);
-
                 ArrayList<RecipeVO> recipes = RecipesUtil.getRecipesFrom(response);
-
                 return RecipesFragment.create("Search", recipes);
-
             } catch (IOException e) {
                 return null;
             }
@@ -121,15 +124,15 @@ public class SearchActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(RecipesFragment fragment) {
 
-            progress.dismiss();
+            _progressDialog.dismiss();
 
             if (fragment != null) {
                 if (fragment.getArguments().getSerializable("recipes") != null)
-                    getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, fragment).commit();
+                    ACTIVITY.getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, fragment).commit();
                 else
-                    Toast.makeText(SearchActivity.this, "Sorry, no recipes matched your search. Please try again", Toast.LENGTH_LONG).show();
+                    Toast.makeText(ACTIVITY, "Sorry, no recipes matched your search. Please try again", Toast.LENGTH_LONG).show();
             } else
-                Toast.makeText(SearchActivity.this, R.string.error_message, Toast.LENGTH_SHORT).show();
+                Toast.makeText(ACTIVITY, R.string.error_message, Toast.LENGTH_SHORT).show();
 
         }
     }

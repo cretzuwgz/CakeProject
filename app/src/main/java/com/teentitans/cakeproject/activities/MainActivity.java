@@ -37,9 +37,9 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static String URL_RECOMMENDED = "https://cakeproject.000webhostapp.com/php/get_recommended.php";
-    public static String URL_TOP = "https://cakeproject.000webhostapp.com/php/get_top5.php";
-    public static String URL_RECENT = "https://cakeproject.000webhostapp.com/php/get_recent.php";
+    public static String URL_RECOMMENDED = ConnectionUtil.URL_BASE + "get_recommended.php";
+    public static String URL_TOP = ConnectionUtil.URL_BASE + "get_top5.php";
+    public static String URL_RECENT = ConnectionUtil.URL_BASE + "get_recent.php";
     private static ArrayList<RecipeVO> recommendedRecipes;
     private static ArrayList<RecipeVO> topRecipes;
     private static ArrayList<RecipeVO> recentRecipes;
@@ -203,12 +203,9 @@ public class MainActivity extends AppCompatActivity {
             // Associate searchable configuration with the SearchView
             SearchManager searchManager =
                     (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-            final SearchView searchView =
-                    (SearchView) menu.findItem(R.id.action_search).getActionView();
-            if (searchManager != null) {
-                searchView.setSearchableInfo(
-                        searchManager.getSearchableInfo(getComponentName()));
-            }
+            SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+            if (searchManager != null)
+                searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
@@ -235,8 +232,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         return mDrawerToggle.onOptionsItemSelected(item);
-
-//        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -249,6 +244,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setAdapter() {
+
         if (user.isGuest()) {
             // Creating The ViewPagerAdapter and Passing Fragment Manager, Titles fot the Tabs and Number Of Tabs.
             int noOfTabs = 1;
@@ -331,7 +327,7 @@ public class MainActivity extends AppCompatActivity {
                 switch (args[0]) {
                     case "recommended": {
                         response = ConnectionUtil.getResponseFromURL(URL_RECOMMENDED, "user_id=" + user.getId());
-                        Log.w("recommended",response);
+                        Log.w("recommended", response);
                         recommendedRecipes = RecipesUtil.getRecipesFrom(response);
 
                         if (response == null)
@@ -342,7 +338,7 @@ public class MainActivity extends AppCompatActivity {
                     case "top": {
                         response = ConnectionUtil.getResponseFromURL(URL_TOP);
                         topRecipes = RecipesUtil.getRecipesFrom(response);
-                        Log.w("top",response);
+                        Log.w("top", response);
                         if (response == null)
                             return "Connection failed";
                         else
@@ -351,7 +347,7 @@ public class MainActivity extends AppCompatActivity {
                     case "recent": {
                         response = ConnectionUtil.getResponseFromURL(URL_RECENT);
                         recentRecipes = RecipesUtil.getRecipesFrom(response);
-                        Log.w("recent",response);
+                        Log.w("recent", response);
                         if (response == null)
                             return "Connection failed";
                         else
@@ -359,7 +355,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             } catch (IOException e) {
-                Log.w("ioexc",e.toString());
+                Log.w("ioexc", e.toString());
                 return null;
             }
 

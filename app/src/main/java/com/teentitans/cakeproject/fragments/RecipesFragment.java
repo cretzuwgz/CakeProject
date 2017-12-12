@@ -1,6 +1,7 @@
 package com.teentitans.cakeproject.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,10 +20,11 @@ import java.util.ArrayList;
 
 public class RecipesFragment extends Fragment {
 
-    public static final String ARG_TITLE = "title";
-    public static final String ARG_RECIPES = "recipes";
-    private ArrayList<RecipeVO> recipes;
-    private String title = "";
+    public static final String ARG_TITLE = "_title";
+    public static final String ARG_RECIPES = "_recipes";
+
+    private ArrayList<RecipeVO> _recipes;
+    private String _title = "";
 
     public static RecipesFragment create(String title, ArrayList<RecipeVO> recipes) {
         RecipesFragment fragment = new RecipesFragment();
@@ -34,19 +36,22 @@ public class RecipesFragment extends Fragment {
     }
 
     public String getTitle() {
-        return title;
+
+        return _title;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
-        title = getArguments().getString(ARG_TITLE);
-        recipes = (ArrayList<RecipeVO>) getArguments().getSerializable(ARG_RECIPES);
+        _title = getArguments().getString(ARG_TITLE);
+        _recipes = (ArrayList<RecipeVO>) getArguments().getSerializable(ARG_RECIPES);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View v = inflater.inflate(R.layout.fragment_recipes, container, false);
 
         ObservableRecyclerView mRecyclerView = v.findViewById(R.id.recycler);
@@ -55,16 +60,15 @@ public class RecipesFragment extends Fragment {
         AppCompatActivity parentActivity = (AppCompatActivity) getActivity();
         mRecyclerView.setTouchInterceptionViewGroup(parentActivity.findViewById(R.id.container));
 
-        if (parentActivity instanceof ObservableScrollViewCallbacks) {
+        if (parentActivity instanceof ObservableScrollViewCallbacks)
             mRecyclerView.setScrollViewCallbacks((ObservableScrollViewCallbacks) parentActivity);
-        }
 
         // use a linear layout manager
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        if (recipes != null) {
-            CustomRecycleViewAdapter mAdapter = new CustomRecycleViewAdapter(recipes, parentActivity);
+        if (_recipes != null && !_recipes.isEmpty()) {
+            CustomRecycleViewAdapter mAdapter = new CustomRecycleViewAdapter(_recipes, parentActivity);
             mRecyclerView.setAdapter(mAdapter);
         }
 

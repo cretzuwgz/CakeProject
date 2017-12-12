@@ -5,159 +5,167 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class RecipeVO implements Parcelable {
 
+    private static final String INGREDIENTS = "ingredients";
+    private static final String TAGS = "tags";
     public static final Parcelable.Creator<RecipeVO> CREATOR = new Parcelable.Creator<RecipeVO>() {
         public RecipeVO createFromParcel(Parcel in) {
+
             return new RecipeVO(in);
         }
 
         public RecipeVO[] newArray(int size) {
+
             return new RecipeVO[size];
         }
     };
 
-    private String id;
-    private String title;
-    private String date;
-    private String uploader;
-    private String description;
-    private String pLink;
-    private String rating;
-    private int difficulty;
-    private String reqTime;
-    private ArrayList<IngredientVO> ingredients;
-    private ArrayList<String> tags;
+    private String _id;
+    private String _title;
+    private String _date;
+    private String _uploader;
+    private String _description;
+    private String _pLink;
+    private String _rating;
+    private int _difficulty;
+    private String _reqTime;
+    private ArrayList<IngredientVO> _ingredients;
+    private ArrayList<String> _tags;
 
-    RecipeVO(String id, String title, String date, String uploader, String description, String pLink, String rating, int difficulty, String reqTime) {
-        this.id = id;
-        this.title = title;
-        this.date = date;
-        this.uploader = uploader;
-        this.description = description;
-        this.pLink = pLink;
-        this.rating = rating;
-        this.difficulty = difficulty;
-        this.reqTime = reqTime;
-        ingredients = new ArrayList<>();
-        tags = new ArrayList<>();
+    public RecipeVO(String id, String title, String date, String uploader, String description, String pLink, String rating, int difficulty, String reqTime) {
+        _id = id;
+        _title = title;
+        _date = date;
+        _uploader = uploader;
+        _description = description;
+        _pLink = pLink;
+        _rating = rating;
+        _difficulty = difficulty;
+        _reqTime = reqTime;
+        _ingredients = new ArrayList<>();
+        _tags = new ArrayList<>();
     }
 
     @SuppressWarnings("unchecked")
     private RecipeVO(Parcel in) {
-        this.id = in.readString();
-        this.title = in.readString();
-        this.date = in.readString();
-        this.uploader = in.readString();
-        this.description = in.readString();
-        this.pLink = in.readString();
-        this.rating = in.readString();
-        this.difficulty = in.readInt();
-        this.reqTime = in.readString();
+        _id = in.readString();
+        _title = in.readString();
+        _date = in.readString();
+        _uploader = in.readString();
+        _description = in.readString();
+        _pLink = in.readString();
+        _rating = in.readString();
+        _difficulty = in.readInt();
+        _reqTime = in.readString();
         Bundle b = in.readBundle(getClass().getClassLoader());
-        this.ingredients = (ArrayList<IngredientVO>) b.getSerializable("ingredients");
-        this.tags = (ArrayList<String>) b.getSerializable("tags");
+        _ingredients = (ArrayList<IngredientVO>) b.getSerializable(INGREDIENTS);
+        _tags = (ArrayList<String>) b.getSerializable(TAGS);
     }
 
     public String getId() {
-        return id;
+
+        return _id;
     }
 
     public String getTitle() {
-        return title;
+
+        return _title;
     }
 
     public String getDescription() {
-        return description;
+
+        return _description;
     }
 
     public String getPLink() {
-        return pLink;
+
+        return _pLink;
     }
 
     public String getRating() {
-        return rating;
+
+        return _rating;
     }
 
     public void setRating(String rating) {
-        this.rating = rating;
+
+        _rating = rating;
     }
 
     public int getDifficulty() {
-        return difficulty;
+
+        return _difficulty;
     }
 
     public String getReqTime() {
-        return reqTime;
+
+        return _reqTime;
     }
 
     public ArrayList<String> getTags() {
-        return tags;
+
+        return _tags;
     }
 
     public String getDate() {
-        return date;
+
+        return _date;
     }
 
     public String getUploader() {
-        return uploader;
+
+        return _uploader;
     }
 
     public ArrayList<IngredientVO> getIngredients() {
-        return ingredients;
+
+        return _ingredients;
     }
 
-    String getFirstXTags(int x) {
-        StringBuilder buffer = new StringBuilder();
+    public String getFirstXTags(int x) {
 
-        for (int i = 0; i < x - 1; i++)
-            buffer.append(tags.get(i)).append(", ");
-
-        buffer.append(tags.get(x - 1));
-
-        return buffer.toString().trim();
+        return _tags.stream().limit(x).collect(Collectors.joining(", "));
     }
 
-    void addTag(String tag) {
-        tags.add(tag);
+    public void addTag(String tag) {
+
+        _tags.add(tag);
     }
 
-    void addIngredient(IngredientVO ingredient) {
-        ingredients.add(ingredient);
+    public void addIngredient(IngredientVO ingredient) {
+
+        _ingredients.add(ingredient);
     }
 
     @Override
-
     public int describeContents() {
+
         return 0;
     }
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(id);
-        parcel.writeString(title);
-        parcel.writeString(date);
-        parcel.writeString(uploader);
-        parcel.writeString(description);
-        parcel.writeString(pLink);
-        parcel.writeString(rating);
-        parcel.writeInt(difficulty);
-        parcel.writeString(reqTime);
+
+        parcel.writeString(_id);
+        parcel.writeString(_title);
+        parcel.writeString(_date);
+        parcel.writeString(_uploader);
+        parcel.writeString(_description);
+        parcel.writeString(_pLink);
+        parcel.writeString(_rating);
+        parcel.writeInt(_difficulty);
+        parcel.writeString(_reqTime);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("ingredients", ingredients);
-        bundle.putSerializable("tags", tags);
+        bundle.putSerializable(INGREDIENTS, _ingredients);
+        bundle.putSerializable(TAGS, _tags);
         parcel.writeBundle(bundle);
     }
 
     public String getTagsAsString() {
 
-        StringBuilder stringBuilder = new StringBuilder();
-
-        for (String tag : tags)
-            stringBuilder.append(tag).append(",");
-
-        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
-        return stringBuilder.toString();
+        return _tags.stream().collect(Collectors.joining(","));
     }
 }

@@ -18,7 +18,7 @@
         <item name="android:background">@android:color/white</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_gravity">center</item>
-        <item name="android:drawableRight">@drawable/ic_arrow</item>
+        <item name="android:drawableEnd">@drawable/ic_arrow</item>
     </style>
 
     <style name="SpinnerDropDownItem">
