@@ -46,24 +46,29 @@ public class SettingsActivity extends AppCompatActivity {
         Spinner sExperience = findViewById(R.id.sExperience);
 
         btnUpdateInfo.setOnClickListener(view -> {
-            if (!etUsername.getText().toString().equals(MainActivity.getUser().getUsername())
+            if (etOldPwd.getText().toString().isEmpty())
+                Toast.makeText(ACTIVITY, "Current password is required!", Toast.LENGTH_LONG).show();
+            else if (!etUsername.getText().toString().equals(MainActivity.getUser().getUsername())
                     || sGender.getSelectedItemPosition() + 1 != MainActivity.getUser().getGender()
                     || sExperience.getSelectedItemPosition() + 1 != MainActivity.getUser().getExperience())
-                new UpdateInfoTask().execute(MainActivity.getUser().getId(), etUsername.getText().toString(), String.valueOf(sGender.getSelectedItemPosition() + 1), String.valueOf(sExperience.getSelectedItemPosition() + 1));
+                new UpdateInfoTask().execute(MainActivity.getUser().getId(), etUsername.getText().toString(), String.valueOf(sGender.getSelectedItemPosition() + 1), String.valueOf(sExperience.getSelectedItemPosition() + 1), etOldPwd.getText().toString());
         });
 
         btnChangePwd.setOnClickListener(view -> {
             if (!etOldPwd.getText().toString().isEmpty() && !etNewPwd.getText().toString().isEmpty()) {
                 new ChangePasswordTask().execute(MainActivity.getUser().getId(), etOldPwd.getText().toString(), etNewPwd.getText().toString());
             } else
-                Toast.makeText(ACTIVITY, "Both fields are required", Toast.LENGTH_LONG).show();
+                Toast.makeText(ACTIVITY, "Both current and new password fields are required!", Toast.LENGTH_LONG).show();
         });
 
         btnUpdateTags.setOnClickListener(v -> {
-            if (!etTags.getText().toString().isEmpty() && !etTags.getText().toString().equals(MainActivity.getUser().getFavoriteTagsAsString()))
-                new UpdateFavoriteTagsTask().execute(MainActivity.getUser().getId(), etTags.getText().toString());
+            if (etOldPwd.getText().toString().isEmpty())
+                Toast.makeText(ACTIVITY, "Current password is required!", Toast.LENGTH_LONG).show();
+            else if (!etTags.getText().toString().isEmpty() && !etTags.getText().toString().equals(MainActivity.getUser().getFavoriteTagsAsString()))
+                new UpdateFavoriteTagsTask().execute(MainActivity.getUser().getId(), etTags.getText().toString(), etOldPwd.getText().toString());
             else
                 Toast.makeText(ACTIVITY, "Please check tags!", Toast.LENGTH_LONG).show();
+
         });
 
         etUsername.setText(MainActivity.getUser().getUsername());
@@ -123,7 +128,7 @@ public class SettingsActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... params) {
 
-            String parameters = "userId=" + params[0] + "&username=" + params[1] + "&gender=" + params[2] + "&experience=" + params[3];
+            String parameters = "userId=" + params[0] + "&username=" + params[1] + "&gender=" + params[2] + "&experience=" + params[3] + "&password=" + params[4];
 
             String response = null;
             try {
@@ -181,7 +186,7 @@ public class SettingsActivity extends AppCompatActivity {
             String response = null;
 
             try {
-                response = ConnectionUtil.getResponseFromURL(ConnectionUtil.URL_BASE + "change_tags.php", "user_id=" + params[0] + "&tags=" + params[1]);
+                response = ConnectionUtil.getResponseFromURL(ConnectionUtil.URL_BASE + "change_tags.php", "user_id=" + params[0] + "&tags=" + params[1] + "&password=" + params[2]);
             } catch (IOException e) {
                 Log.e("Update favorite tags", e.toString());
             }

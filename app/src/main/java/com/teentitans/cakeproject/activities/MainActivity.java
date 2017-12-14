@@ -160,9 +160,6 @@ public class MainActivity extends AppCompatActivity {
         tabs.setCustomTabColorizer(position -> getResources().getColor(R.color.primary_text));
         progress = new ProgressDialog(this);
 
-        if (needsUpdate())
-            updateData();
-        else setAdapter();
     }
 
     private boolean needsUpdate() {
@@ -213,6 +210,10 @@ public class MainActivity extends AppCompatActivity {
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String s) {
+                    if(s.length()<3){
+                        Toast.makeText(MainActivity.this,"Please provide minimum 3 characters for search", Toast.LENGTH_LONG).show();
+                        return false;
+                    }
                     searchView.setQuery("", false);
                     searchView.setIconified(true);
                     Intent intent = new Intent(MainActivity.this, SearchActivity.class);

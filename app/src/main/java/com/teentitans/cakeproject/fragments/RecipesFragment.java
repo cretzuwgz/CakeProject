@@ -20,8 +20,8 @@ import java.util.ArrayList;
 
 public class RecipesFragment extends Fragment {
 
-    public static final String ARG_TITLE = "_title";
-    public static final String ARG_RECIPES = "_recipes";
+    public static final String ARG_TITLE = "title";
+    public static final String ARG_RECIPES = "recipes";
 
     private ArrayList<RecipeVO> _recipes;
     private String _title = "";

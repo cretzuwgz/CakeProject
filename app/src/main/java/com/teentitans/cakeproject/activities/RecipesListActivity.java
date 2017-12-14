@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -105,10 +106,12 @@ public class RecipesListActivity extends AppCompatActivity {
                 if (params[0].equals("uploaded")) {
                     response = ConnectionUtil.getResponseFromURL(ConnectionUtil.URL_BASE + "get_uploaded_recipes.php", "user_id=" + MainActivity.getUser().getId());
                     recipes = RecipesUtil.getRecipesFrom(response);
+                    Log.w("uploaded", recipes.toString());
                     return RecipesFragment.create("Uploaded", recipes);
                 } else {
                     response = ConnectionUtil.getResponseFromURL(ConnectionUtil.URL_BASE + "get_favorite_recipes.php", "user_id=" + MainActivity.getUser().getId());
                     recipes = RecipesUtil.getRecipesFrom(response);
+                    Log.w("favorites", recipes.toString());
                     return RecipesFragment.create("Favorites", recipes);
                 }
             } catch (IOException e) {
@@ -122,7 +125,7 @@ public class RecipesListActivity extends AppCompatActivity {
             _progressDialog.dismiss();
 
             if (fragment != null) {
-                if (fragment.getArguments().getSerializable("recipes") != null) {
+                if (fragment.getArguments().getSerializable(RecipesFragment.ARG_RECIPES) != null) {
                    ACTIVITY.getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, fragment).commit();
                 } else {
                     if (fragment.getTitle().equals("Uploaded"))
