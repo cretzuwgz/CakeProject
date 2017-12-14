@@ -129,7 +129,7 @@ public class SettingsActivity extends AppCompatActivity {
             try {
                 response = ConnectionUtil.getResponseFromURL(ConnectionUtil.URL_BASE + "update_user.php", parameters);
             } catch (IOException e) {
-                Log.e("Update user", "error");
+                Log.e("Update user", e.toString());
             }
 
             return response;
@@ -139,7 +139,7 @@ public class SettingsActivity extends AppCompatActivity {
         protected void onPostExecute(String response) {
             if (response == null)
                 Toast.makeText(ACTIVITY, R.string.error_message, Toast.LENGTH_LONG).show();
-            else if (!response.equals("OK"))
+            else if (response.equals("OK"))
                 Toast.makeText(ACTIVITY, "Info changed", Toast.LENGTH_LONG).show();
             else
                 Toast.makeText(ACTIVITY, response, Toast.LENGTH_LONG).show();
@@ -156,7 +156,7 @@ public class SettingsActivity extends AppCompatActivity {
             try {
                 response = ConnectionUtil.getResponseFromURL(ConnectionUtil.URL_BASE + "change_pass.php", parameters);
             } catch (IOException e) {
-                Log.e("Update user", "error");
+                Log.e("Update user", e.toString());
             }
 
             return response;
@@ -181,9 +181,9 @@ public class SettingsActivity extends AppCompatActivity {
             String response = null;
 
             try {
-                response = ConnectionUtil.getResponseFromURL("https://cakeproject.000webhostapp.com/change_tags.php", "user_id" + params[0] + "&tags=" + params[1]);
+                response = ConnectionUtil.getResponseFromURL(ConnectionUtil.URL_BASE + "change_tags.php", "user_id=" + params[0] + "&tags=" + params[1]);
             } catch (IOException e) {
-                Log.e("Update favorite tags", "error");
+                Log.e("Update favorite tags", e.toString());
             }
 
             return response;

@@ -62,7 +62,7 @@
 
                 <LinearLayout
                     android:layout_width="0px"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginEnd="5dp"
                     android:layout_weight="1"
                     android:background="@android:color/white"
@@ -91,7 +91,7 @@
 
                 <LinearLayout
                     android:layout_width="0px"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@android:color/white"
                     android:orientation="vertical"
@@ -114,7 +114,9 @@
                         android:layout_gravity="center"
                         android:entries="@array/experience_array"
                         android:gravity="center"
+                        android:backgroundTint="@color/accent"
                         android:spinnerMode="dropdown"
+                        android:theme="@style/SpinnerItem"
                         android:textColor="@color/primary_text" />
                 </LinearLayout>
 

@@ -67,7 +67,7 @@ public class RecipesFragment extends Fragment {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        if (_recipes != null && !_recipes.isEmpty()) {
+        if (_recipes != null) {
             CustomRecycleViewAdapter mAdapter = new CustomRecycleViewAdapter(_recipes, parentActivity);
             mRecyclerView.setAdapter(mAdapter);
         }

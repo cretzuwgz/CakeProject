@@ -1,11 +1,11 @@
 <resources>
 
     <style name="AppTheme" parent="AppTheme.Base">
-        <item name="android:spinnerItemStyle">@style/SpinnerItem</item>
-        <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItem</item>
+        <!--<item name="android:spinnerItemStyle">@style/SpinnerItem</item>-->
+        <!--<item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItem</item>-->
     </style>
 
-    <style name="AppTheme.Base" parent="Theme.AppCompat.NoActionBar">
+    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
@@ -13,18 +13,15 @@
         <item name="windowActionBar">false</item>
     </style>
 
-    <style name="SpinnerItem">
+    <style name="SpinnerDropItem" >
         <item name="android:textColor">@color/primary_text</item>
-        <item name="android:background">@android:color/white</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_gravity">center</item>
-        <item name="android:drawableEnd">@drawable/ic_arrow</item>
     </style>
 
-    <style name="SpinnerDropDownItem">
-        <item name="android:gravity">center</item>
-        <item name="android:background">@android:color/white</item>
-        <item name="android:layout_gravity">center</item>
+    <style name="SpinnerItem" parent="Widget.AppCompat.Light.DropDownItem.Spinner">
         <item name="android:textColor">@color/primary_text</item>
+        <item name="android:width">150dp</item>
+        <item name="android:spinnerItemStyle">@style/SpinnerDropItem</item>
     </style>
 </resources>

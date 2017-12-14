@@ -64,7 +64,7 @@ public class ViewRecipeActivity extends AppCompatActivity implements ObservableS
         intent.putExtra("bundle", b);
 
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, transitionImage, "image");
-        ActivityCompat.startActivity(activity, intent, options.toBundle());
+        activity.startActivity(intent);
     }
 
     protected int getActionBarSize() {
@@ -174,7 +174,6 @@ public class ViewRecipeActivity extends AppCompatActivity implements ObservableS
                 startActivity(intent);
             } else {
                 new AddToFavorites().execute(recipe.getId(), MainActivity.getUser().getId());
-                Toast.makeText(ViewRecipeActivity.this, "Recipe added to favorites", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -219,6 +218,7 @@ public class ViewRecipeActivity extends AppCompatActivity implements ObservableS
 
     @Override
     public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
+        setTitle(null);
         // Translate overlay and image
         float flexibleRange = mFlexibleSpaceImageHeight - mActionBarSize;
         int minOverlayTransitionY = mActionBarSize - mOverlayView.getHeight();
@@ -269,6 +269,7 @@ public class ViewRecipeActivity extends AppCompatActivity implements ObservableS
             // Change alpha of toolbar background
             if (-scrollY + mFlexibleSpaceImageHeight <= mActionBarSize) {
                 mToolbar.setBackgroundColor(ScrollUtils.getColorWithAlpha(1, mToolbarColor));
+                setTitle(recipe.getTitle());
             } else {
                 mToolbar.setBackgroundColor(ScrollUtils.getColorWithAlpha(0, mToolbarColor));
             }
@@ -295,6 +296,7 @@ public class ViewRecipeActivity extends AppCompatActivity implements ObservableS
         if (!mFabIsShown) {
             ViewPropertyAnimator.animate(mFab).cancel();
             ViewPropertyAnimator.animate(mFab).scaleX(1).scaleY(1).setDuration(200).start();
+            mFab.setClickable(true);
             mFabIsShown = true;
         }
     }
@@ -303,6 +305,7 @@ public class ViewRecipeActivity extends AppCompatActivity implements ObservableS
         if (mFabIsShown) {
             ViewPropertyAnimator.animate(mFab).cancel();
             ViewPropertyAnimator.animate(mFab).scaleX(0).scaleY(0).setDuration(200).start();
+            mFab.setClickable(false);
             mFabIsShown = false;
         }
     }
@@ -359,7 +362,8 @@ public class ViewRecipeActivity extends AppCompatActivity implements ObservableS
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            Toast.makeText(ViewRecipeActivity.this, "Thank you", Toast.LENGTH_LONG).show();
+            Toast.makeText(ViewRecipeActivity.this, "Recipe added to favorites", Toast.LENGTH_LONG).show();
+            hideFab();
         }
     }
 }

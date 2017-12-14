@@ -91,6 +91,10 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemClickListener((arg0, arg1, position, arg3) -> {
 
                     if (user.isGuest()) {
+                        if (position == 4) {
+                            finish();
+                            return;
+                        }
                         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                         builder.setPositiveButton("Yes", (dialog, id) -> {
                             Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
@@ -201,8 +205,7 @@ public class MainActivity extends AppCompatActivity {
             getMenuInflater().inflate(R.menu.menu_main, menu);
 
             // Associate searchable configuration with the SearchView
-            SearchManager searchManager =
-                    (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+            SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
             SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
             if (searchManager != null)
                 searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
@@ -243,7 +246,7 @@ public class MainActivity extends AppCompatActivity {
             setAdapter();
     }
 
-    public void setAdapter() {
+    private void setAdapter() {
 
         if (user.isGuest()) {
             // Creating The ViewPagerAdapter and Passing Fragment Manager, Titles fot the Tabs and Number Of Tabs.
@@ -321,45 +324,37 @@ public class MainActivity extends AppCompatActivity {
 
         protected String doInBackground(String... args) {
 
-            String response;
+            String response = null;
 
             try {
                 switch (args[0]) {
                     case "recommended": {
                         response = ConnectionUtil.getResponseFromURL(URL_RECOMMENDED, "user_id=" + user.getId());
-                        Log.w("recommended", response);
                         recommendedRecipes = RecipesUtil.getRecipesFrom(response);
-
-                        if (response == null)
-                            return "Connection failed";
-                        else
-                            return response;
+                        Log.w("recommended", response);
+                        break;
                     }
                     case "top": {
                         response = ConnectionUtil.getResponseFromURL(URL_TOP);
                         topRecipes = RecipesUtil.getRecipesFrom(response);
                         Log.w("top", response);
-                        if (response == null)
-                            return "Connection failed";
-                        else
-                            return response;
+                        break;
                     }
                     case "recent": {
                         response = ConnectionUtil.getResponseFromURL(URL_RECENT);
                         recentRecipes = RecipesUtil.getRecipesFrom(response);
                         Log.w("recent", response);
-                        if (response == null)
-                            return "Connection failed";
-                        else
-                            return response;
+                        break;
                     }
                 }
             } catch (IOException e) {
-                Log.w("ioexc", e.toString());
-                return null;
+                Log.w("IOException", e.toString());
             }
 
-            return null;
+            if (response == null)
+                return "Connection failed";
+            else
+                return response;
         }
 
         @Override
